@@ -1,5 +1,5 @@
 
-@extends('adminlte::page')
+@extends('ppa')
 
 @section('title', 'Add Proveedor')
 
@@ -7,7 +7,12 @@
     <h1>Crear una Proveedor</h1>
 @stop
 
-@section('content')
+@section('body')
+<div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Agregar Proveedor</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body">
 <form action="/proveedor" method="POST">
 	@csrf
 	<div class="mb-3">
@@ -30,9 +35,15 @@
 		<label for="" class="form-label">Direccion del Proveedor</label>
 		<input id="direccion" name="direccion" type="text" tabindex="5" class="form-control">
 	</div>
-	<a href="/proveedor" class="btn btn-secondary" >CANCELAR</a>
 	<button  class="btn btn-primary" >GUARDAR</button>
 </form>
+</div> 
+
+<div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+</div>
+
+
 @stop
 
 @section('css')

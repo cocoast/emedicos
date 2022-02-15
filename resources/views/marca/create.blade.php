@@ -1,5 +1,5 @@
 
-@extends('adminlte::page')
+@extends('ppa')
 
 @section('title', 'Add Marca')
 
@@ -7,16 +7,25 @@
     <h1>Crear una Marca</h1>
 @stop
 
-@section('content')
+@section('body')
+<div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Agregar Marca</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body">
 <form action="/marca" method="POST">
 	@csrf
 	<div class="mb-3">
 		<label for="" class="form-label">Nombre de la marca</label>
 		<input id="marca" name="marca" type="text" tabindex="1" class="form-control">
 	</div>
-	<a href="/marca" class="btn btn-secondary" tabindex="2">CANCELAR</a>
+	
 	<button  class="btn btn-primary" tabindex="3">GUARDAR</button>
 </form>
+</div>
+<div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+</div>
 @stop
 
 @section('css')

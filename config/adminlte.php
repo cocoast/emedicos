@@ -280,7 +280,7 @@ return [
         [
             'text'          => 'Servicio Tecnico',
             'icon_color'    => 'green',
-            'url'           => '/servicio-tecnico',
+            'url'           => '#',
             'label_color'   => 'warning',
             'label'         => 'soon',
         ],
@@ -292,21 +292,10 @@ return [
             'label'         => 'soon',
         ],
         [ 
-                    'text'    => 'Servicio Clinico',
-                    'url'     => 'servicioclinico/',
-                    'submenu' => [
-                        [
-                            'text' => 'Listado de Servicios',
-                            'url'  => 'servicioclinico/',
-                            'can'     => 'servicioclinico.index',
-                        ],
-                        [
-                            'text' => 'Agregar Servicio',
-                            'url'  => 'servicioclinico/create',
-                            'can'     => 'servicioclinico.create',
-                        ],
-                    ],
-                ],
+            'text'    => 'Servicio Clinico',
+            'url'     => 'servicioclinico/',
+            'can'     => 'servicioclinico.index',    
+        ],
         [
             'text'          => 'Traslados',
             'icon_color'    => 'green',
@@ -317,153 +306,51 @@ return [
         //crud
          
         [
-            'text'    => 'Componentes',
-            'icon'    => 'fas fa-fw fa-share',
-            'label'       => "CRUD",
-            'label_color' => 'warning',
+            'text'          => 'Componentes',
+            'icon'          => 'fas fa-fw fa-share',
+            'label'         => "CRUD",
+            'can'           => 'marca.index',
+            'label_color'   => 'warning',
 
             
-            'submenu' => [
-                //Equipos    
-        [
-            'text'    => 'Equipos Medicos',
-            'icon'    => 'fas fa-fw fa-share',
-            'can'     => 'equipo.create',
-            'submenu' => [
-                
-                [
-                    'text' => 'Agregar un Equipo',
-                    'url'  => 'equipo/create',
-                ],
-            ],
-        ],       
-        //EndEquipos 
-         //Convenios  
-
-        [
-            'text'    => 'Convenios',
-            'icon'    => 'fas fa-fw fa-share',
-            'can'  => 'convenio.create',
-            'submenu' => [
-                
-                [
-                    'text' => 'Agregar un Convenio',
-                    'url'  => 'convenio/create',
-
-                ],
-            ],
-        ],       
+            'submenu' => [       
                 [ 
                     'text'    => 'Marca',
                     'url'     => 'marca/',
-                    'submenu' => [
-                        [
-                    'text' => 'Listado Marcas',
-                    'url'  => 'marca/',
                     'can'     => 'marca.index',
-                        ],
-                        [
-                            'text' => 'Agregar Marca',
-                            'url'  => 'marca/create',
-                            'can'     => 'marca.create',
-                        ],
-                    ],
                 ],
                 [ 
                     'text'    => 'Modelo',
                     'url'     => 'modelo/',
-                    'submenu' => [
-                        [
-                    'text' => 'Listado Modelos',
-                    'url'  => 'modelo/',
                     'can'     => 'modelo.index',
-                        ],
-                        [
-                            'text' => 'Agregar Modelo',
-                            'url'  => 'modelo/create',
-                            'can'     => 'modelo.create',
-                        ],
-                    ],
+                    
                 ],
                 [ 
                     'text'    => 'Familia',
                     'url'     => 'familia/',
-                    'submenu' => [
-                        [
-                    'text' => 'Listado Familias',
-                    'url'  => 'familia/',
                     'can'     => 'familia.index',
-                        ],
-                        [
-                            'text' => 'Agregar familia',
-                            'url'  => 'familia/create',
-                             'can'     => 'familia.create',
-                        ],
-                    ],
+                    
                 ],
                 [ 
                     'text'    => 'SubFamilia',
                     'url'     => 'subfamilia/',
-                    'submenu' => [
-                         [
-                    'text' => 'Listado SubFamilias',
-                    'url'  => 'subfamilia/',
                     'can'     => 'subfamilia.index',
-                        ],
-                        [
-                            'text' => 'Agregar SubFamilia',
-                            'url'  => 'subfamilia/create',
-                            'can'     => 'subfamilia.create',
-                        ],
-                    ],
                 ],
                 [ 
                     'text'    => 'Clase',
                     'url'     => 'clase/',
-                    'submenu' => [
-                        [
-                    'text' => 'Listado Clase',
-                    'url'  => 'clase/',
                     'can'     => 'clase.index',
-                        ],
-                        [
-                            'text' => 'Agregar Clase',
-                            'url'  => 'clase/create',
-                            'can'     => 'clase.create',
-                        ],
-                    ],
                 ],
                 [ 
                     'text'    => 'SubClase',
                     'url'     => 'subclase/',
-                    'submenu' => [
-                        [
-                            'text' => 'Listado SubClase',
-                            'url'  => 'subclase/',
-                            'can'     => 'subclase.index',
-                        ],
-                        [
-                            'text' => 'Agregar SubClase',
-                            'url'  => 'subclase/create',
-                            'can'     => 'subclase.create',
-                        ],
-                    ],
+                    'can'     => 'subclase.index',
+                    
                 ],
                 [ 
                     'text'    => 'Proveedor',
                     'url'     => 'proveedor/',
-                    'submenu' => [
-                        [
-                            'text' => 'Listado Proveedores',
-                            'url'  => 'proveedor/',
-                            'can'     => 'proveedor.index',
-                        ],
-                        [
-                            'text' => 'Agregar Proveedores',
-                            'url'  => 'proveedor/create',
-                            'can'     => 'proveedor.create',
-                        ],
-                    ],
+                    'can'     => 'proveedor.index',
                 ],
                 
                 [ 

@@ -197,7 +197,10 @@ class PagosController extends Controller
     //  $pdf = PDF::loadView('pagos.ficha',compact('pago','convenio'))->setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
     //  return $pdf->stream();
 
-        $pdf = PDF2::view('pagos.ficha',compact('pago','convenio'))->make()->render();
+        //$pdf = PDF2::view('pagos.ficha',compact('pago','convenio'))->make()->render();
+
+        $pdf = PDF2::loadview('pagos.ficha',compact('pago','convenio'));
+        return $pdf->download('user.pdf');
         
        }
 }

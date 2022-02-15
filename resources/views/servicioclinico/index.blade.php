@@ -13,6 +13,13 @@
         {{ session('message') }}
     </div>
     @endif 
+
+    @can('servicioclinico.create')
+    <!-- Trigger the modal with a button -->
+    <button type="button" data-path="{{route('servicioclinico.create') }}" class="btn btn-primary btn-sm openBtn">
+                            Agregar</button>
+    @endcan
+ <h1>Vista Servicios Clínicos</h1>
  <table id="serviciosclinicostable" class="table table-striped table-hover mt-4" style="width:100%">
 	<thead>
 	<tr>
@@ -72,6 +79,15 @@
     </div>
   </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+    <!--Aqui Va la informacion del modal -->
+  </div>
+</div>
+
 @stop
 
 @section('css')

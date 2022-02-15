@@ -13,10 +13,10 @@
                 <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($preventivo["pagado"])}}</span>
                 
                 <div class="progress">
-                  <div class="progress-bar" style="width: {{ ($preventivo["pagado"]/$preventivo["total"])*100 }}%"></div>
+                  <div class="progress-bar" style="width: @if($preventivo["total"]==0) 0 @else{{ ($preventivo["pagado"]/$preventivo["total"])*100   }}@endif %"></div>
                 </div>
                 <span class="progress-description">
-                 {{ substr(($preventivo["pagado"]/$preventivo["total"])*100,0,4) }}% de: {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($preventivo["total"])}}
+                  @if($preventivo["total"]==0) 0 @else {{ substr((  $preventivo["pagado"]/$preventivo["total"])*100,0,4) }} @endif% de: {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($preventivo["total"])}}
                  Equipos: {{ $preventivo["equipos"] }}
                 </span>
               </div>
@@ -30,10 +30,10 @@
                     <span class="info-box-text">Convenios de Arriendo({{$arriendos["cantidad"]}})</span>
                     <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($arriendos["pagado"])}}</span>
                     <div class="progress">
-                    <div class="progress-bar" style="width: {{ ($arriendos["pagado"]/$arriendos["total"])*100 }}%"></div>
+                    <div class="progress-bar" style="width: @if ($arriendos["total"]==0) 0 @else {{ ($arriendos["pagado"]/$arriendos["total"])*100 }} @endif%"></div>
                     </div>
                     <span class="progress-description">
-                    {{ substr(($arriendos["pagado"]/$arriendos["total"])*100,0,4) }}% de: {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($arriendos["total"])}}
+                    @if ($arriendos["total"]==0) 0 @else {{ substr(($arriendos["pagado"]/$arriendos["total"])*100,0,4) }}@endif % de: {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($arriendos["total"])}}
                     Equipos: {{ $arriendos["equipos"] }}
                     </span>
                 </div>
@@ -48,10 +48,10 @@
                     <span class="info-box-text">Convenios Correctivos({{$correctivos["cantidad"]}})</span>
                     <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($correctivos["pagado"])}}</span>
                     <div class="progress">
-                        <div class="progress-bar" style="width: {{ ($correctivos["pagado"]/$correctivos["total"])*100 }}%"></div>
+                        <div class="progress-bar" style="width: @if ($correctivos["total"]==0) 0 @else {{ ($correctivos["pagado"]/$correctivos["total"])*100 }}@endif %"></div>
                     </div>
                     <span class="progress-description">
-                    {{ substr(($correctivos["pagado"]/$correctivos["total"])*100,0,4) }}% de un total de {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($correctivos["total"])}}
+                    @if ($correctivos["total"]==0) 0 @else {{ substr(($correctivos["pagado"]/$correctivos["total"])*100,0,4) }}% de un total de {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($correctivos["total"])}}@endif
                     </span>
                 </div>
             </div>

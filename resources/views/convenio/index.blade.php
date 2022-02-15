@@ -32,10 +32,10 @@
     <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($totalpagado)}}</span>
     <!-- The progress section is optional -->
     <div class="progress">
-      <div class="progress-bar" style="width: {{ ($totalpagado/$totalanualpreventivo)*100 }}%"></div>
+      <div class="progress-bar" style="width: @if($totalanualpreventivo==0)0 @else{{ ($totalpagado/$totalanualpreventivo)*100 }}@endif%"></div>
     </div>
     <span class="progress-description">
-     {{ substr(($totalpagado/$totalanualpreventivo)*100,0,4) }}% de un total de {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($totalanualpreventivo)}}
+     @if($totalanualpreventivo==0)0 @else {{ substr(($totalpagado/$totalanualpreventivo)*100,0,4) }} @endif % de un total de {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($totalanualpreventivo)}}
     </span>
   </div>
   <!-- /.info-box-content -->
@@ -51,10 +51,10 @@
     <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($totalpagadoarriendo)}}</span>
     <!-- The progress section is optional -->
     <div class="progress">
-      <div class="progress-bar" style="width: {{ ($totalpagadoarriendo/$totalanualarriendo)*100 }}%"></div>
+      <div class ="progress-bar" style="width: @if($totalanualarriendo==0) 0 @else {{ ($totalpagadoarriendo/$totalanualarriendo)*100 }} @endif %"></div>
     </div>
     <span class="progress-description">
-     {{ substr(($totalpagadoarriendo/$totalanualarriendo)*100,0,4) }}% de un total de {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($totalanualarriendo)}}
+     @if($totalanualarriendo==0) 0 @else {{ substr(($totalpagadoarriendo/$totalanualarriendo)*100,0,4) }} @endif% de un total de {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($totalanualarriendo)}}
     </span>
   </div>
   <!-- /.info-box-content -->

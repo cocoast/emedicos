@@ -10,7 +10,17 @@
     </div>
     @endif 
     <h1>Listado de Proveedores</h1>
-@stop
+
+    @can('proveedor.create')
+    <!-- Trigger the modal with a button -->
+    <button type="button" data-path="{{route('proveedor.create') }}" class="btn btn-primary btn-sm openBtn">
+                        Agregar</button>
+    @endcan
+
+    <h1>Vista Proveedores</h1>
+    @stop
+
+
 
 @section('content')
  <table id="proveedorstable" class="table table-striped table-hover mt-4" style="width:100%">
@@ -48,6 +58,16 @@
     @endforeach
 	</tbody>
 </table>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+    <!--Aqui Va la informacion del modal -->
+  </div>
+</div>
+
+
 @stop
 
 @section('css')
@@ -89,5 +109,13 @@
         "lengthMenu":[[10,50,-1],[10,50,"Todos"]]
     });
 } );
+
+$('.openBtn').on('click',function(){
+    $('.modal-content').load($(this).data('path'),function(){
+        $('#myModal').modal({show:true});
+        console.log($('.openBtn').data('path'));
+    });
+});
+
 </script>
 @stop

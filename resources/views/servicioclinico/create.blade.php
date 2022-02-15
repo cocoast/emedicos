@@ -1,5 +1,5 @@
 
-@extends('adminlte::page')
+@extends('ppa')
 
 @section('title', 'Add Servicio Clinico')
 
@@ -7,7 +7,12 @@
     <h1>Crear una Servicio Clinico</h1>
 @stop
 
-@section('content')
+@section('body')
+<div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Agregar Servicio Clínico</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+<div class="modal-body">
 <form action="/servicioclinico" method="POST">
 	@csrf
 	<div class="mb-3">
@@ -34,9 +39,9 @@
 		<label for="" class="form-label">Anexo Responsable</label>
 		<input id="anexo" name="anexo" type="text" tabindex="4" class="form-control">
 	</div>
-	<a href="/servicioclinico" class="btn btn-secondary" >CANCELAR</a>
 	<button  class="btn btn-primary" tabindex="3">GUARDAR</button>
 </form>
+</div> 
 @stop
 
 @section('css')

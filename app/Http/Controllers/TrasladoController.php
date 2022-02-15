@@ -29,9 +29,13 @@ class TrasladoController extends Controller
      */
     public function create()
     {
-        
+        if(traslado::count()==0){
+            $numero=1;
+        } 
+        else{
         $numero=Traslado::latest('numero')->first();
         $numero=$numero->numero+1;
+    }
         
         return view ('traslado.create')->with('numero',$numero);
     }
