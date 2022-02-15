@@ -35,7 +35,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Logo
+    | Layout-and-Styling-Configuration  
     |--------------------------------------------------------------------------
     |
     | Here you can change the logo of your admin panel.
@@ -45,7 +45,7 @@ return [
     |
     */
 
-    'logo' => '<b>EEMM</b>HPM',
+    'logo' => 'Sistema <b>COO</b>',
     'logo_img' => '/img/logo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
@@ -310,9 +310,9 @@ return [
         [
             'text'          => 'Traslados',
             'icon_color'    => 'green',
-            'url'           => '#',
-            'label_color'   => 'warning',
-            'label'         => 'soon',
+            'url'           => 'traslado/',
+            'label_color'   => 'danger',
+            'label'         => 'new',
         ],
         //crud
          

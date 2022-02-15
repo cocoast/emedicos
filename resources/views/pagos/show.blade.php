@@ -1,5 +1,13 @@
 @extends('ppa')
 @section('body')
+  <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Mostrar OC</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       
  @if($oc!="no")   
 <div class="row align-items-start">
 	<div class="col">
@@ -151,4 +159,8 @@
 @else
 <h1>OC No encontrada en Mercado Publico</h1>
 @endif
+ </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
 @stop

@@ -71,8 +71,8 @@ class BajaController extends Controller
             $eq="2.2";
         if($equipo->eq=="Sin")
             $eq="Sin";
-                $carpeta=$_SERVER['DOCUMENT_ROOT'].'/storage/'.$equipo->eq.'/'.$equipo->Familia->nombre.'/'.$equipo->SubFamilia->nombre.'/'.$equipo->serie."/";
-                $carpeta='/storage/'.$equipo->eq.'/'.$equipo->Familia->nombre.'/'.$equipo->SubFamilia->nombre.'/'.$equipo->serie."/";
+                $carpeta=$_SERVER['DOCUMENT_ROOT'].'/storage/'.$eq.'/'.$equipo->Familia->nombre.'/'.$equipo->SubFamilia->nombre.'/'.$equipo->serie."/";
+                $carpeta='/storage/'.$eq.'/'.$equipo->Familia->nombre.'/'.$equipo->SubFamilia->nombre.'/'.$equipo->serie."/";
                 $nombre=$equipo->serie.'_'.$fecha->format('Y').'_BAJA_'.$fecha->format('m');
             }
             else

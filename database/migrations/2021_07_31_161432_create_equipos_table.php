@@ -22,6 +22,9 @@ class CreateEquiposTable extends Migration
             $table->integer('fabricacion');
             $table->string('tipoactivo',10);
             $table->string('valor',30);
+            $table->string('oc',30)->nullable();
+            $table->string('licitacion',30)->nullable();
+
         
            
             $table->foreignId('familia')->constrained('familias')->onDelete('cascade');

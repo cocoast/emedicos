@@ -41,7 +41,12 @@
                              <td>{{$realizado->memo}}</td>
                              <td>{{$realizado->oc}}</td>
                              <td data-order="{{ date("Ymd", strtotime($realizado->updated_at)) }}">{{date("d-m-Y", strtotime($realizado->updated_at))}}</td>
-                            <td><a class="btn btn-warning btn-sm" href="/pagos/{{$realizado->id}}/edit "><i class="bi bi-pencil"></i></a></td>     
+                            <td>@can('convenio.edit')
+                             <!-- Trigger the modal with a button -->
+                    <button type="button" data-path="{{route('pagos.edit', $realizado->id) }}" class="btn btn-warning btn-sm EquipoBtn">
+                        <i class="bi bi-pencil"></i></button>
+
+                            @endcan</td>     
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -50,6 +55,14 @@
             <!-- /.card-body -->
           
         </div>
+        <!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+        <!--Aqui Va la informacion del modal -->
+        </div>
+    </div>
+</div>
 
 @stop
 
@@ -98,5 +111,15 @@
             }],
     });
 } );
+</script>
+<script>
+
+$('.EquipoBtn').on('click',function(){
+    $('.modal-content').load($(this).data('path'),function(){
+        $('#myModal').modal({show:true});
+        console.log($('.openBtn').data('path'));
+    });
+});
+
 </script>
 @stop

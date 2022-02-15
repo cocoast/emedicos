@@ -1,12 +1,12 @@
-@extends('adminlte::page')
+@extends('ppa')
 
-@section('title', 'Editar Proveedor')
+@section('title', 'Editar Servicio Clinico')
 
 @section('content_header')
-    <h1>Editar Proveedor</h1>
+    <h1>Editar Servicio Clinico</h1>
 @stop
 
-@section('content')
+@section('body')
     <form action="/servicioclinico/{{$servicioclinico->id}}" method="POST">
 	@csrf
 	@method('PUT')
@@ -26,8 +26,25 @@
 		<label for="" class="form-label">Correo del Responsable del Servicio Clinico</label>
 		<input id="email_responsable" name="email_responsable" type="text" tabindex="4" value="{{$servicioclinico->email_responsable}}" class="form-control">
 	</div>
-	<a href="/servicioclinico" class="btn-secondary" tabindex="2">CANCELAR</a>
-	<button  class="btn-primary" tabindex="3">GUARDAR</button>
+	<div class="col">
+			<label for="" class="form-label">Centro de Recurso Fisico</label>
+			<select class="form-control" name="cr" id="cr"  tabindex="5">
+				<option value="{{$servicioclinico->cr}}" selected>{{ $servicioclinico->cr }}</option>
+				<option value="Medico del Adulto">Medico del Adulto </option>
+				<option value="Operaciones">Operaciones</option>
+				<option value="Materno Infantil">Materno Infantil</option>
+				<option value="Quirurgico">Quirurgico</option>
+				<option value="Atencion Abierta">Atencion Abierta</option>
+				<option value="Apoyo Diagnostico Terapeutico">Apoyo Diagnostico Terapeutico</option>
+				
+			</select>
+		</div>
+	<div class="mb-3">
+		<label for="" class="form-label">Anexo Responsable</label>
+		<input id="anexo" name="anexo" type="text" tabindex="6" value="{{ $servicioclinico->anexo }}" class="form-control">
+	</div>
+	
+	<button  class="btn btn-primary" tabindex="3">GUARDAR</button>
 </form>
 @stop
 

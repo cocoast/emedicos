@@ -23,7 +23,8 @@ class EquiposConveniosController extends Controller
     }
     public function index()
     {
-        //
+        $equipos =EquipoConvenio::all();
+        return view('equipoconvenio.index')->with('equipos',$equipos);
     }
 
     /**
@@ -59,6 +60,9 @@ class EquiposConveniosController extends Controller
                 $equipoconvenio->repuesto=$request->get('repuesto');
                 $equipoconvenio->equipo=$equipo->id;
                 $equipoconvenio->convenio=$request->get('convenio');
+                $equipoconvenio->mp_disponible=$request->get('disponible');
+                $convenio->valor=$convenio->valor+$equipoconvenio->valor;
+                $convenio->save();
                 $equipoconvenio->save();
             return redirect()->route('convenio.show',$equipoconvenio->convenio)->with('message', 'El Equipo '.$equipo->inventario.' se Ingreso Correctamente')->with('status','alert alert-success');
             }
@@ -79,6 +83,8 @@ class EquiposConveniosController extends Controller
                     $equipoconvenio->repuesto=$request->get('repuesto');
                     $equipoconvenio->equipo=$equipo->id;
                     $equipoconvenio->convenio=$request->get('convenio');
+                    $convenio->valor=$convenio->valor+$equipoconvenio->valor;
+                    $convenio->save();
                     $equipoconvenio->save();
                     return redirect()->route('convenio.show',$equipoconvenio->convenio)->with('message', 'El Equipo '.$equipo->serie.' se Ingreso Correctamente')->with('status','alert alert-success');    
                     }
@@ -135,6 +141,7 @@ class EquiposConveniosController extends Controller
         $equipoconvenio->repuesto=$request->get('repuesto');
         $equipoconvenio->equipo=$equipo->id;
         $equipoconvenio->convenio=$request->get('convenio');
+        $equipoconvenio->mp_disponible=$request->get('disponible');
         $equipoconvenio->save();
         return redirect()->route('convenio.show',$equipoconvenio->convenio);
        

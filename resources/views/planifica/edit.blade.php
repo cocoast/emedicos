@@ -27,7 +27,14 @@
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Tipo de Mantencion</label>
-			<input type="text" name="tipo" id="tipo" value="{{ $planifica->tipomp }}" class="form-control" readonly>
+			<select class="form-control" name="tipo" id="tipo" tabindex="1">
+	         <option value="{{ $planifica->tipomp }}">{{ $planifica->tipomp }}</option>
+	         <option value="Garantia">Garantia</option>
+	         <option value="Convenio">Convenio</option>
+	         <option value="Interna">Interna</option>
+	         <option value="Compra de Servicio">Compra de Servicio</option>
+     	</select>
+			
 		</div>
 	</div>
 	<div class="row align-items-start">

@@ -7,6 +7,13 @@
 @stop
 
 @section('body')
+<div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Editar Equipos al Convenio</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
     <form action="/equipoconvenio/{{$equipoconvenio->id}}" method="POST">
 	@csrf
 	@method('PUT')
@@ -27,6 +34,10 @@
 		<div class="col">
 			<label for="" class="form-label">Valor en el convenio</label>
 			<input id="valor" name="valor" value="{{$equipoconvenio->valor}}" type="text" tabindex="3" class="form-control">
+		</div>
+		<div class="col">
+			<label for="" class="form-label">Mantenciones Preventivas Disponibles</label>
+			<input id="disponible" name="disponible" type="text" value="{{ $equipoconvenio->mp_disponible }}" tabindex="3" class="form-control">
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Mantenimiento Preventivo</label>
@@ -85,6 +96,10 @@
 	</div>
 </div>
 </form>
+ </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
 @stop
 
 @section('css')

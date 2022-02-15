@@ -25,8 +25,9 @@ class RoleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        //
+    {   
+        
+        return view ('role.create');
     }
 
     /**
@@ -37,7 +38,12 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if(Role::where('name',$request->get('clase'))->count()==0){
+           $role=Role::create(['name' => $request->get('clase')]);
+           return redirect('/role')->with('message','Nuevo Role Creado')->with('status','alert alert-success');
+        }    
+        else
+            return redirect('/role')->with('message','Role ya creado')->with('status','alert alert-danger');
     }
 
     /**

@@ -13,9 +13,9 @@ class Convenio extends Model
         return $this->belongsTo('App\Models\Proveedor','proveedor','id');
     }
     public function EquipoConvenio(){
-        return  $this->hasMany('App\Models\EquipoConvenio');
+        return  $this->hasMany('App\Models\EquipoConvenio','convenio');
      }
       public function Pago(){
-        return  $this->hasMany('App\Models\Pago');
+        return  $this->hasMany('App\Models\Pago','convenio');
      }
 }

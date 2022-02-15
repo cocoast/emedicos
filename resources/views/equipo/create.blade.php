@@ -1,4 +1,3 @@
-
 @extends('adminlte::page')
 
 @section('title', 'Add Equipo')
@@ -8,27 +7,35 @@
 @stop
 
 @section('content')
-<form action="/equipo" method="POST">
+<form action="/equipo" method="POST" enctype="multipart/form-data">
 	@csrf
  	<div class="row align-items-start">
 		<div class="col">
 			<label for="" class="form-label">Inventario Equipo</label>
-			<input id="inventario" name="inventario" type="text" tabindex="1" class="form-control">
+			<input id="inventario" name="inventario" type="text" tabindex="1" class="form-control" required>
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Serie</label>
-			<input id="serie" name="serie" type="text" tabindex="2" class="form-control">
+			<input id="serie" name="serie" type="text" tabindex="2" class="form-control" required>
 		</div>
 	</div>
 	<div class="mb-3">
 	<div class="row align-items-start">
 		<div class="col">
 			<label for="" class="form-label">Fecha de Acta de Recepción</label>
-			<input id="fecha_adquisicion" name="fecha_adquisicion" type="text" tabindex="3" class="form-control">
+			<input id="fecha_adquisicion" name="fecha_adquisicion" type="text" tabindex="3" class="form-control" required>
+		</div>
+		<div class="col">
+			<label for="" class="form-label"> Licitacion del Proyecto</label>
+			<input type="text" class="form-control" name="licitacion" id="licitacion" >
+		</div>
+		<div class="col">
+			<label for="" class="form-label"> OC del Equipo/ Proyecto</label>
+			<input type="text" class="form-control" name="oc" id="oc" >
 		</div>
 		<div class="col">
 			<label for="" class="form-label">EQ</label>
-			<select class="form-control" name="eq" id="eq" tabindex="4">
+			<select class="form-control" name="eq" id="eq" tabindex="4" required>
 				<option selected>Seleccione</option>
 				<option value="Critico">Critico</option>
 				<option value="Relevante">Relevante</option>
@@ -48,8 +55,8 @@
 			<input id="valor" name="valor" type="text" tabindex="6" class="form-control">
 		</div>
 		<div class="col">
-			<label for="" class="form-label">Tipo Activo</label>
-			<select class="form-control" name="tipoactivo" id="tipoactivo" tabindex="7">
+			<label for="" class="form-label">Tipo Activo</label >
+			<select class="form-control" name="tipoactivo" id="tipoactivo" tabindex="7" required>
 				<option selected>Seleccione</option>
 				<option value="Propio">Propio</option>
 				<option value="Arriendo">Arriendo</option>
@@ -59,7 +66,7 @@
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Archivador</label>
-			<input id="archivador" name="archivador" type="text" tabindex="7" class="form-control">
+			<input id="archivador" name="archivador" type="text" tabindex="8" class="form-control">
 		</div>
 	</div>
 	</div>
@@ -67,29 +74,29 @@
 		<div class="row align-items-start">
 		<div class="col">
 		<label for="" class="form-label">Marca</label>
-     	<input id="marca" name="marca" type="text" class="form-control">
+     	<input id="marca" name="marca" type="text" tabindex="9" class="form-control" required>
 		</div>
 	<div class="col">
 		<label for="" class="form-label">Modelo</label>
-     <input id="modelo" name="modelo" type="text" class="form-control">
+     <input id="modelo" name="modelo" type="text" tabindex="10" class="form-control" required>
 	</div>
 </div>
 	<div class="mb-3">
 		<div class="row align-items-start">
 			<div class="col">
 		<label for="" class="form-label" >Proveedor</label>
-     	<input id="proveedor" name="proveedor" type="text" class="form-control">
+     	<input id="proveedor" name="proveedor" type="text" tabindex="11" class="form-control" required>
 	</div>
 	<div class="col">
 		<label for="" class="form-label">Servicio Clinico Responsable</label>
-     	<input id="servicioclinico" name="servicioclinico" type="text" class="form-control">
+     	<input id="servicioclinico" name="servicioclinico" tabindex="12" type="text" class="form-control" required>
 	</div>
 </div>
 	<div class="mb-3">
 		<div class="row align-items-start">
 			 <div class="col">
 				<label for="" class="form-label">Familia del Equipo</label>
-     				<input id="familia" name="familia" type="text" class="form-control">
+     				<input id="familia" name="familia" type="text" tabindex="13" class="form-control" required>
  			</div> 
  			<!-- <div class="col">
 			<label for="" class="form-label">Familia Equipo</label>
@@ -97,14 +104,14 @@
 		</div> -->
  			<div class="col">
      			<label for="" class="form-label">SubFamilia del Equipo</label>
-     			<input id="subfamilia" name="subfamilia" type="text" class="form-control">
+     			<input id="subfamilia" name="subfamilia" type="text" tabindex="14" class="form-control" required>
 				</div>
 			</div>
 	</div>
 		<div class="row align-items-start">
 			<div class="col">
 				<label for="" class="form-label">Clase del Equipo</label>
-     			<select class="form-control" name="clase" id="clase" tabindex="14">
+     			<select class="form-control" name="clase" id="clase" tabindex="15" required>
          		<option selected>Seleccione</option>
          			@foreach($clase as $id=>$nombre)
          				<option value="{{$id}}">{{$nombre}}</option>
@@ -113,7 +120,7 @@
  			</div>
  			<div class="col">
      			<label for="" class="form-label">Sub Clase del Equipo</label>
-     			<select class="form-control" name="subclase" id="subclase" tabindex="15">
+     			<select class="form-control" name="subclase" id="subclase" tabindex="16" required>
         		<option selected>Seleccione</option>
         			@foreach($subclase as $id=>$nombre)
         				 <option value="{{$id}}">{{$nombre}}</option>
@@ -121,19 +128,29 @@
      			</select>
 				</div>
 			</div>
+			<div class="row align-items-start">
+            <div class="col">
+                <label for="" class="form-label">Adjuntar Acta </label>
+                <input id="documento" name="documento" type="file"  class="form-control">
+            </div>
+          </div>
 			<h2>Garantias</h2>
 			<div class="row align-items-start">
 				<div class="col">
 					<label for="" class="form-label">Fecha de Vencimiento</label>
-	     			<input type="date" name="fin"  id="fin" tabindex="16" class="form-control">
+	     			<input type="date" name="fin"  id="fin" tabindex="17" class="form-control">
 	 			</div>
 	 			<div class="col">
-	     			<label for="" class="form-label">Cantidad de Mantenciones</label>
-	     			<input type="text" name="mp" id="mp" tabindex="17" class="form-control">
+	     			<label for="" class="form-label">Cantidad de Mantenciones Disponibles</label>
+	     			<input type="text" name="mp" id="mp" tabindex="18" class="form-control">
 				</div>
 				<div class="col">
 	     			<label for="" class="form-label">Frecuencia de Mantenciones</label>
-	     			<input type="text" name="frecuencia" id="frecuencia" tabindex="18" class="form-control">
+	     			<input type="text" name="frecuencia" id="frecuencia" tabindex="19" class="form-control">
+				</div>
+				<div class="col">
+	     			<label for="" class="form-label">Mantenciones Anuales</label>
+	     			<input type="text" name="mpa" id="mpa" tabindex="19" class="form-control">
 				</div>
 			</div>
 	</div>
@@ -144,7 +161,7 @@
 		<a href="/equipo" class="btn btn-secondary">CANCELAR</a>
 	</div>
 	<div class="col">
-		<button  class="btn btn-primary" tabindex="16">GUARDAR</button>
+		<button  class="btn btn-primary" tabindex="20">GUARDAR</button>
 	</div>
 </div>
 

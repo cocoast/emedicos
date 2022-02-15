@@ -18,6 +18,10 @@ use App\Models\EquipoConvenio;
 use DateTime;
 use App\Models\User;
 use App\Models\Garantia;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
+use App\Models\Baja;
 
 class EquipoController extends Controller
 {
@@ -37,6 +41,7 @@ class EquipoController extends Controller
     {
        
         $equipos=Equipo::all();
+        
         $fecha=new DateTime();
         $fecha=$fecha->format('d-m-Y');
         $year=date('Y',strtotime($fecha));
@@ -108,6 +113,7 @@ class EquipoController extends Controller
         $servicioclinico=ServicioClinico::orderBy('nombre','ASC')->pluck('nombre','id');
         $modelo=Modelo::orderBy('modelo','ASC')->pluck('modelo','id');
         $marca=Marca::orderBy('marca','ASC')->pluck('marca','id');
+
         return view('equipo.create')->with('familia',$familia)->with('subfamilia',$subfamilia)->with('clase',$clase)->with('subclase',$subclase)->with('proveedor',$proveedor)->with('servicioclinico',$servicioclinico)->with('modelo',$modelo)->with('marca',$marca);;
     }
 
@@ -119,6 +125,12 @@ class EquipoController extends Controller
      */
     public function store(Request $request)
     {
+    $proveedor=explode(' - ', $request->get('proveedor'))[0];
+    $servicio=explode(' - ', $request->get('servicioclinico'))[0];
+    $modelo=explode(' - ', $request->get('modelo'))[0];
+    $marca=explode(' - ', $request->get('marca'))[0];
+    $familia=explode(' - ', $request->get('familia'))[0];
+    $subfamilia=explode(' - ', $request->get('subfamilia'))[0];
     if ($request->get('inventario')!='?') {
         if(Equipo::where('inventario',$request->get('inventario'))->where('familia',$request->get('familia'))->count()==0){
             $equipo= new Equipo();
@@ -130,27 +142,50 @@ class EquipoController extends Controller
             $equipo->tipoactivo=$request->get('tipoactivo');
             $equipo->valor=$request->get('valor');
             $equipo->archivador=$request->get('archivador');
-            $equipo->familia=$request->get('familia');
+            $equipo->familia=$familia;
             $equipo->fabricacion=$request->get('fabricacion');
-            $equipo->familia=$request->get('familia');
-           	$equipo->subfamilia=$request->get('subfamilia');
+           	$equipo->subfamilia=$subfamilia;
            	$equipo->clase=$request->get('clase');
            	$equipo->subclase=$request->get('subclase');
-           	$equipo->modelo=$request->get('modelo');
-           	$equipo->marca=$request->get('marca');
-          	$equipo->proveedor=$request->get('proveedor');
-           	$equipo->servicioclinico=$request->get('servicioclinico');
+           	$equipo->modelo=$modelo;
+           	$equipo->marca=$marca;
+          	$equipo->proveedor=$proveedor;
+            $equipo->licitacion=$request->get('licitacion');
+            $equipo->oc=$request->get('oc');
+           	$equipo->servicioclinico=$servicio;
+            //creacion de Carpeta del equipo y subida del acta
+            $eq="";
+            if($equipo->eq=="Critico")
+                $eq="2.1";
+            if($equipo->eq=="Relevante")
+                $eq="2.2";
+            if($equipo->eq=="Sin")
+                $eq="Sin";
+            $fecha=new DateTime($equipo->fecha_adquisicion);
+            $carpeta=$_SERVER['DOCUMENT_ROOT'].'/storage/'.$eq.'/'.$equipo->Familia->nombre.'/'.$equipo->SubFamilia->nombre.'/'.$equipo->inventario."/";
+            $carpetanombre='/storage/'.$eq.'/'.$equipo->Familia->nombre.'/'.$equipo->SubFamilia->nombre.'/'.$equipo->inventario."/";
+            $nombre=$equipo->inventario.'_'.$fecha->format('Y').'_ACTA_'.$fecha->format('m');
+            if(!file_exists($carpeta))
+                mkdir($carpeta,0777,true);
+            if($request->hasFile('documento')){
+                $file=$request->file('documento');
+                $nombre=$nombre.'.pdf';
+                if($file->guessExtension()=="pdf"){    
+                    $file->move($carpeta, $nombre);
+                }
+            }
             $equipo->save();
         //Ingreso de Garantias
         if($request->get('fin')!=null){
             $garantia=new Garantia();
-            $fecha=DateTime::createFromFormat('d-m-Y',$request->get('fecha_adquisicion'));
-            $garantia->inicio=$fecha;
+            $inicio=DateTime::createFromFormat('d-m-Y',date('d-m-Y',strtotime($request->get('fecha_adquisicion'))));
+            $garantia->inicio=$inicio;
             $garantia->fin=$request->get('fin');
-            $garantia->mp=$request->get('mp');
+            $garantia->mp=$request->get('mpa');
+            $garantia->mp_disponible=$request->get('mp');
             $garantia->frecuencia=$request->get('frecuencia');
             $garantia->equipo=$equipo->id;
-            $garantia->proveedor=$request->get('proveedor');
+            $garantia->proveedor=$proveedor;
             $garantia->save();
         }
         return redirect ('/equipo')->with('message', 'El Equipo '.$equipo->inventario.' a sido Ingresado')->with('status','alert alert-success');
@@ -162,7 +197,12 @@ class EquipoController extends Controller
     }
     else{
         if(Equipo::where('serie',$request->get('serie'))->where('familia',$request->get('familia'))->count()==0){
-            dd("serie");
+            $marca=explode(' - ', $request->get('marca'))[0];
+            $modelo=explode(' - ', $request->get('modelo'))[0];
+            $proveedor=explode(' - ', $request->get('proveedor'))[0];
+            $sc=explode(' - ', $request->get('servicioclinico'))[0];
+            $familia=explode(' - ', $request->get('familia'))[0];
+            $subfamilia=explode(' - ', $request->get('subfamilia'))[0];
             $equipo= new Equipo();
             $equipo->inventario=$request->get('inventario');
             $equipo->serie=$request->get('serie');
@@ -172,16 +212,36 @@ class EquipoController extends Controller
             $equipo->tipoactivo=$request->get('tipoactivo');
             $equipo->valor=$request->get('valor');
             $equipo->archivador=$request->get('archivador');
-            $equipo->familia=$request->get('familia');
+            $equipo->familia=$familia;
             $equipo->fabricacion=$request->get('fabricacion');
-            $equipo->familia=$request->get('familia');
-            $equipo->subfamilia=$request->get('subfamilia');
+            $equipo->subfamilia=$subfamilia;
             $equipo->clase=$request->get('clase');
             $equipo->subclase=$request->get('subclase');
-            $equipo->modelo=$request->get('modelo');
-            $equipo->marca=$request->get('marca');
-            $equipo->proveedor=$request->get('proveedor');
-            $equipo->servicioclinico=$request->get('servicioclinico');
+            $equipo->modelo=$modelo;
+            $equipo->marca=$marca;
+            $equipo->proveedor=$proveedor;
+            $equipo->servicioclinico=$sc;
+            //Creacion de Carpeta y subida del Acta 
+            $eq="";
+            if($equipo->eq=="Critico")
+                $eq="2.1";
+            if($equipo->eq=="Relevante")
+                $eq="2.2";
+            if($equipo->eq=="Sin")
+                $eq="Sin";
+            $fecha=new DateTime($equipo->fecha_adquisicion);
+            $carpeta=$_SERVER['DOCUMENT_ROOT'].'/storage/'.$eq.'/'.$equipo->Familia->nombre.'/'.$equipo->SubFamilia->nombre.'/'.$equipo->serie."/";
+            $carpetanombre='/storage/'.$eq.'/'.$equipo->Familia->nombre.'/'.$equipo->SubFamilia->nombre.'/'.$equipo->serie."/";
+            $nombre=$equipo->inventario.'_'.$fecha->format('Y').'_ACTA_'.$fecha->format('m');
+            if(!file_exists($carpeta))
+                mkdir($carpeta,0777,true);
+            if($request->hasFile('documento')){
+                $file=$request->file('documento');
+                $nombre=$nombre.'.pdf';
+                if($file->guessExtension()=="pdf"){    
+                    $file->move($carpeta, $nombre);
+                }
+            }
             $equipo->save();
         //Ingreso de Garantias
         if($request->get('fin')!=null){
@@ -220,20 +280,21 @@ class EquipoController extends Controller
         $equipo=Equipo::find($id);
         //Datos de Blyott
         $cadena=EquipoController::BlyottAsset(session('rtls'),$equipo->inventario);
-        
+      
        if($cadena=='cambio token'){
-        session(['rtls'=>EquipoController::BlyottConec()]);
-        $cadena=EquipoController::BlyottAsset(session('rtls'),$equipo->inventario);
+            session(['rtls'=>EquipoController::BlyottConec()]);
+            $cadena=EquipoController::BlyottAsset(session('rtls'),$equipo->inventario);
             if($cadena!="sin Registro"){  
-                $blyottloc=$cadena[5];
-                $blyotttemp=substr($cadena[8],1);
+                $blyottloc=$cadena->LocationDetails->LocationName;
+                $blyotttemp=$cadena->TagDetails->TagActivities[0]->Temperature;
             }
             
              return view('equipo.rtls')->with('blyottloc',$blyottloc)->with('blyotttemp',$blyotttemp);
        }
+
        if($cadena!="sin Registro"){  
-            $blyottloc=$cadena[5];
-            $blyotttemp=substr($cadena[8],1);
+                $blyottloc=$cadena->LocationDetails->LocationName;
+                $blyotttemp=$cadena->TagDetails->TagActivities[0]->Temperature;
         }
         
         return view('equipo.rtls')->with('blyottloc',$blyottloc)->with('blyotttemp',$blyotttemp);
@@ -318,6 +379,9 @@ class EquipoController extends Controller
                                         );}
                             }
                         $dir->close();
+                        $res=array_reverse($res);
+                    
+                        //dd($data);
                         }
 
                         else
@@ -349,7 +413,7 @@ class EquipoController extends Controller
         $servicioclinico=ServicioClinico::orderBy('nombre','ASC')->pluck('nombre','id');
         $modelo=Modelo::orderBy('modelo','ASC')->pluck('modelo','id');
         $marca=Marca::orderBy('marca','ASC')->pluck('marca','id');
-
+        //dd($equipo);
         return view('equipo.edit')->with('familia',$familia)->with('subfamilia',$subfamilia)->with('clase',$clase)->with('subclase',$subclase)->with('proveedor',$proveedor)->with('servicioclinico',$servicioclinico)->with('modelo',$modelo)->with('marca',$marca)->with('equipo',$equipo)->with('garantia',$garantia);
     }
 
@@ -361,8 +425,17 @@ class EquipoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {   
+        $marca=explode(' - ', $request->get('marca'))[0];
+        $modelo=explode(' - ', $request->get('modelo'))[0];
+        $proveedor=explode(' - ', $request->get('proveedor'))[0];
+        $sc=explode(' - ', $request->get('servicioclinico'))[0];
+        $familia=explode(' - ', $request->get('familia'))[0];
+        $subfamilia=explode(' - ', $request->get('subfamilia'))[0];
+
         $equipo=Equipo::find($id);
+        $inv=$equipo->inventario;
+        $ser=$equipo->serie;
         $equipo->inventario=$request->get('inventario');
         $equipo->serie=$request->get('serie');
         $equipo->fecha_adquisicion=$request->get('fecha_adquisicion');
@@ -370,17 +443,46 @@ class EquipoController extends Controller
         $equipo->fabricacion=$request->get('fabricacion');
         $equipo->tipoactivo=$request->get('tipoactivo');
         $equipo->valor=$request->get('valor');
-        $equipo->familia=$request->get('familia');
+        $equipo->familia=$familia;
         $equipo->fabricacion=$request->get('fabricacion');
         $equipo->archivador=$request->get('archivador');
-        $equipo->familia=$request->get('familia');
-       	$equipo->subfamilia=$request->get('subfamilia');
+       	$equipo->subfamilia=$subfamilia;
        	$equipo->clase=$request->get('clase');
        	$equipo->subclase=$request->get('subclase');
-       	$equipo->modelo=$request->get('modelo');
-       	$equipo->marca=$request->get('marca');
-      	$equipo->proveedor=$request->get('proveedor');
-       	$equipo->servicioclinico=$request->get('servicioclinico');
+       	$equipo->modelo=$modelo;
+       	$equipo->marca=$marca;
+      	$equipo->proveedor=$proveedor;
+       	$equipo->servicioclinico=$sc;
+        $equipo->licitacion=$request->get('licitacion');
+        $equipo->oc=$request->get('oc');
+        if($equipo->inventario!='?'&&$inv!=$equipo->inventario){
+            $eq="";
+            if($equipo->eq=="Critico")
+                $eq="2.1";
+            if($equipo->eq=="Relevante")
+                $eq="2.2";
+            if($equipo->eq=="Sin")
+                $eq="Sin";
+            $fecha=new DateTime($equipo->fecha_adquisicion);
+            $carpeta=$_SERVER['DOCUMENT_ROOT'].'/storage/'.$eq.'/'.$equipo->Familia->nombre.'/'.$equipo->SubFamilia->nombre.'/'.$equipo->inventario."/";
+            if(!file_exists($carpeta))
+                mkdir($carpeta,0777,true);                
+        }
+        if($equipo->inventario=='?'&&$ser!=$equipo->serie){
+            $eq="";
+            if($equipo->eq=="Critico")
+                $eq="2.1";
+            if($equipo->eq=="Relevante")
+                $eq="2.2";
+            if($equipo->eq=="Sin")
+                $eq="Sin";
+            $fecha=new DateTime($equipo->fecha_adquisicion);
+            
+            $carpeta=$_SERVER['DOCUMENT_ROOT'].'/storage/'.$eq.'/'.$equipo->Familia->nombre.'/'.$equipo->SubFamilia->nombre.'/'.$equipo->serie."/";
+            if(!file_exists($carpeta))
+                mkdir($carpeta,0777,true);
+        }
+      
         $equipo->save();
         if($request->get('fin')!=null){
             $garantia=new Garantia();
@@ -390,7 +492,7 @@ class EquipoController extends Controller
             $garantia->mp=$request->get('mp');
             $garantia->frecuencia=$request->get('frecuencia');
             $garantia->equipo=$equipo->id;
-            $garantia->proveedor=$request->get('proveedor');
+            $garantia->proveedor=$proveedor;
             $garantia->save();
         }
         return redirect ('/equipo')->with('message', 'El Equipo '.$equipo->inventario.' a sido actualizado')->with('status','alert alert-warning') ;
@@ -409,17 +511,20 @@ class EquipoController extends Controller
         return redirect('/equipo');
     }
      public function BlyottConec(){
+
+        $config['useragent'] =$_SERVER['HTTP_USER_AGENT'];
         $user="sebastian.fernandez@hofmann.cl";
-        $password="1000Fuegos";
+        $password="Hofmann01";
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, 'https://api.blyott.com/login');
+        curl_setopt($ch, CURLOPT_USERAGENT, $config['useragent']);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, "{\"username\":\"".$user."\",\"password\":\"".$password."\"}");
 
         $headers = array();
-        $headers[] = 'Authority: api.blyott.com';
+        $headers[] = 'Authority:api.blyott.com';
         $headers[] = 'Accept: application/json, text/plain, */*';
         $headers[] = 'Content-Type: application/json';
         $headers[] = 'Origin: https://portal.blyott.com';
@@ -431,7 +536,6 @@ class EquipoController extends Controller
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         $result = curl_exec($ch);
-        //dd($result);
         if($result!=""){
         $token = explode('"',$result);
         $result=$token[3];
@@ -442,13 +546,16 @@ class EquipoController extends Controller
         curl_close($ch);
 
         return $result;
+       
+     
     }
 
     public function BlyottTag($token,$tag){
+        $config['useragent'] =$_SERVER['HTTP_USER_AGENT'];
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, 'https://api.blyott.com/tag/'.$tag);
-        curl_setopt($ch, CURLOPT_USERAGENT,'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.52 Safari/537.17');
+        curl_setopt($ch, CURLOPT_USERAGENT, $config['useragent']);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
         //dd($token);
@@ -472,11 +579,13 @@ class EquipoController extends Controller
         return $result;
     }
     public function BlyottAsset($token,$asset)
-    {
+    {   
+        $config['useragent'] =$_SERVER['HTTP_USER_AGENT'];
         $total="";
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, 'https://api.blyott.com/assetDetails/'.$asset);
+        curl_setopt($ch, CURLOPT_USERAGENT, $config['useragent']);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
 
@@ -493,17 +602,15 @@ class EquipoController extends Controller
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         $result = curl_exec($ch);
         
-        if($result=='has expired to Token.'){
+      
+        if($result=='Token has expired.'||$result==""){
             $loc="cambio token";
             session(['rtls'=>null]);
             return $loc;
 
         }
         if($result!='{"message":"Asset with given Code does not exist"}'){
-            $result = substr($result, 1);
-            $result = explode(',',$result);
-            $loc=$result[19]." ".$result[33];
-            $loc=explode('"',$loc);  
+            $loc=json_decode($result);
         }
         else
         $loc="sin Registro";
@@ -515,6 +622,19 @@ class EquipoController extends Controller
         return $loc;
     }
     
-    
+    public function search(Request $request){
+        $term = $request->get('term');
+        $querys=Equipo::where('inventario','LIKE','%'.$term.'%')
+                ->orWhere('serie','LIKE','%'.$term.'%')
+                ->orWhere('id','LIKE','%'.$term.'%')->get();
+        $data =[];
+        foreach ($querys as $query) {
+            $data[]=[
+                'label' => $query->id.' - '.$query->inventario.' - '.$query->serie
+            ];
+        }
+        return $data;
+
+    }
 
 }

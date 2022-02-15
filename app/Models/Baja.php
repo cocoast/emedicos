@@ -10,7 +10,7 @@ class Baja extends Model
     use HasFactory;
     
  public function Equipo(){
-        return $this->belongsTo('App\Models\Equipo','equipo');
+        return $this->hasOne('App\Models\Equipo','id','equipo');
     }
 
 }

@@ -68,6 +68,7 @@ route::resource('principal','App\Http\Controllers\DashBoardController');
 route::resource('planifica','App\Http\Controllers\PlanificaController');
 route::resource('sc','App\Http\Controllers\SolicitudCompraController');
 route::resource('producto','App\Http\Controllers\ProductoController');
+route::resource('traslado','App\Http\Controllers\TrasladoController');
 
 Route::get('equipoconvenio/{id}/create',[
         'uses'  =>  'App\Http\Controllers\EquiposConveniosController@create',
@@ -107,9 +108,41 @@ Route::get('search/producto',[
     'uses'  =>  'App\Http\Controllers\ProductoController@search',
     'as'    =>  'search.producto'
     ]);
+Route::get('search/equipo',[
+    'uses'  =>  'App\Http\Controllers\EquipoController@search',
+    'as'    =>  'search.equipo'
+    ]);
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 Route::get('servicio-tecnico',function(){
     return view('servicio-tecnico.index');
 });
+Route::get('traslado/{id}/pdf',[
+        'uses'  =>  'App\Http\Controllers\TrasladoController@createPDF',
+        'as'    =>  'traslado.pdf'
+        ]);
+Route::get('traslado/{id}/subir',[
+        'uses'  =>  'App\Http\Controllers\TrasladoController@Subir',
+        'as'    =>  'traslado.subir'
+        ]);
+Route::Post('/traslado/archivo',[
+    'uses'  =>'App\Http\Controllers\TrasladoController@Archivo',
+    'as'    =>'traslado.archivo'
+    ]);
+Route::get('convenio/{id}/subir',[
+        'uses'  =>  'App\Http\Controllers\ConveniosController@Subir',
+        'as'    =>  'convenio.subir'
+        ]);
+Route::Post('/convenio/{id}/archivo',[
+    'uses'  =>'App\Http\Controllers\ConveniosController@Archivo',
+    'as'    =>'convenio.file'
+    ]);
+Route::get('pagos/{id}/ficha',[
+        'uses'  =>  'App\Http\Controllers\PagosController@Ficha',
+        'as'    =>  'pagos.ficha'
+        ]);
+Route::get('pagos/{id}/pdf',[
+        'uses'  =>  'App\Http\Controllers\PagosController@createPDF',
+        'as'    =>  'pagos.pdf'
+        ]);

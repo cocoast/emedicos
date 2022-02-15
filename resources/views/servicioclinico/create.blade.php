@@ -26,6 +26,14 @@
 		<label for="" class="form-label">Correo del Responsable del Servicio Clinico</label>
 		<input id="email_responsable" name="email_responsable" type="text" tabindex="4" class="form-control">
 	</div>
+	<div class="mb-3">
+		<label for="" class="form-label">Centro de Recurso Fisico</label>
+		<input id="cr" name="cr" type="text" tabindex="3" class="form-control">
+	</div>
+	<div class="mb-3">
+		<label for="" class="form-label">Anexo Responsable</label>
+		<input id="anexo" name="anexo" type="text" tabindex="4" class="form-control">
+	</div>
 	<a href="/servicioclinico" class="btn btn-secondary" >CANCELAR</a>
 	<button  class="btn btn-primary" tabindex="3">GUARDAR</button>
 </form>

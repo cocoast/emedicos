@@ -7,7 +7,7 @@
 @stop
 @section('content_header')
     <h1>Detalles del Convenio: </h1>
-    <input id="nombre" value="{{$convenio->nombre}}" name="nombre" type="text" tabindex="1" class="form-control" readonly>
+    <input id="dt-title" value="{{$convenio->nombre}}" name="nombre" type="text" tabindex="1" class="form-control" readonly>
 @stop
 
 @section('content')
@@ -83,232 +83,232 @@
 			<input id="" value="{{$convenio->Proveedor->nombre}}" name="" type="text" tabindex="2" class="form-control"readonly>
 		</div>
 	</div>
-	
-	<div class="row align-items-start ">
-		<div class="col">
-			<h1 class="focus text-danger">Monto Disponible:$ <strong> {{NumberFormatter::create( 'es_CL', NumberFormatter::DECIMAL )->format($convenio->valor-$gasto)}}</strong></h1>
-			<br>
-			<h2>Equipo dentro del Convenio</h2>
-			<table id="equipostables" class="table table-hover table-primary ">
-				<thead>
-				<th>Equipo</th>
-				<th>Familia</th>
-				<th>Modelo</th>
-				<th>Incorporación</th>
-				<th>Valor +IVA</th>
-				<th>MP Anual</th>
-				<th>Mano Anual</th>
-				<th>Respuestos</th>
-				@can('convenio.edit')
-				<th>Funciones</th>
-				@endcan
-				</thead>
-				<tbody>
-					@foreach($equiposconvenios as $equipoconvenio)
-				<tr>
-					<td><a href="/equipo/{{$equipoconvenio->Equipo->id}}"> {{$equipoconvenio->Equipo->inventario}}</a></td>
-					<td>{{$equipoconvenio->Equipo->Familia->nombre}}</td>
-					<td>{{$equipoconvenio->Equipo->Modelo->modelo}}</td>
-					<td>{{date("d-m-Y", strtotime($equipoconvenio->fechaincorporacion))}}</td>
-					<td>{{NumberFormatter::create( 'es_CL', NumberFormatter::DECIMAL )->format($equipoconvenio->valor)}}</td>
-					<td>{{$equipoconvenio->mp}}</td>
-					<td>{{$equipoconvenio->mc}}</td>
-					<td>{{$equipoconvenio->repuesto}}</td>
-					@can('convenio.edit')
-					<td>
-							<!-- Trigger the modal with a button -->
-							<button type="button" data-path="{{route('equipoconvenio.edit',$convenio->id) }}" class="btn btn-warning btn-sm EditEquipoBtn"><i class="bi bi-pencil"></i></button>
-					@endcan
-					@can('convenio.destroy')
-      	 			<form action="{{route('equipoconvenio.destroy',$equipoconvenio->id)}}" method="POST">
-      				@csrf
-      				@method('DELETE')
-      				<button class="btn btn-sm btn-danger" type="submit" onClick="javascript: return confirm('¿Estas seguro?');"><i class="bi bi-trash"></i></button>
-      				</form> 
+	<h1 class="focus text-danger">Monto Disponible:$ <strong> {{NumberFormatter::create( 'es_CL', NumberFormatter::DECIMAL )->format($convenio->valor-$gasto)}}</strong></h1>
+	<ul class="nav nav-tabs">
+    <li class="active"><a class="nav-link" data-toggle="tab" href="#home">Equipos</a></li>
+    <li><a class="nav-link" data-toggle="tab" href="#menu1">Documentos</a></li>
+    <li><a class="nav-link" data-toggle="tab" href="#menu2">Pagos Realizados</a></li>
+    <li><a class="nav-link" data-toggle="tab" href="#menu3">Pagos Pendientes</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div id="home" class="tab-pane fade active">
+      <h3>Equipos</h3>
+       @can('convenio.edit')
+            <div class="row">
+                
+                <!-- Trigger the modal with a button -->
+            <button type="button" data-path="{{route('equipoconvenio.create',$convenio->id) }}" class="btn btn-primary btn-sm EquipoBtn">Agregar Equipos al Convenio</button>
+            </div>
+            @endcan
+            <table id="equipostables" class="table table-hover table-primary ">
+                <thead>
+                <th>Equipo</th>
+                <th>Serie</th>
+                <th>Fabricación</th>
+                <th>Familia</th>
+                <th>Modelo</th>
+                <th>Incorporación</th>
+                <th>Valor +IVA</th>
+                <th>MP Disponibles</th>
+                <th>MP Anual</th>
+                <th>Mano Obra</th>
+                <th>Respuestos</th>
+                @can('convenio.edit')
+                <th>Funciones</th>
+                @endcan
+                </thead>
+                <tbody>
+                    @foreach($equiposconvenios as $equipoconvenio)
+                <tr>
+                    <td>
+                         <!-- Trigger the modal with a button -->
+                    <button type="button" data-path="{{route('equipo.show', $equipoconvenio->Equipo->id) }}" class="btn btn-primary btn-sm EquipoBtn">
+                        {{$equipoconvenio->Equipo->inventario}}</button>
+                    </td>
+                    <td>{{ $equipoconvenio->Equipo->serie }}</td>
+                    <td>{{ $equipoconvenio->Equipo->fabricacion }}</td>
+                    <td>{{$equipoconvenio->Equipo->Familia->nombre}}</td>
+                    <td>{{$equipoconvenio->Equipo->Modelo->modelo}}</td>
+                    <td>{{date("d-m-Y", strtotime($equipoconvenio->fechaincorporacion))}}</td>
+                    <td>{{NumberFormatter::create( 'es_CL', NumberFormatter::DECIMAL )->format($equipoconvenio->valor)}}</td>
+                    <td>{{ $equipoconvenio->mp_disponible }}</td>
+                    <td>{{$equipoconvenio->mp}}</td>
+                    <td>{{$equipoconvenio->mc}}</td>
+                    <td>{{$equipoconvenio->repuesto}}</td>
+                    @can('convenio.edit')
+                    <td>
+                            <!-- Trigger the modal with a button -->
+                            <button type="button" data-path="{{route('equipoconvenio.edit',$equipoconvenio->id) }}" class="btn btn-warning btn-sm EquipoBtn"><i class="bi bi-pencil"></i></button>
+                    @endcan
+                    @can('convenio.destroy')
+                    <form action="{{route('equipoconvenio.destroy',$equipoconvenio->id)}}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-sm btn-danger" type="submit" onClick="javascript: return confirm('¿Estas seguro?');"><i class="bi bi-trash"></i></button>
+                    </form> 
     
         @endcan
 
-			</tr>
-			@endforeach
-				</tbody>
-			</table>
-			@can('convenio.edit')
-			<div class="row">
-				
-				<!-- Trigger the modal with a button -->
-							<button type="button" data-path="{{route('equipoconvenio.create',$convenio->id) }}" class="btn btn-primary btn-sm EquipoBtn">Agregar Equipos al Convenio</button>
-			</div>
-			@endcan
-			<div class="row">
-				<table class="table table-striped"  style="width: 100%;">
-    		<thead>
-    			<th>Tipo Documento</th>
-    			
-    			<th>Archivo</th>
-    		</thead>
-     		<tbody>
-     			@if($res!=null)
-  				@foreach($res as $item =>$value)
-   			<tr>
-   				
-  				<td>{{$value["Nombre"]}}</td>
-  				
-  				<td><a href="{{asset($value['direccion'])}}" target="_blank">archivo</a></td>
-  			</tr>
-   				@endforeach
-   				@else
-   				<td>Sin Registro</td>
-   				@endif
-   			</tbody>
-   		</table>
-			</div>
-		</div>
-		<div class="col" >
-			
-			<h2>Pagos Generados </h2>
-			<table id="pagosGentables"class="table table-hover table-success">
-				<thead>
-				<th>Estado</th>
-				<th>Periodo</th>
-				<th>Memo</th>
-				<th>Fecha de corte</th>
-				<th>OC</th>
-				<th>Valor+IVA</th>
-				<th>Archivo</th>
-				@can('convenio.edit')
-				<th>Editar</th>
-				@endcan
-				</thead>
-				<tbody>
-					@foreach($pagosrealizados as $pagorealizado)
-					<tr>
-					<td>{{$pagorealizado->estado}}</td>
-					<td>{{$pagorealizado->periodo}}</td>
-					<td>{{$pagorealizado->memo}}</td>
-					<td>{{date("d-m-Y", strtotime($pagorealizado->fecha))}}</td>
-					<td>
-						@if($pagorealizado->oc!="ingresar")
-						<!-- Trigger the modal with a button -->
-							<button type="button" data-path="{{route('pagos.show', $pagorealizado->oc) }}" class="btn btn-primary btn-sm openBtn">{{ $pagorealizado->oc }}</button>
-							
-							@else
-							{{ $pagorealizado->oc }}
-						@endif
-					</td>
-					<td>{{NumberFormatter::create( 'es_CL', NumberFormatter::DECIMAL )->format($pagorealizado->valor)}}</td>
-					<td>@if($pagorealizado->link!=null)<a href="{{asset($pagorealizado->link)}}" target="_blank">archivo</a>  @endif</td>
-					@can('convenio.edit')
-					<td>
-						<!-- Trigger the modal with a button -->
-						<button type="button" data-path="{{route('pagos.edit', $pagorealizado->id) }}" class="btn btn-warning btn-sm PagoBtn">
+            </tr>
+            @endforeach
+                </tbody>
+            </table>
+           
+    </div>
+    <div id="menu1" class="tab-pane fade">
+      <h3>Documentos</h3>
+      @can('convenio.edit')
+      <!-- Trigger the modal with a button -->
+    	 <button type="button" data-path="{{route('convenio.subir', $convenio->id) }}" class="btn btn-warning btn-sm EquipoBtn"> Agregar Archivo</button>
+    	 @endcan
+                <table class="table table-striped"  style="width: 100%;">
+            <thead>
+                <th>Nombre Documento</th>
+                
+                <th>Archivo</th>
+            </thead>
+            <tbody>
+                @if($res!=null)
+                @foreach($res as $item =>$value)
+            <tr>
+                
+                <td>{{$value["Nombre"]}}</td>
+                
+                <td><a href="{{asset($value['direccion'])}}" target="_blank">archivo</a></td>
+            </tr>
+                @endforeach
+                @else
+                <td>Sin Registro</td>
+                @endif
+            </tbody>
+        </table>
+         
+    </div>
+    <div id="menu2" class="tab-pane fade">
+      <h3>Pagos Generados </h3>
+            <table id="pagosGeneradostables" class="table table-hover table-success">
+                <thead>
+	                <th>Estado</th>
+	                <th>Periodo</th>
+	                <th>Memo</th>
+	                <th>Fecha de corte</th>
+	                <th>OC</th>
+	                <th>Valor+IVA</th>
+	                <th>Archivo</th>
+	                @can('convenio.edit')
+	                <th>Editar</th>
+	                @endcan
+                </thead>
+                <tbody>
+                    @foreach($pagosrealizados as $pagorealizado)
+                    <tr>
+                    <td>{{$pagorealizado->estado}}</td>
+                    <td>{{$pagorealizado->periodo}}</td>
+                    <td>{{$pagorealizado->memo}}</td>
+                    <td >{{date("d-m-Y", strtotime($pagorealizado->fecha))}}</td>
+                    <td>
+                        @if($pagorealizado->oc!="ingresar"&&$pagorealizado->oc!=null&&$pagorealizado->oc!="")
+                        <!-- Trigger the modal with a button -->
+                            <button type="button" data-path="{{route('pagos.show', $pagorealizado->oc) }}" class="btn btn-primary btn-sm EquipoBtn">{{ $pagorealizado->oc }}</button>
+                            
+                            @else
+                            {{ $pagorealizado->oc  }}
+                        @endif
+                    </td>
+                    <td>{{NumberFormatter::create( 'es_CL', NumberFormatter::DECIMAL )->format($pagorealizado->valor)}}</td>
+                    <td>@if($pagorealizado->link!=null)<a href="{{asset($pagorealizado->link)}}" target="_blank">archivo</a>  @endif</td>
+                    @can('convenio.edit')
+                    <td>
+                        <!-- Trigger the modal with a button -->
+                        <button type="button" data-path="{{route('pagos.edit', $pagorealizado->id) }}" class="btn btn-warning btn-sm EquipoBtn">
                        <i class="bi bi-pencil"></i></button>
-					</td>
-					@endcan
-					</tr>
-					@endforeach
-				</tbody>
-			</table>
-			<div class="row">
-				
-				<div class="col" >
-
-				<h2>Pagos Pendientes</h2>
-			<table id="pagosPentables" class="table table-hover table-danger" >
-				<thead>
-				<th>Estado</th>
-				<th>Periodo</th>
-				<th>Memo</th>
-				<th>Fecha de Corte</th>
-				<th>OC</th>
-				<th>Valor+IVA</th>
-				@can('convenio.edit')
-				<th>Generar</th>
-				@endcan
-				</thead>
-				<tbody>
-					@foreach($pagospendientes as $pagopendiente)
-					<tr>
-					<td>{{$pagopendiente->estado}}</td>
-					<td>{{$pagopendiente->periodo}}</td>
-					<td>{{$pagopendiente->memo}}</td>
-					<td>{{date("d-m-Y", strtotime($pagopendiente->fecha))}}</td>
-					<td>{{$pagopendiente->oc}}</td>
-					<td>{{$pagopendiente->valor}}</td>
-					@can('convenio.edit')
-					<td>
-						 <!-- Trigger the modal with a button -->
-                    <button type="button" data-path="{{route('pagos.edit', $pagopendiente->id) }}" class="btn btn-success btn-sm editPagoBtn">
+                    </td>
+                    @endcan
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+    </div>
+    <div id="menu3" class="tab-pane fade">
+      <h3>Pagos Pendientes</h3>
+      
+             
+            <table id="pagosPentables" class="table table-hover table-danger" >
+                <thead>
+                <th>Estado</th>
+                <th>Periodo</th>
+                <th>Memo</th>
+                <th>Fecha de Corte</th>
+                <th>OC</th>
+                <th>Valor+IVA</th>
+                @can('convenio.edit')
+                <th>Generar</th>
+                @endcan
+                </thead>
+                <tbody>
+                    @foreach($pagospendientes as $pagopendiente)
+                    <tr>
+                    <td>{{$pagopendiente->estado}}</td>
+                    <td>{{$pagopendiente->periodo}}</td>
+                    <td>{{$pagopendiente->memo}}</td>
+                    <td>{{date("d-m-Y", strtotime($pagopendiente->fecha))}}</td>
+                    <td>{{$pagopendiente->oc}}</td>
+                    <td>{{$pagopendiente->valor}}</td>
+                    @can('convenio.edit')
+                    <td>
+                        <a href="{{ route('pagos.ficha',$pagopendiente->id) }}" class="btn btn-warning" target="_blank"><i class="bi bi-clipboard-data"></i></a>
+                        <a href="{{ route('pagos.pdf',$pagopendiente->id) }}" class="btn btn-warning" target="_blank"><i class="bi bi-clipboard"></i></a>
+                         <!-- Trigger the modal with a button -->
+                    <button type="button" data-path="{{route('pagos.edit', $pagopendiente->id) }}" class="btn btn-success btn-sm EquipoBtn">
                         <i class="bi bi-check-square-fill"></i></button>
 
 
-					</td>
-					@endcan
-					</tr>
-					@endforeach
-				</tbody>
-			</table>
-			@can('convenio.edit')
-			<?php
-			if($convenio->tipoconvenio=='Correctivo')
-			echo('<a class="btn btn-success" href="'.route('pagos.create', $convenio->id).'">Agregar Pago</a>');
-			?>
-			@endcan
-		</div>
-			</div>
-		</div>	
+                    </td>
+                    @endcan
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            @can('convenio.edit')
+            <?php
+            if($convenio->tipoconvenio=='Correctivo')
+            echo('<a class="btn btn-success" href="'.route('pagos.create', $convenio->id).'">Agregar Pago</a>');
+            ?>
+            @endcan
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    	<div class="modal-content">
+    	<!--Aqui Va la informacion del modal -->
+  		</div>
 	</div>
-
-</div>
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Mostrar OC</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-       
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Mostrar Equipo</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-       
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
+
 @stop
 
 @section('css')
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.0/css/jquery.dataTables.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css">
-
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.0/css/dataTables.bootstrap4.min.css">
+
 @stop
 
 @section('js')
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.11.0/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
@@ -321,15 +321,24 @@
 
 <script type="text/javascript" src="https://cdn.datatables.net/1.11.0/js/dataTables.bootstrap4.min.js"></script>
 
+
+
 <script type="text/javascript">
 	$(document).ready(function() {
     $('#equipostables').DataTable({
     	responsive:true,
+    	"columnDefs": [{
+        "targets": [1,2],
+        "visible": false
+        }],
      "dom": "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
         "<'row'<'col-sm-12'tr>>" +
         "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'pB>>",
-         	buttons :['excel','copy', 'pdf', 'print'],
-    	 "lengthMenu":[[3,10,-1],[3,10,"Todos"]],
+        buttons :['excel','copy', { extend: 'pdfHtml5',
+                orientation: 'landscape',title: function () { return $('#dt-title').val(); }}, 'print'],
+    	"lengthMenu":[[3,10,-1],[3,10,"Todos"]],
+    	
+    	
         });
     } );
 </script>
@@ -343,16 +352,13 @@
 </script>
 <script type="text/javascript">
 	$(document).ready(function() {
-    $('#pagosGentables').DataTable({
-    	"order": [[ 1, "desc" ]],
-     "dom":  "<'row'<'col-sm-12 col-md-7'B>"
-     +"<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
-        "<'row'<'col-sm-12'tr>>",
-         	buttons :['excelHtml5','copy', 'pdf', 'print'],            
-        "scrollY":        "250px",
-        "scrollCollapse": true,
-        "paging":         false,
-        "info":false,
+    $('#pagosGeneradostables').DataTable({
+    	responsive:true,
+     "dom": "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'pB>>",
+        buttons :['excel','copy', 'pdf', 'print'],
+    	"lengthMenu":[[3,10,-1],[3,10,"Todos"]],          
         });
     });
 </script>
@@ -362,36 +368,14 @@
 })
 </script>
 <script>
-$('.openBtn').on('click',function(){
-    $('.modal-body').load($(this).data('path'),function(){
-        $('#myModal').modal({show:true});
-        console.log($('.openBtn').data('path'));
-    });
-});
-$('.editPagoBtn').on('click',function(){
-    $('.modal-body').load($(this).data('path'),function(){
-        $('#myModal').modal({show:true});
-        console.log($('.openBtn').data('path'));
-    });
-});
-$('.PagoBtn').on('click',function(){
-    $('.modal-body').load($(this).data('path'),function(){
-        $('#myModal').modal({show:true});
-        console.log($('.openBtn').data('path'));
-    });
-});
+
 $('.EquipoBtn').on('click',function(){
-    $('.modal-body').load($(this).data('path'),function(){
+    $('.modal-content').load($(this).data('path'),function(){
         $('#myModal').modal({show:true});
         console.log($('.openBtn').data('path'));
     });
 });
-$('.EditEquipoBtn').on('click',function(){
-    $('.modal-body').load($(this).data('path'),function(){
-        $('#myModal').modal({show:true});
-        console.log($('.openBtn').data('path'));
-    });
-});
+
 </script>
 @stop
 

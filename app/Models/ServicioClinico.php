@@ -14,4 +14,10 @@ class ServicioClinico extends Model
      public function Solicitud(){
         return  $this->hasMany('App\Models\solicitudCompra');
      }
+     public function Actual(){
+     return $this->hasMany('App\Models\Traslado', 'actual');
+  }
+    public function Destino(){
+     return $this->hasMany('App\Models\Traslado', 'destino');
+  }  
 }

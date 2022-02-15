@@ -3,7 +3,7 @@
 @section('title', 'Planificacion')
 
 @section('content_header')
-    <h1>Listado de Mantenimientos Planificados {{$year }}</h1>
+    <h1>Carta Gantt de Mantenimientos Planificados {{$year }}</h1>
 @stop
 
 @section('content')
@@ -15,13 +15,16 @@
         {{ session('message') }}
     </div>
     @endif
-@can('modelo.create')
-<a href="/planifica/create/" class="btn btn-secondary">Agregar</a>
-<a href="/planifica/programa/" class="btn btn-secondary">Programar en lote</a>
-@endcan
-<a href="/planifica/listado/" class="btn btn-primary"> Programación</a>
-<a href="/planifica/minsal/" class="btn btn-primary"> Vista Minsal</a>
 
+@can('modelo.create')
+<div class="d-flex justify-content-between">
+<div class="justify-content-start"><a href="/planifica/create/" class="btn btn-success">Ingresar Equipos a la Planificación</a></div>
+<div class="justify-content-start"><a href="/planifica/programa/" class="btn btn-secondary">Programar en lote</a></div>
+
+@endcan
+    <div class="justify-content-end"> <a href="/planifica/minsal/" class="btn btn-primary"> Vista Minsal</a></div>
+    <div class="justify-content-end"><a href="/planifica/listado/" class="btn btn-success flex-end"> Programación</a></div>
+</div>
 
 
 <table id="planificatable" class="table table-striped table-hover mt-4" >
@@ -53,8 +56,15 @@
         <tr>    
             
             <td><a href="/servicioclinico/{{$equipo->ServicioClinico->id}}">{{ $equipo->ServicioClinico->nombre }}</a></td>
-            <td><a href="/equipo/{{$equipo->id}}">{{ $equipo->inventario }}</a></td>
-            <td><a href="/equipo/{{$equipo->id}}">{{ $equipo->serie }}</a></td>
+           <td> <!-- Trigger the modal with a button -->
+                    <button type="button" data-path="{{route('equipo.show', $equipo->id) }}" class="btn btn-primary btn-sm openBtn">
+                        {{$equipo->inventario}}</button>
+                </td>
+                <td>
+         <!-- Trigger the modal with a button -->
+                <button type="button" data-path="{{route('equipo.show', $equipo->id) }}" class="btn btn-primary btn-sm openBtn">
+                    {{$equipo->serie}}</button>
+                </td>
             <td>{{ $equipo->Marca->marca }}</td>
             <td>{{ $equipo->Modelo->modelo }}</td>
         
@@ -123,7 +133,13 @@
         @endforeach
     </tbody>
 </table>
-
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      
+  </div>
+</div>
 @stop
 
 @section('css')
@@ -178,6 +194,11 @@
     pageLength: 20
 });
    
-
+$('.openBtn').on('click',function(){
+    $('.modal-content').load($(this).data('path'),function(){
+        $('#myModal').modal({show:true});
+        console.log($('.openBtn').data('path'));
+    });
+});
 </script>
 @stop

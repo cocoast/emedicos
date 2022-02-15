@@ -3,7 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-
+<div><h3>Resumen Equipos Medicos Año {{ date('Y') }}</h3></div>
    <div class="row align-items-start">
        <div class="col w-25">
             <div class="info-box bg-red">
@@ -323,22 +323,21 @@ var myChart = new Chart(ctx, {
     data: {
         labels: ['Enero', 'Febrero','Marzo','Abril', 'Mayo', 'Junio','Julio', 'Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
         datasets: [{
-            label: 'Plan de Mantenimiento 2021',
-            data: [155,137,54,288,171,14,147,148,58,263,156,6],
+            label: 'Plan de Mantenimiento ',
+            data: @json($mp),
             backgroundColor: [
                 'rgb(255, 99, 132)',
                 'rgb(54, 162, 235)',
-                'rgb(255, 99, 132)',
+                'rgb(156,87,107)',
                 'rgb(51,212,55)',
                 'rgb(255,71,236)',
                 'rgb(252, 255, 51)',   
                 'rgb(54, 255, 51)',
                 'rgb(255,193,51)',
-
                 'rgb(51, 255, 193)',
                  'rgb(255,87,51)',
                 'rgb(12,57,127)',
-                'rgb(156,87,107)',
+                'rgb(255, 99, 132)',
 
 
                 

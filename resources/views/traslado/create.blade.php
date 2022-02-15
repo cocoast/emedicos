@@ -1,73 +1,110 @@
+
 @extends('adminlte::page')
 
-@section('title', 'Edit Baja')
+@section('title', 'Generar Acta de Traslado')
 
 @section('content_header')
-    <h1>Editar una Baja</h1>
+    <h1>Crear un Traslado</h1>
 @stop
 
 @section('content')
-
-
-
-
-
-<div class="field_wrapper">
-	<div class="row">
-	<div class="col">
-		<label for="" class="form-label">Cantidad</label>
-		<input type="text" name="field_cantidad[]" value=""/>
+<h1>Traslado de Equipos</h1>
+<form action="/traslado" method="POST">
+	@csrf
+ 	<div class="row align-items-start">
+		<div class="col">
+			<label for="" class="form-label">Fecha</label>
+			<input id="fecha" name="fecha" type="date" tabindex="1" class="form-control" required>
+		</div>
+		<div class="col">
+			<label for="" class="form-label">Numero</label>
+			<input id="numero" name="numero" type="text" value="{{ $numero }}"  class="form-control" readonly >
+		</div>
 	</div>
-	<div class="col">
-		<label for="" class="form-label">Accesorio</label>
-		<input type="text" name="field_name[]" value=""/>
+	<div class="mb-3">
+		<div class="row align-items-start">
+			<div class="col">
+			<label for="" class="form-label">Servicio Clinico Actual</label>
+	     		<input id="actual" name="actual" type="text" tabindex="2"  class="form-control" required>
+				</div>
+			<div class="col">
+				<label for="" class="form-label">Servicio Clinico Destino</label>
+	     		<input id="destino" name="destino" type="text" tabindex="3"  class="form-control" required>
+			</div>
+		</div>
 	</div>
-	<div class="col">
-		<label for="" class="form-label">Marca</label>
-		<input type="text" name="field_marca[]" value=""/>
+	<div class="row align-items-start">
+		<div class="col">
+			<label for="" class="form-label">Equipo</label>
+	     	<input id="equipo" name="equipo" type="text" tabindex="4"  class="form-control" required>
+		</div>
 	</div>
+	<div class="mt-4 mb-3">
+	<div class="row align-items-start mb-3">
+		
 	<div class="col">
-		<label for="" class="form-label">Modelo</label>
-		<input type="text" name="field_modelo[]" value=""/>
+		<button  class="btn btn-primary" tabindex="6">GUARDAR</button>
 	</div>
-	<div class="col">
-		<label for="" class="form-label">Serie</label>
-		<input type="text" name="field_serie[]" value=""/>
-	</div>
-        <a href="javascript:void(0);" class="add_button" title="Add field"><i class="bi bi-file-plus"></i>Agregar</a>
-        </div>
-    </div>
 </div>
-<a href="/proveedor" class="btn btn-secondary" >CANCELAR</a>
-	<button  class="btn btn-primary" >GUARDAR</button>
-</form> 
+</form>
 @stop
-
 
 @section('css')
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+   <link rel="stylesheet" href="{{ asset('vendor/jquery-ui/jquery-ui/jquery-ui.min.css') }}">
+
 @stop
+
 @section('js')
-  	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-  	<script type="text/javascript">
-	$(document).ready(function(){
-	    var maxField = 10; //Input fields increment limitation
-	    var addButton = $('.add_button'); //Add button selector
-	    var wrapper = $('.field_wrapper'); //Input field wrapper
-	    var fieldHTML = 
-	    '<div class="row"><div class="col"><label for="" class="form-label">Cantidad</label><input type="text" name="field_cantidad[]" value=""/></div><div class="col"><label for="" class="form-label">Accesorio</label><input type="text" name="field_name[]" value=""/></div>			<div class="col"><label for="" class="form-label">Marca</label><input type="text" name="field_marca[]" value=""/></div>			<div class="col"><label for="" class="form-label">Modelo</label><input type="text" name="field_modelo[]" value=""/></div>			<div class="col"><label for="" class="form-label">Serie</label><input type="text" name="field_serie[]" value=""/></div></div> '; //New input field html 
-	    var x = 1; //Initial field counter is 1
-	    $(addButton).click(function(){ //Once add button is clicked
-	        if(x < maxField){ //Check maximum number of input fields
-	            x++; //Increment field counter
-	            $(wrapper).append(fieldHTML); // Add field html
-	        }
-	    });
-	    $(wrapper).on('click', '.remove_button', function(e){ //Once remove button is clicked
-	        e.preventDefault();
-	        $(this).parent('div').remove(); //Remove field html
-	        x--; //Decrement field counter
-	    });
-	});
-	</script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="{{ asset('vendor/jquery-ui/jquery-ui/jquery-ui.min.js') }}"></script>
+    <script type="text/javascript">
+    	
+    	
+    	$('#actual').autocomplete({
+    		source: function (request, response){
+    			$.ajax({
+    				url: "{{ route('search.servicio') }}",	
+    				dataType: 'json',
+    				data:{
+    					term: request.term
+    				},
+    				success: function(data){
+    					response(data)
+    				}
+    			});
+    		}
+    	});
+    	$('#destino').autocomplete({
+    		source: function (request, response){
+    			$.ajax({
+    				url: "{{ route('search.servicio') }}",	
+    				dataType: 'json',
+    				data:{
+    					term: request.term
+    				},
+    				success: function(data){
+    					response(data)
+    				}
+    			});
+    		}
+    	});
+    	$('#equipo').autocomplete({
+    		source: function (request, response){
+    			$.ajax({
+    				url: "{{ route('search.equipo') }}",	
+    				dataType: 'json',
+    				data:{
+    					term: request.term
+    				},
+    				success: function(data){
+    					response(data)
+    				}
+    			});
+    		}
+    	});
+    	
+
+    </script> 
 @stop

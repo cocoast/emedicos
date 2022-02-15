@@ -48,6 +48,8 @@ class ServicioClinicoController extends Controller
         $servicioclinico->ubicacion=$request->get('ubicacion');
         $servicioclinico->email_responsable=$request->get('email_responsable');
         $servicioclinico->responsable=$request->get('responsable');
+        $servicioclinico->cr=$request->get('cr');
+        $servicioclinico->anexo=$request->get('anexo');
         $servicioclinico->save();
          return redirect ('/servicioclinico');
     }
@@ -90,6 +92,8 @@ class ServicioClinicoController extends Controller
         $servicioclinico->ubicacion=$request->get('ubicacion');
         $servicioclinico->email_responsable=$request->get('email_responsable');
         $servicioclinico->responsable=$request->get('responsable');
+        $servicioclinico->cr=$request->get('cr');
+        $servicioclinico->anexo=$request->get('anexo');
         $servicioclinico->save();
         return redirect ('/servicioclinico');
     }
@@ -112,7 +116,7 @@ class ServicioClinicoController extends Controller
         $data =[];
         foreach ($querys as $query) {
             $data[]=[
-                'label' => $query->nombre
+                'label' => $query->id.' - '.$query->nombre.' - '.$query->ubicacion
             ];
         }
         return $data;

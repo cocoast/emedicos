@@ -13,23 +13,31 @@
 	<div class="row align-items-start">
 		<div class="col">
 			<label for="" class="form-label">Inventario Equipo</label>
-			<input id="inventario" name="inventario" type="text" value="{{$equipo->inventario}}" tabindex="1" class="form-control">
+			<input id="inventario" name="inventario" type="text" value="{{$equipo->inventario}}" tabindex="1" class="form-control" required>
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Serie</label>
-			<input id="serie" name="serie" type="text" tabindex="2" value="{{$equipo->serie}}" class="form-control">
+			<input id="serie" name="serie" type="text" tabindex="2" value="{{$equipo->serie}}" class="form-control" required>
 		</div>
 	</div>
 	<div class="mb-3">
 	<div class="row align-items-start">
 		<div class="col">
 			<label for="" class="form-label">Fecha de Acta de Recepción</label>
-			<input id="fecha_adquisicion" name="fecha_adquisicion" type="text" value="{{$equipo->fecha_adquisicion}}" tabindex="3" class="form-control">
+			<input id="fecha_adquisicion" name="fecha_adquisicion" type="text" value="{{$equipo->fecha_adquisicion}}" tabindex="3" class="form-control" required>
 		</div>
 		<div class="col">
-			<label for="" class="form-label">EQ</label>
-			<select class="form-control" name="eq" id="eq"  tabindex="4">
-				<option value="{{$equipo->eq}}" selected>{{$equipo->eq}}</option>
+			<label for="" class="form-label"> Licitacion del Proyecto</label>
+			<input type="text" class="form-control" name="licitacion" id="licitacion" >
+		</div>
+		<div class="col">
+			<label for="" class="form-label"> OC del Equipo/ Proyecto</label>
+			<input type="text" class="form-control" name="oc" id="oc" >
+		</div>
+		<div class="col">
+			<label for="" class="form-label">EQ {{ $equipo->eq}}</label>
+			<select class="form-control" name="eq" id="eq"  tabindex="4" required>
+				<option value="{{ $equipo->eq}}"> {{ $equipo->eq}}</option>
 				<option value="Critico">Critico </option>
 				<option value="Relevante">Relevante</option>
 				<option value="Sin">Sin</option>
@@ -49,7 +57,7 @@
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Tipo Activo</label>
-			<select class="form-control" name="tipoactivo" id="tipoactivo" tabindex="7">
+			<select class="form-control" name="tipoactivo" id="tipoactivo" tabindex="7" required>
 				<option value="{{$equipo->tipoactivo}}" selected>{{$equipo->tipoactivo}}</option>
 				<option value="Propio">Propio</option>
 				<option value="Arriendo">Arriendo</option>
@@ -67,86 +75,65 @@
 		<div class="row align-items-start">
 		<div class="col">
 		<label for="" class="form-label">Marca</label>
-     	<select class="form-control" name="marca" id="marca" tabindex="8">
-         <option value="{{$equipo->marca}}" selected>{{$equipo->Marca->marca}}</option>
-         @foreach($marca as $id=>$nombre)
-         <option value="{{$id}}">{{$nombre}}</option>
-         @endforeach
-     </select>
+     	<input id="marca" name="marca" type="text" tabindex="9" value="{{ $equipo->Marca->id.' - '.$equipo->Marca->marca }}" class="form-control" required>
 		</div>
 	<div class="col">
 		<label for="" class="form-label">Modelo</label>
-     	<select class="form-control" name="modelo" id="modelo" tabindex="9">
-         <option value="{{$equipo->modelo}}" selected>{{$equipo->Modelo->modelo}}</option>
-         @foreach($modelo as $id=>$nombre)
-         <option value="{{$id}}">{{$nombre}}</option>
-         @endforeach
-     </select>
+     <input id="modelo" name="modelo" type="text" tabindex="10"value="{{ $equipo->Modelo->id.' - '.$equipo->Modelo->modelo }}" class="form-control" required>
 	</div>
 </div>
 	<div class="mb-3">
 		<div class="row align-items-start">
 			<div class="col">
-		<label for="" class="form-label" >Proveedor</label>
-     	<select class="form-control" name="proveedor" id="proveedor" tabindex="10">
-         <option value="{{$equipo->proveedor}}" selected>{{$equipo->Proveedor->nombre}}</option>
-         @foreach($proveedor as $id=>$nombre)
-         <option value="{{$id}}">{{$nombre}}</option>
-         @endforeach
-     </select>
-	</div>
-	<div class="col">
-		<label for="" class="form-label">Servicio Clinico Responsable</label>
-     	<select class="form-control" name="servicioclinico" id="servicioclinico" tabindex="11">
-         <option value="{{$equipo->servicioclinico->id}}" selected>{{$equipo->ServicioClinico->nombre}}</option>
-         @foreach($servicioclinico as $id=>$nombre)
-         <option value="{{$id}}">{{$nombre}}</option>
-         @endforeach
-     </select>
-	</div>
-</div>
+				<label for="" class="form-label" >Proveedor</label>
+     			<input id="proveedor" name="proveedor" type="text" value="{{ $equipo->Proveedor->id.' - '.$equipo->Proveedor->nombre }}" tabindex="11" class="form-control" required>
+			</div>
+			<div class="col">
+				<label for="" class="form-label">Servicio Clinico Responsable</label>
+     			<input id="servicioclinico" name="servicioclinico" tabindex="12" type="text" value="{{ $equipo->ServicioClinico->id.' - '.$equipo->ServicioClinico->nombre.' - '.$equipo->ServicioClinico->ubicacion }}" class="form-control" required>
+			</div>
+		</div>
 	<div class="mb-3">
 		<div class="row align-items-start">
 			<div class="col">
 				<label for="" class="form-label">Familia del Equipo</label>
-     			<select class="form-control" name="familia" id="familia" tabindex="12">
-         		<option value="{{$equipo->familia}}" selected>{{$equipo->Familia->nombre}}</option>
-         			@foreach($familia as $id=>$nombre)
-         				<option value="{{$id}}">{{$nombre}}</option>
-         			@endforeach
-     			</select>
- 			</div>
+     			<input id="familia" name="familia" type="text" value="{{ $equipo->Familia->id.' - '.$equipo->Familia->nombre }}" tabindex="13" class="form-control" required>
+ 			</div> 
  			<div class="col">
      			<label for="" class="form-label">SubFamilia del Equipo</label>
-     			<select class="form-control" name="subfamilia" id="subfamilia" tabindex="13">
-        		<option value="{{$equipo->subfamilia}}" selected>{{$equipo->SubFamilia->nombre}}</option>
-        			@foreach($subfamilia as $id=>$nombre)
-        				 <option value="{{$id}}">{{$nombre}}</option>
-         			@endforeach
-     			</select>
+     			<input id="subfamilia" name="subfamilia" type="text" tabindex="14" value="{{ $equipo->SubFamilia->id.' - '.$equipo->SubFamilia->nombre }}" class="form-control" required>
 				</div>
 			</div>
-	</div>
+		</div>
+	<div class="mb-3">	
 		<div class="row align-items-start">
 			<div class="col">
 				<label for="" class="form-label">Clase del Equipo</label>
-     			<select class="form-control" name="clase" id="clase" tabindex="14">
-         		<option value="{{$equipo->clase}}" selected>{{$equipo->Clase->nombre}}</option>
-         			@foreach($clase as $id=>$nombre)
+     			<select class="form-control" name="clase" id="clase" tabindex="15" required>
+         				<option value="{{ $equipo->Clase->id }}">{{ $equipo->Clase->nombre }}</option>
+         					@foreach($clase as $id=>$nombre)
          				<option value="{{$id}}">{{$nombre}}</option>
-         			@endforeach
+         					@endforeach
      			</select>
  			</div>
  			<div class="col">
      			<label for="" class="form-label">Sub Clase del Equipo</label>
-     			<select class="form-control" name="subclase" id="subclase" tabindex="15">
-        		<option value="{{$equipo->subclase}}" selected>{{$equipo->SubClase->nombre}}</option>
+     			<select class="form-control" name="subclase" id="subclase" tabindex="16" required>
+        		<<option value="{{ $equipo->SubClase->id }}">{{ $equipo->SubClase->nombre }}</option>
         			@foreach($subclase as $id=>$nombre)
         				 <option value="{{$id}}">{{$nombre}}</option>
          			@endforeach
      			</select>
 				</div>
 			</div>
+			</div>
+			<div class="row align-items-start">
+            <div class="col">
+                <label for="" class="form-label">Adjuntar Acta </label>
+                <input id="documento" name="documento" type="file"  class="form-control">
+            </div>
+          </div>
+      </div>
 			<h2>Garantias</h2>
 			
 			<div class="row align-items-start">
@@ -155,12 +142,16 @@
 	     			<input type="date" name="fin"  id="fin" value="{{ $garantia->fin??"" }}" tabindex="16" class="form-control">
 	 			</div>
 	 			<div class="col">
-	     			<label for="" class="form-label">Cantidad de Mantenciones</label>
+	     			<label for="" class="form-label">Cantidad de Mantenciones Disponibles</label>
 	     			<input type="text" name="mp" id="mp" value="{{ $garantia->mp?? "" }}" tabindex="17" class="form-control">
 				</div>
 				<div class="col">
 	     			<label for="" class="form-label">Frecuencia de Mantenciones</label>
 	     			<input type="text" name="frecuencia" id="frecuencia" value="{{ $garantia->frecuencia?? "" }}" tabindex="18" class="form-control">
+				</div>
+				<div class="col">
+	     			<label for="" class="form-label">Mantenciones Anuales</label>
+	     			<input type="text" name="mpa" id="mpa" value="{{ $garantia->mp ?? ""}}" tabindex="18" class="form-control">
 				</div>
 			</div>
 	</div>
@@ -182,5 +173,94 @@
 @stop
 
 @section('js')
-    <script> console.log('Hi!'); </script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="{{ asset('vendor/jquery-ui/jquery-ui/jquery-ui.min.js') }}"></script>
+    <script type="text/javascript">
+    	$('#proveedor').autocomplete({
+    		source: function (request, response){
+    			$.ajax({
+    				url: "{{ route('search.proveedor') }}",
+    				dataType: 'json',
+    				data:{
+    					term: request.term
+    				},
+    				success: function(data){
+    					response(data)
+    				}
+    			});
+    		}
+    	});
+    	$('#marca').autocomplete({
+    		source: function (request, response){
+    			$.ajax({
+    				url: "{{ route('search.marca') }}",	
+    				dataType: 'json',
+    				data:{
+    					term: request.term
+    				},
+    				success: function(data){
+    					response(data)
+    				}
+    			});
+    		}
+    	});
+    	$('#modelo').autocomplete({
+    		source: function (request, response){
+    			$.ajax({
+    				url: "{{ route('search.modelo') }}",	
+    				dataType: 'json',
+    				data:{
+    					term: request.term
+    				},
+    				success: function(data){
+    					response(data)
+    				}
+    			});
+    		}
+    	});
+    	$('#servicioclinico').autocomplete({
+    		source: function (request, response){
+    			$.ajax({
+    				url: "{{ route('search.servicio') }}",	
+    				dataType: 'json',
+    				data:{
+    					term: request.term
+    				},
+    				success: function(data){
+    					response(data)
+    				}
+    			});
+    		}
+    	});
+    	$('#familia').autocomplete({
+    		source: function (request, response){
+    			$.ajax({
+    				url: "{{ route('search.familia') }}",	
+    				dataType: 'json',
+    				data:{
+    					term: request.term
+    				},
+    				success: function(data){
+    					response(data)
+    				}
+    			});
+    		}
+    	});
+    	$('#subfamilia').autocomplete({
+    		source: function (request, response){
+    			$.ajax({
+    				url: "{{ route('search.subfamilia') }}",	
+    				dataType: 'json',
+    				data:{
+    					term: request.term
+    				},
+    				success: function(data){
+    					response(data)
+    				}
+    			});
+    		}
+    	});
+
+    </script> 
 @stop

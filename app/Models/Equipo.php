@@ -33,16 +33,18 @@ class Equipo extends Model
         return $this->belongsTo('App\Models\SubClase','subclase','id');
     }
     public function EquipoConvenio(){
-        return  $this->hasMany('App\Models\EquipoConvenio','equipo');
+        return  $this->hasMany('App\Models\EquipoConvenio','id');
      }
     public function Garantias(){
         return  $this->hasMany('App\Models\Garantia','equipo');
      }
-     public function Bajas(){
-        return  $this->hasMany('App\Models\Baja','equipo');
+     public function Baja(){
+        return $this->belongsTo('App\Models\Baja','id','equipo');
      }
      public function PlanificaMP(){
         return  $this->hasMany('App\Models\Planificamp','equipo');
      }
-       
+     public function Traslados(){
+        return  $this->hasMany('App\Models\Traslado','equipo','id');
+     }   
 }

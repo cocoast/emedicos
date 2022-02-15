@@ -110,7 +110,7 @@ class ModeloController extends Controller
         $data =[];
         foreach ($querys as $query) {
             $data[]=[
-                'label' => $query->modelo
+                'label' => $query->id.' - '.$query->modelo
             ];
         }
         return $data;

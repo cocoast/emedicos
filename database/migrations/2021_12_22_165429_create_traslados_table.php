@@ -20,6 +20,7 @@ class CreateTrasladosTable extends Migration
             $table->foreignId('actual')->constrained('servicio_clinicos')->onDelete('cascade');
             $table->foreignId('destino')->constrained('servicio_clinicos')->onDelete('cascade');
             $table->foreignId('equipo')->constrained('equipos')->onDelete('cascade');
+            $table->string('archivo',250);
             $table->timestamps();
         });
     }

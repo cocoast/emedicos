@@ -7,7 +7,11 @@
 @stop
 
 @section('body')
-
+<div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Mostrar Equipo {{ $equipo->id }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    </div>
+    <div class="modal-body">
   <div class="row">
     <div class="col">
       	<div class="row align-items-start" >
@@ -113,10 +117,7 @@
       		</div>
 		</div>
     	<div class="row align-items-start mb-3">
-      		<div class="col">
-        		<br>
-        		<a href="/equipo" class="btn btn-danger">Atras</a>
-      		</div>
+      		
         @can('equipo.edit')
       		<div class="col">
         		<br>
@@ -224,7 +225,9 @@
 		            </thead>
 		            <tbody>
 	              		@if($res!=null)
-	            		<?php foreach ($res as $key => $row) { $aux[$key] = $row['Nombre'];} array_multisort($aux, SORT_ASC, $res);?>
+	            		<?php foreach ($res as $key => $row) { 
+	            			$aux[$key] = $row['Nombre'];} 
+	            		?>
 	              		@foreach($res as $item =>$value)
 	            		<tr>
 	            		<?php $nombre=explode("/",$value["Nombre"])[5]?>  
@@ -247,26 +250,27 @@
 	              		@endif
 	            	</tbody>
 	          	</table>
+	
 	        </div>
         </div>
 		</div>
   </div>
 </div>
- 
+ </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    </div>
 @stop
 
+@section('css')
 
+
+@stop
 
 @section('js')
 
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
+
 <script type="text/javascript">
-	$(document).ready(function() {
-    $('#papeles').DataTable({
-    	 "lengthMenu":[[10,50,-1],[10,50,"Todos"]],
-    	 "order": [[ 0, "desc" ]]
-    });
-} );
+
+
 </script>@stop

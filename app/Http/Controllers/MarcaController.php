@@ -109,7 +109,7 @@ class MarcaController extends Controller
         $data =[];
         foreach ($querys as $query) {
             $data[]=[
-                'label' => $query->marca
+                'label' =>$query->id.' - '.$query->marca
             ];
         }
         return $data;

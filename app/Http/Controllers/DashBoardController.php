@@ -18,6 +18,7 @@ use App\Models\EquipoConvenio;
 use DateTime;
 use App\Models\User;
 use App\Models\Garantia;
+use App\Models\Planificamp;
 
 
 class DashBoardController extends Controller
@@ -29,6 +30,7 @@ class DashBoardController extends Controller
      */
     public function index()
     {
+        $mp=$this->PlanMP();
         $preventivo=$this->ConveniosMantenimiento();
         $arriendos=$this->ConveniosArriendo();
         $correctivos=$this->ConveniosCorrectivos();
@@ -49,7 +51,7 @@ class DashBoardController extends Controller
                     ->orderBy('fecha','ASC')
                     ->get();
                   
-        return view("dashboard.index")->with('preventivo',$preventivo)->with("arriendos",$arriendos)->with("correctivos",$correctivos)->with("data", $cantidadequipos)->with('garantias',$garantias)->with('realizados',$realizados)->with('porvencer',$porvencer)->with('hoy',$hoy)->with('vencido',$vencido);
+        return view("dashboard.index")->with('preventivo',$preventivo)->with("arriendos",$arriendos)->with("correctivos",$correctivos)->with("data", $cantidadequipos)->with('garantias',$garantias)->with('realizados',$realizados)->with('porvencer',$porvencer)->with('hoy',$hoy)->with('vencido',$vencido)->with('mp',$mp);
 
         
     }
@@ -92,6 +94,7 @@ class DashBoardController extends Controller
     public function ConveniosArriendo(){
         $fecha=new DateTime();
         $year=$fecha->format('Y');
+        
         $arriendos=Convenio::where('tipoconvenio','Arriendo')->get();
         $donacion=Convenio::where('tipoconvenio','Arriendo con Donacion')->get();
         $arrtotal=Convenio::where('tipoconvenio','Arriendo')->where('fechafin','>',$fecha)->count()+Convenio::where('tipoconvenio','Arriendo con Donacion')->where('fechafin','>',$fecha)->count();
@@ -165,13 +168,14 @@ class DashBoardController extends Controller
     public function ConveniosCorrectivos(){
         $fecha=new DateTime();
         $year=$fecha->format('Y');
-        $correc=Convenio::where('tipoconvenio','Correctivo')->count();
+        $hoy=date('Y-m-d');
+        $correc=Convenio::where('tipoconvenio','Correctivo')->where('fechafin','>',$hoy)->count();
         $tcorrec=0;
         $tvalor=0;
-        $correctivos=Convenio::where('tipoconvenio','Correctivo')->get();
+        $correctivos=Convenio::where('tipoconvenio','Correctivo')->where('fechafin','>',$hoy)->get();
          foreach($correctivos as $correctivo){
             //dd($correctivo);
-            $pagos=Pago::where('convenio',$correctivo->id)->where('fecha','LIKE','%'.$year)->where('estado','Generado')->get();
+            $pagos=Pago::where('convenio',$correctivo->id)->where('estado','Generado')->get();
             $tvalor+=$correctivo->valor;
             foreach($pagos as $pago)
                 $tcorrec=$tcorrec+$pago->valor;
@@ -209,6 +213,24 @@ class DashBoardController extends Controller
         $arr="";
         $arr=[$con,$sin];
         return $arr;
+    }
+    public function PlanMP(){
+        $year=date('Y');
+        $enero=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte',1)->count();
+        $febrero=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte',2)->count();
+        $marzo=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte',3)->count();
+        $abril=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte',4)->count();
+        $mayo=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte',5)->count();
+        $junio=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte',6)->count();
+        $julio=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte',7)->count();
+        $agosto=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte',8)->count();
+        $septiembre=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte',9)->count();
+        $octubre=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte',10)->count();
+        $noviembre=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte',11)->count();
+        $diciembre=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte',12)->count();
+        $res ="";
+        $res= [$enero,$febrero,$marzo,$abril,$mayo,$junio,$julio,$agosto,$septiembre,$octubre,$noviembre,$diciembre];
+        return $res;
     }
     /**
      * Show the form for creating a new resource.

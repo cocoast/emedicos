@@ -7,6 +7,13 @@
 @stop
 
 @section('body')
+<div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Mostrar Equipo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
 <form action="{{route('equipoconvenio.store')}}" method="POST">
 	@csrf
  	<div class="row align-items-start">
@@ -21,6 +28,10 @@
 		<div class="col">
 			<label for="" class="form-label">Valor del Equipo en el convenio</label>
 			<input id="valor" name="valor" type="text" tabindex="3" class="form-control">
+		</div>
+		<div class="col">
+			<label for="" class="form-label">Mantenciones Preventivas Disponibles</label>
+			<input id="disponible" name="disponible" type="text" tabindex="3" class="form-control">
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Mantenimiento Preventivo</label>
@@ -65,7 +76,7 @@
 		 <div class="col">
 			<label for="" class="form-label"> Convenio</label>
 			<input id="convenio" name="convenio"  type ="hidden" value="{{$convenios->id}}"type="text" class="form-control" readonly>
-			<input id="nombreconvenio" name="nombreconvenio" value="{{$convenios->nombre}}"type="text"  class="form-control" readonly>
+			<input id="nombreconvenio" name="nombreconvenio" value="{{$convenios->nombre}}"type="text"  class="form-control" readonly tabindex="7">
 		</div> 
 </div>
 <br>
@@ -75,11 +86,15 @@
 		
 	</div>
 	<div class="col">
-		<button  class="btn btn-primary" tabindex="16">GUARDAR</button>
+		<button  class="btn btn-primary" tabindex="8">GUARDAR</button>
 	</div>
 </div>
 
 </form>
+ </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
 @stop
 
 @section('css')

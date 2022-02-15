@@ -110,7 +110,7 @@ class FamiliaController extends Controller
         $data =[];
         foreach ($querys as $query) {
             $data[]=[
-                'label' => $query->nombre
+                'label' => $query->id.' - '.$query->nombre
             ];
         }
         return $data;

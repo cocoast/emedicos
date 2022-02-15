@@ -1,17 +1,18 @@
 @extends('adminlte::page')
 
-@section('title', 'Garantias')
+@section('title', 'Bajas')
 
 @section('content_header')
     <h1>Listado Solicitudes de Bajas</h1>
 @stop
 
 @section('content')
-
+@can('equipo.create')
 {{-- <a href="/baja/create/">Agregar</a> --}}
 <button type="button" class="btn btn-primary" data-toggle="modal" id="add" data-target="#addModal">
   Agregar Baja
 </button>
+@endcan
 
 <!-- Add Modal -->
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -84,7 +85,7 @@
                 <td>{{$baja->Equipo->ServicioClinico->ubicacion}}</td>
                 <td> 
             <!-- Trigger the modal with a button -->
-                    <button type="button" data-path="{{route('equipo.show', $baja->Equipo->id) }}" class="btn btn-primary btn-sm openBtn">{{$baja->Equipo->inventario}}</button>
+                    <button type="button" data-path="{{route('equipo.show', $baja->Equipo->id) }}" class="btn btn-primary btn-sm openBtn">{{$baja->Equipo->inventario}}</button> 
                 </td>
                 <td>
          <!-- Trigger the modal with a button -->
@@ -96,7 +97,7 @@
                 <td>{{$baja->Equipo->Marca->marca}}</td>
                 <td>{{$baja->Equipo->Modelo->modelo}}</td>
                 <td>{{$baja->Equipo->archivador}}</td>    
-                <td><a href="{{ $baja->documento }}">Archivo de Baja</a></td>
+                <td><a href="{{ $baja->documento }}" class="btn btn-primary" target="_blank">Sol Baja</a></td>
                    @can('convenio.destroy')<td><form action="{{route('baja.destroy',$baja->id)}}" method="POST">
                     @csrf
                     @method('DELETE')

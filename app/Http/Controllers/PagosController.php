@@ -8,6 +8,9 @@ use App\Models\EquipoConvenio;
 use App\Models\Convenio;
 use NumberFormatter;
 use DateTime;
+use PDF2;
+
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PagosController extends Controller
 {
@@ -101,7 +104,8 @@ class PagosController extends Controller
             //sumamos todos los equipos que comenzaron junto con el convenio
             $total=EquipoConvenio::where('convenio',$pago->convenio)->where('fechaincorporacion',$pago->Convenio->fechaincio)->sum('valor')/$pa;
             //obtenemos los equipos que son del convenio pero se agregaron en una fecha distinta al inicio del convenio. 
-            $anexos=EquipoConvenio::where('convenio',$pago->convenio)->where('fechaincorporacion','!=',$pago->Convenio->fechaincio)->get();
+            $anexos=EquipoConvenio::where('convenio',$pago->convenio)->where('fechaincorporacion','>',$pago->Convenio->fechaincio)->get();
+            
             foreach ($anexos as $anexo) {
                 foreach (Pago::where('convenio',$convenio->id)->get() as $p) {
                     if($anexo->fechaincorporacion<$p->fecha){
@@ -178,4 +182,22 @@ class PagosController extends Controller
     {
          //
     }
+    public function Ficha($id){
+        $pago=Pago::find($id);
+        $convenio=Convenio::find($pago->Convenio->id);
+        $inicio=date('d-m-Y',(strtotime($pago->fecha."- 1 month + 1 days")));
+    
+       return view('pagos.ficha')->with('convenio',$convenio)->with('pago',$pago);
+    }
+
+
+     public function createPDF($id){
+        $pago=Pago::find($id);
+        $convenio=Convenio::find($pago->Convenio->id);
+    //  $pdf = PDF::loadView('pagos.ficha',compact('pago','convenio'))->setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+    //  return $pdf->stream();
+
+        $pdf = PDF2::view('pagos.ficha',compact('pago','convenio'))->make()->render();
+        
+       }
 }

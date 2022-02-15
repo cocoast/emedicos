@@ -7,6 +7,13 @@
 @stop
 
 @section('body')
+<div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Mostrar Equipo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
     <form action="/pagos/{{$pago->id}}" method="POST" enctype="multipart/form-data">
 	@csrf
 	@method('PUT')
@@ -35,6 +42,10 @@
 	
 	<button  class="btn btn-primary" tabindex="3">GUARDAR</button>
 </form>
+ </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
 @stop
 
 @section('css')

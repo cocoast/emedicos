@@ -21,6 +21,8 @@
       <th scope="col">UBICACIÓN</th>
       <th scope="col">RESPONSABLE</th>
       <th scope="col">CORREO DEL RESPONSABLE</th>
+      <th scope="col">CR</th>
+      <th scope="col">Anexo</th>
       <th scope="col">@can('servicioclinico.edit') FUNCIONES @endcan</th>
 	</tr>
 	</thead>
@@ -32,13 +34,18 @@
       <td>{{$servicioclinico->ubicacion}}</td>
       <td>{{$servicioclinico->responsable}}</td>
       <td>{{$servicioclinico->email_responsable}}</td>
+      <td>{{ $servicioclinico->cr }}</td>
+      <td>{{ $servicioclinico->anexo }}</td>
       <td>
         @can('servicioclinico.edit') 
       	<form action="{{route('servicioclinico.destroy',$servicioclinico->id)}}" method="POST">
-      	<a class="btn btn-info" href="/servicioclinico/{{$servicioclinico->id}}/edit ">EDITAR</a>
+      
+        <!-- Trigger the modal with a button -->
+                    <button type="button" data-path="{{route('servicioclinico.edit', $servicioclinico->id) }}" class="btn btn-warning btn-sm openBtn">
+                       Editar</button>
       	@csrf
       	@method('DELETE')
-      	<button class="btn btn-danger" type="submit" onClick="javascript: return confirm('¿Estas seguro?');">ELIMINAR</button>
+      	<button class="btn btn-danger btn-sm" type="submit" onClick="javascript: return confirm('¿Estas seguro?');">ELIMINAR</button>
       	</form>
         @endcan
       </td>
@@ -46,6 +53,25 @@
     @endforeach
 	</tbody>
 </table>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Editar Servicio Clinico</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 @stop
 
 @section('css')
@@ -87,5 +113,11 @@
         "lengthMenu":[[10,50,-1],[10,50,"Todos"]]
     });
 } );
+  $('.openBtn').on('click',function(){
+    $('.modal-body').load($(this).data('path'),function(){
+        $('#myModal').modal({show:true});
+        console.log($('.openBtn').data('path'));
+    });
+});
 </script>
 @stop

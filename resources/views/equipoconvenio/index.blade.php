@@ -1,58 +1,34 @@
 @extends('adminlte::page')
 
 @section('title', 'Convenios')
-@section('css')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-@stop
+
 @section('content_header')
     <h1>Listado de Convenios</h1>
 @stop
 
 @section('content')
 <div class="container-fluid">
- <table id="conveniostables" class="table table-responsive table-striped table-hover mt-4" style="width:100%">
+ <table id="conveniostables" class="table table-responsive table-striped table-hover " >
 	<thead>
 	<tr>
       <th scope="col">#</th>
-      <th scope="col">NOMBRE</th>
-      <th scope="col">LICITACION</th>
-      <th scope="col">SOLICITUD</th>
-      <th scope="col">RESOLUCION</th>
-      <th scope="col">FECHA RESOLUCION</th>
-      <th scope="col">FECHA INICIO</th>
-      <th scope="col">FECHA FIN</th>
-      <th scope="col">MESES</th>
-      <th scope="col">FRECUENCIA DE PAGO</th>
-      <th scope="col">TIPO DE CONVENIO</th>
-      <th scope="col">PROVEEDOR</th>
-      <th scope="col">FUNCIONES</th>
+      <th scope="col">Inventario </th>
+      <th scope="col">Serie</th>
+      <th scope="col">N° RES</th>
+
+
 	</tr>
 	</thead>
 	<tbody>
-		@foreach($convenios as $convenio)
+		@foreach($equipos as $equipo)
+        @if(date('Y',strtotime($equipo->Convenio->fechafin))>date('Y',strtotime('2021-01-01')))
 		<tr>
-      <th scope="row">{{$convenio->id}}</th>
-      <td>{{$convenio->nombre}}</td>
-      <td>{{$convenio->licitacion}}</td>
-      <td>{{$convenio->solicitud}}</td>
-      <td>{{$convenio->resolucion}}</td>
-      <td>{{$convenio->fecharesolucion}}</td>
-      <td>{{$convenio->fechaincio}}</td>
-      <td>{{$convenio->fechafin}}</td>
-      <td>{{$convenio->meses}}</td>
-      <td>{{$convenio->frecuenciapago}}</td>
-      <td>{{$convenio->tipoconvenio}}</td>
-      <td>{{$convenio->Proveedor->nombre}}</td>
-           <td>
-      	<form action="{{route('convenio.destroy',$convenio->id)}}" method="POST">
-      	<a class="btn btn-warning" href="/convenio/{{$convenio->id}}/edit "><i class="bi bi-pencil"></i></a>
-        <a class="btn btn-info" href="/convenio/{{$convenio->id}}"><i class="bi bi-clipboard"></i></a>
-      	@csrf
-      	@method('DELETE')
-      	<button class="btn btn-danger" type="submit" onClick="javascript: return confirm('¿Estas seguro?');"><i class="bi bi-trash"></i></button>
-      	</form>
-      </td>
+      <th scope="row">{{$equipo->Equipo->id}}</th>
+      <td>{{$equipo->Equipo->inventario}}</td>
+      <td>{{$equipo->Equipo->serie}}</td>
+      <td>{{ $equipo->Convenio->resolucion }}</td>
     </tr>
+    @endif
     @endforeach
 	</tbody>
 </table>
@@ -60,19 +36,44 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css">
+<!--BOOSTRAP ICONS-->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+<!--DATATABLE-->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css ">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/1.4.0/css/searchPanes.dataTables.min.css ">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css ">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css ">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css ">
+
 @stop
 
 @section('js')
+<!--JQUERY-->
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
-<script type="text/javascript">
-	$(document).ready(function() {
-    $('#conveniostables').DataTable({
-    	 "lengthMenu":[[10,50,-1],[10,50,"Todos"]]
-    });
-} );
+<!--DATATABLE-->
+
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.colVis.min.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/searchpanes/1.4.0/js/dataTables.searchPanes.min.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js "></script>
+<script type="text/javascript" src="js/jszip.min.js "></script>
+<script type="text/javascript" src="js/pdfmake.min.js "></script>
+<script type="text/javascript" src="js/vfs_fonts.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js "></script>
+
+
+<script >
+	 $(document).ready(function() {
+   $('#conveniostables').DataTable( {
+        buttons: ['excel'],
+        responsive: true,
+        dom: 'Bfprtip', 
+        pageLength: 10
+        });
+});
 </script>
 @stop

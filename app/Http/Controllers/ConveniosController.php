@@ -27,16 +27,17 @@ class ConveniosController extends Controller
      */
     public function index()
     {   
-        $preventivos=Convenio::where('tipoconvenio','Mantenimiento')->get();
-        $arriendos=Convenio::where('tipoconvenio','Arriendo')->get();
-        $donacion=Convenio::where('tipoconvenio','Arriendo con Donacion')->get();
-        //dd($donacion);
-        $hoy=date('d-m-Y');
-        $conmantt=Convenio::where('tipoconvenio','Mantenimiento')->count();
-        $arr=Convenio::where('tipoconvenio','Arriendo')->count()+Convenio::where('tipoconvenio','Arriendo con Donacion')->count();
-        $correc=Convenio::where('tipoconvenio','Correctivo')->count();
+        $hoy=date('Y-m-d');
         $fecha=new DateTime();
         $year=$fecha->format('Y');
+        $preventivos=Convenio::where('tipoconvenio','Mantenimiento')->where('fechafin','>',$hoy)->get();
+        $arriendos=Convenio::where('tipoconvenio','Arriendo')->where('fechafin','>',$hoy)->get();
+        $donacion=Convenio::where('tipoconvenio','Arriendo con Donacion')->where('fechafin','>',$hoy)->get();
+        //dd($donacion);
+        $conmantt=Convenio::where('tipoconvenio','Mantenimiento')->where('fechafin','>',$hoy)->count();
+        $arr=   Convenio::where('tipoconvenio','Arriendo')->where('fechafin','>',$hoy)->count()+
+                Convenio::where('tipoconvenio','Arriendo con Donacion')->where('fechafin','>',$hoy)->count();
+        $correc=Convenio::where('tipoconvenio','Correctivo')->where('fechafin','>',$hoy)->count();
         $totalanualpreventivo=0;
         $totalpagado=0;
         $totalsaldo=0;
@@ -47,7 +48,7 @@ class ConveniosController extends Controller
         $totalpagadodonacion=0;
         $totalsaldodonacion=0;
         $tcorrec=0;
-        $correctivos=Convenio::where('tipoconvenio','Correctivo')->get();
+        $correctivos=Convenio::where('tipoconvenio','Correctivo')->where('fechafin','>',$hoy)->get();
          foreach($correctivos as $correctivo){
             //dd($correctivo);
             $pagos=Pago::where('convenio',$correctivo->id)->where('fecha','LIKE','%'.$year)->where('estado','Generado')->get();
@@ -342,7 +343,7 @@ class ConveniosController extends Controller
     }
     else{
         $carpeta=$_SERVER['DOCUMENT_ROOT'].'/storage/convenios/'.$convenio->id."/";
-
+        $convenio->link=$request->get('link');
     if(!file_exists($carpeta)){
          //dd($carpeta);
             mkdir($carpeta,0777,true);
@@ -357,6 +358,8 @@ class ConveniosController extends Controller
             else
                 dd("no es .pdf");
         }
+        $convenio->save();
+       return redirect ('/convenio');
     }
 }
 
@@ -372,5 +375,27 @@ class ConveniosController extends Controller
         $convenio->delete();
         return redirect('/convenio');
     }
-    
+     public function subir($id)
+    {
+        $convenio=Convenio::find($id);
+        return view('convenio.file')->with('convenio',$convenio);
+    }
+    public function archivo(Request $request, $id)
+    {
+        $convenio=Convenio::find($id);
+        $carpeta=$_SERVER['DOCUMENT_ROOT'].'/storage/convenios/'.$convenio->id."/";
+        if(!file_exists($carpeta)){
+            mkdir($carpeta,0777,true);
+        }
+        if($request->hasFile("documento")){
+            $file=$request->file('documento');
+            $nombre=$request->get("archivo").".".$file->guessExtension();
+            if($file->guessExtension()=="pdf"){
+               $file->move($carpeta, $nombre);
+               return redirect ('/convenio/'.$convenio->id);
+            }
+            else
+                dd("no es .pdf");
+        }
+    }
 }

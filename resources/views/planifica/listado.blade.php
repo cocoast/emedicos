@@ -3,7 +3,7 @@
 @section('title', 'Programacion')
 
 @section('content_header')
-    <h1>Listado de Mantenimientos Planificados y/o Programados{{ $year }}</h1>
+    <h1>Detalle de Programacion {{ $year }}</h1>
 @stop
 
 @section('content')
@@ -16,12 +16,14 @@
     </div>
     @endif
 @can('modelo.create')
-<a href="/planifica/create/" class="btn btn-secondary">Agregar</a>
-<a href="/planifica/programa/" class="btn btn-secondary">Programar en lote</a>
+<div class="d-flex justify-content-between">
+<div class="justify-content-start"><a href="/planifica/create/" class="btn btn-success">Ingresar Equipos a la Planificación</a></div>
+<div class="justify-content-start"><a href="/planifica/programa/" class="btn btn-secondary">Programar en lote</a></div>
 
 @endcan
-<a href="/planifica/" class="btn btn-primary"> Planificación</a>
-<a href="/planifica/minsal/" class="btn btn-primary"> Vista Minsal</a>
+    <div class="justify-content-end"> <a href="/planifica/minsal/" class="btn btn-primary"> Vista Minsal</a></div>
+    <div class="justify-content-end"><a href="/planifica/" class="btn btn-success flex-end"> Carta Gantt</a></div>
+</div>
 
 
 
@@ -49,10 +51,12 @@
 		@foreach($planificados as $mp)
 		  @if(empty($mp->Equipo->Bajas[0]))
         <tr>
-      <th scope="row">{{$mp->id}}</th>
+      <th scope="row">{{$mp->id}}@can('convenio.edit') <a class="btn btn-warning" href="/planifica/{{$mp->id}}/edit "><i class="bi bi-pencil"></i></a> @endcan</th>
       <td>{{ $mp->Equipo->ServicioClinico->nombre }}</td>
-      <td>{{ $mp->Equipo->inventario }}</td>
-      <td>{{ $mp->Equipo->serie }}</td>
+      <td><!-- Trigger the modal with a button -->
+        <button type="button" data-path="{{route('equipo.show', $mp->Equipo->id) }}" class="btn btn-primary btn-sm openBtn">{{$mp->Equipo->inventario}}</button></td>
+      <td><!-- Trigger the modal with a button -->
+        <button type="button" data-path="{{route('equipo.show', $mp->Equipo->id) }}" class="btn btn-primary btn-sm openBtn">{{ $mp->Equipo->serie }}</button></td>
       <td>{{ $mp->Equipo->Marca->marca }}</td>
       <td>{{ $mp->Equipo->Modelo->modelo }}</td>
       <td data-order="{{ date("Ymd", strtotime($mp->fechacorte)) }}">@php setlocale(LC_TIME, "spanish"); echo strftime("%B", strtotime(date("d-m-Y", strtotime($mp->fechacorte)))); @endphp</td>
@@ -72,6 +76,13 @@
     @endforeach
 	</tbody>
 </table>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      
+  </div>
+</div>
 @stop
 
 @section('css')
@@ -127,6 +138,11 @@
     'order':[6,'asc']
 });
    
-
+$('.openBtn').on('click',function(){
+    $('.modal-content').load($(this).data('path'),function(){
+        $('#myModal').modal({show:true});
+        console.log($('.openBtn').data('path'));
+    });
+});
 </script>
 @stop

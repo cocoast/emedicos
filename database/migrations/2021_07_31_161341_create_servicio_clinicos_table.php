@@ -19,6 +19,8 @@ class CreateServicioClinicosTable extends Migration
             $table->string('ubicacion',50);
             $table->string('responsable',50);
             $table->string('email_responsable',50);
+            $table->string('cr');
+            $table->string('anexo');
             $table->timestamps();
         });
     }
