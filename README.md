@@ -23,7 +23,7 @@ COO es una herramienta en desarrollo, que pretende ser utilizada para ayudar en 
 Luego de instalar y configurar servidor apache, mysql y composer clonar proyecto. 
 
 ### Paso 2 
-# Habilitar en ini.php
+# Habilitar en php.ini
 - **extension=intl**
 - **extension=gd**
 
