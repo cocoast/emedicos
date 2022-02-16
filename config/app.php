@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Equipos Medicos'),
+    'name' => env('APP_NAME', 'Sistema COO'),
 
     /*
     |--------------------------------------------------------------------------

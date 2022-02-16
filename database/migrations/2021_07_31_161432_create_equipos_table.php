@@ -24,6 +24,7 @@ class CreateEquiposTable extends Migration
             $table->string('valor',30);
             $table->string('oc',30)->nullable();
             $table->string('licitacion',30)->nullable();
+            $table->string('archivador')->nullable();
 
         
            

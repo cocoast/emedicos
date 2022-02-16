@@ -198,9 +198,9 @@ class PagosController extends Controller
     //  return $pdf->stream();
 
         //$pdf = PDF2::view('pagos.ficha',compact('pago','convenio'))->make()->render();
-
+        
         $pdf = PDF2::loadview('pagos.ficha',compact('pago','convenio'));
-        return $pdf->download('user.pdf');
+        return $pdf->inline('user.pdf');
         
        }
 }

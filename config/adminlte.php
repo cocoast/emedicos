@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'Equipos Medicos',
+    'title' => 'Coo System',
     'title_prefix' => '',
     'title_postfix' => '',
 

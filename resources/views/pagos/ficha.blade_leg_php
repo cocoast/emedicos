@@ -1,36 +1,24 @@
+@extends('ppa')
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-       <link rel="stylesheet" href="{{ base_path('public/vendor/adminlte/dist/css/adminlte.min.css') }}">
-    <style>
-        .table-striped>tbody>tr{  color: #538135; }
+@section('title', 'Ficha de Pagos')
 
-        .table-striped>tbody>tr>td, .table-striped>tbody>tr>th{
-        padding-right: 20px;
-        border: 1px solid green;
-        }
+@section('content_header')
 
-        .table-striped>tbody>tr:nth-child(odd)>td, .table-striped>tbody>tr:nth-child(odd)>th {
-        background-color: #e2efd9;   
-        }
+    <h3>Informe Técnico de Cumplimiento de MP, Plazo de Respuesta de Acciones Correctivas, Operatividad de los Equipos</h3>
 
-         
-    </style>
-</head>
-<body>
-    
+@stop
+
+
+@section('body')
+  
+  
 
 
     <div class="container" id="widget">
     <div class="d-flex justify-content-between text-center">
-            <img id="ministerio" src="{{ base_path('public/img/ministerio.png') }}" width="150" alt="Logo">        
+            <img id="ministerio" src="{{ asset('img/ministerio.png') }}" width="150" alt="Logo">        
             <h3 class="p-2"><b>Informe Técnico de Cumplimiento de MP, Plazo de Respuesta de Acciones Correctivas, Operatividad de los Equipos</b></h3>
-            <img src="{{ base_path('public/img/hpm.png') }}" width="150" height="100" alt="">
+            <img src="{{ asset('img/hpm.png') }}" width="150" height="100" alt="">
     </div>
     
     <div class="d-flex justify-content-center">
@@ -186,47 +174,7 @@
 
 </div>
 
-
-
-
-
-
-<p align="justify" style="margin-bottom: 0.11in; line-height: 108%">
-    <b>Obs; Se solicita extender Orden de compra con detalle de equipos, dado que estos presentan distintos valores.</b>
-</p>
-<p align="justify" style="margin-bottom: 0.11in; line-height: 108%">
-    Se extiende el siguiente certificado para el pago de servicios de mantención en conformidad del servicio contratado para el periodo anterior con la aprobación del Gestor Técnico y da curso a la solicitud de emisión de Orden de Compra del contrato.
-</p>
-<p align="justify" style="margin-bottom: 0.11in; line-height: 108%">
-    Nombre, Firma y timbre del Gestor Técnico; 
-</p>
-<p align="justify" style="margin-bottom: 0.11in; line-height: 108%">
-    __________________________________________Fecha de emisión de documento: {{date("d-m-Y")}}
-</p>
-<p align="justify" style="margin-bottom: 0.11in; line-height: 108%"><u><b>
-    Distribución:
-</b></u>
-</p>
-
-<ul>
-    <li/>
-<p align="justify" style="margin-bottom: 0.11in; line-height: 108%">
-    Jefe de Logística (Copia Original)</p>
-    <li/>
-<p align="justify" style="margin-bottom: 0.11in; line-height: 108%">
-    Jefe de SubDpto. de Equipos (Digital)</p>
-    <li/>
-<p align="justify" style="margin-bottom: 0.11in; line-height: 108%">
-    Sección de Administración de Contratos de Dpto. de Operaciones
-    (Digital)</p>
-    <li/>
-<p align="justify" style="margin-bottom: 0.11in; line-height: 108%">
-    Jefe de Operaciones (Digital)</p>
-</ul>
-
-<p><br/><br/></p>
-
-<p ><b>Anexo.1 Equipos Involucrados: </b> <br> </p>
+<p ><b>6. Equipos Involucrados: </b> <br> </p>
 
 <div class="row justify-content-center">
 <table class="table table-striped text-justify">
@@ -259,8 +207,51 @@
             </table>
 </div>
 
+<p><br/><br/></p>
 
-</body>
-</html>
+<p align="justify" style="margin-left: -0.1in; margin-bottom: 0.11in; line-height: 108%">
+    <b>Obs; Se solicita extender Orden de compra con detalle de equipos, dado que estos presentan distintos valores.</b>
+</p>
+<p align="justify" style="margin-left: -0.1in; margin-bottom: 0.11in; line-height: 108%">
+    Se extiende el siguiente certificado para el pago de servicios de mantención en conformidad del servicio contratado para el periodo anterior con la aprobación del Gestor Técnico y da curso a la solicitud de emisión de Orden de Compra del contrato.
+</p>
+<p align="justify" style="margin-left: -0.1in; margin-bottom: 0.11in; line-height: 108%">
+    Nombre, Firma y timbre del Gestor Técnico; 
+</p>
+<p align="justify" style="margin-left: -0.1in; margin-bottom: 0.11in; line-height: 108%">
+    __________________________________________Fecha de emisión de documento: {{date("d-m-Y")}}
+</p>
+<p align="justify" style="margin-bottom: 0.11in; line-height: 108%"><u><b>
+    Distribución:
+</b></u>
+</p>
+
+<ul>
+    <li/>
+<p align="justify" style="margin-bottom: 0.11in; line-height: 108%">
+    Jefe de Logística (Copia Original)</p>
+    <li/>
+<p align="justify" style="margin-bottom: 0.11in; line-height: 108%">
+    Jefe de SubDpto. de Equipos (Digital)</p>
+    <li/>
+<p align="justify" style="margin-bottom: 0.11in; line-height: 108%">
+    Sección de Administración de Contratos de Dpto. de Operaciones
+    (Digital)</p>
+    <li/>
+<p align="justify" style="margin-bottom: 0.11in; line-height: 108%">
+    Jefe de Operaciones (Digital)</p>
+</ul>
+
+
+
+
+@stop 
+@section('css')
+<!-- CSS only -->
+
+<link rel="stylesheet" href="/css/ficha_pagos.css"  >
+<link rel="stylesheet" href="/css/ficha_pagos.css" media="print" >
+
+@stop
 
 
