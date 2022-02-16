@@ -30,8 +30,8 @@ Luego de instalar y configurar servidor apache, mysql y composer clonar proyecto
 ### Paso 3
 # Instalacion de Dependencias: 
 Dentro de la Carpeta del Proyecto (/emedicos) Ejecutar: 
-	- **composer install**
-	- **npm install**
+- **composer install**
+- **npm install**
 	
 
 ### Paso 4 
