@@ -51,6 +51,7 @@ Para crear la nueva clave e insertarla automáticamente en el .env, ejecutaremos
 
 - **php artisan migrate**
 - **php artisan db:seed**
+- **php artisan db:seed --class=UserSeeder**
 
 
 ## License
