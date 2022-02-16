@@ -47,6 +47,12 @@ Para crear la nueva clave e insertarla automáticamente en el .env, ejecutaremos
 - **php artisan migrate**
 - **php artisan db:seed**
 
+### Paso 6 
+# Habilitar en ini.php
+- **extension=intl**
+- **extension=gd**
+
+
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
