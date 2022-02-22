@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Memos Sin Solicitud de Compra')
+@section('title', 'Pagos Realizados sin Memo')
 
 @section('content_header')
 <img class="img-fluid" src="/img/cabezera-1.png">
@@ -8,6 +8,14 @@
 @stop
 
 @section('content') 
+<div>
+        @if (session()->has('message'))
+            <div class="{{session('status')}} alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {{ session('message') }}
+            </div>
+        @endif  
+    </div>
 <div class="row">
   
     <div class="col" >

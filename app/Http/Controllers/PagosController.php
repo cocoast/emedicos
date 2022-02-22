@@ -76,6 +76,9 @@ class PagosController extends Controller
         $oc=$id;
         $url="http://api.mercadopublico.cl/servicios/v1/publico/ordenesdecompra.json?codigo=".$oc."&ticket=51F64BE8-87A8-404B-B5C6-E954D059117C";
         $data = json_decode(file_get_contents($url), true);
+        //$da=json_encode($data["Listado"]);
+        //$da=json_decode($da);
+        //dd($da);
         //dd(sizeof($data["Listado"]));
         if(sizeof($data["Listado"])!=0){
             return view("pagos.show")->with('oc',$data["Listado"][0]);
@@ -92,7 +95,7 @@ class PagosController extends Controller
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
-     */
+     */    
     public function edit($id)
     {   
 
@@ -141,7 +144,7 @@ class PagosController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //dd($request);
+      
         if($request->get('memo')=="ingresar"){
             $pagos=Pago::find($id);
             return redirect()->route('convenio.show',$pagos->convenio)->with('message', 'El Pago No fue procesado Correctamente Verifique que la informacion este completa')->with('status','alert alert-danger');  
@@ -168,7 +171,7 @@ class PagosController extends Controller
                 dd("no es un archivo pdf");
         }
             $pagos->save();
-            return redirect()->route('convenio.show',$pagos->convenio)->with('message', 'El Pago Couta N° '.$pagos->periodo.' se Ingreso Correctamente')->with('status','alert alert-success');
+            return redirect()->back()->with('message', 'El Pago Couta N° '.$pagos->periodo.' se Ingreso Correctamente')->with('status','alert alert-success');
         }
     }
 
@@ -194,13 +197,46 @@ class PagosController extends Controller
      public function createPDF($id){
         $pago=Pago::find($id);
         $convenio=Convenio::find($pago->Convenio->id);
-    //  $pdf = PDF::loadView('pagos.ficha',compact('pago','convenio'))->setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
-    //  return $pdf->stream();
-
-        //$pdf = PDF2::view('pagos.ficha',compact('pago','convenio'))->make()->render();
-        
-        $pdf = PDF2::loadview('pagos.ficha',compact('pago','convenio'));
+        $counter=0;
+       $valor=PagosController::ValorPagar($pago->id);
+   
+        $pdf = PDF2::loadview('pagos.ficha',compact('pago','convenio', 'counter','valor'));
         return $pdf->inline('user.pdf');
         
        }
+       public function ValorPagar($id){
+        $pago=Pago::find($id);
+        $convenio=Convenio::find($pago->convenio);
+        if($convenio->tipoconvenio!="Correctivo"){
+            //Sacamos las cantidades de pagos
+            $pa=$convenio->meses/$convenio->frecuenciapago;
+            //sumamos todos los equipos que comenzaron junto con el convenio
+            $total=EquipoConvenio::where('convenio',$pago->convenio)->where('fechaincorporacion',$pago->Convenio->fechaincio)->sum('valor')/$pa;
+            //obtenemos los equipos que son del convenio pero se agregaron en una fecha distinta al inicio del convenio. 
+            $anexos=EquipoConvenio::where('convenio',$pago->convenio)->where('fechaincorporacion','>',$pago->Convenio->fechaincio)->get();
+            
+            foreach ($anexos as $anexo) {
+                foreach (Pago::where('convenio',$convenio->id)->get() as $p) {
+                    if($anexo->fechaincorporacion<$p->fecha){
+                        //calculamos los pagos que quedan
+                        $paane=$pa-$p->periodo;
+                        if($pago->fecha>$anexo->fechaincorporacion){
+                            //sumamos el valor del equipo al total del pago (dividiendo por los pagos que quedan) 
+                            $total=$total+($anexo->valor/$paane);
+                            
+                            break;
+                        }
+                    }
+                }
+            
+            }
+        $total=NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY_ACCOUNTING )->format($total);
+        }
+        else
+        {
+            $total=0;
+        }
+        return $total;
+
+    }
 }

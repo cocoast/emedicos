@@ -81,14 +81,14 @@
    <div class="container-fluid">
         <div class="row">
             <div class="col">
-                <a href="{{route('convenios.seguimiento')}}" class="btn btn-warning btn-sm" ><i class="bi bi-eyeglasses"></i> Seguimiento de OC </a>
+                <a href="{{route('convenios.seguimiento')}}" target="_blank" class="btn btn-warning btn-sm" ><i class="bi bi-eyeglasses"></i> Seguimiento de OC </a>
             </div>
             <div class="col">
-                <a href="{{route('convenios.seguimientomemos')}}" class="btn btn-warning btn-sm" ><i class="bi bi-eyeglasses"></i> Seguimiento de Memos </a>
+                <a href="{{route('convenios.seguimientomemos')}}" target="_blank" class="btn btn-warning btn-sm" ><i class="bi bi-eyeglasses"></i> Seguimiento de Memos </a>
             </div>
             <div class="col">
                 @can('convenio.create')
-                <a href="{{route('convenio.create')}}" class="btn btn-primary btn-sm"><i class="bi bi-file-plus"></i> Agregar Convenio</a>
+                <a href="{{route('convenio.create')}}" target="_blank" class="btn btn-primary btn-sm"><i class="bi bi-file-plus"></i> Agregar Convenio</a>
                 @endcan
             </div>
             

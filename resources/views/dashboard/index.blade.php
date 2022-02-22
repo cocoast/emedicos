@@ -3,7 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-<div><h3>Resumen Equipos Medicos Año {{ date('Y') }}</h3></div>
+<div><h3>Resumen Año {{ date('Y') }}</h3></div>
    <div class="row align-items-start">
        <div class="col w-25">
             <div class="info-box bg-red">

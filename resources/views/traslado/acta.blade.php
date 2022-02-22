@@ -1,212 +1,214 @@
-@extends('ppa')
+@extends('pdf')
 
 @section('title', 'Acta de Traslado')
 
+
+@section('style')
+.table td, .table th{
+padding-top: .2rem !important ;
+padding-bottom: .2rem !important ;
+padding-left: .5rem !important;
+
+}
+.row {
+margin-left:-5px;
+margin-right:-5px;
+}
+
+.column {
+float: left;
+width: 50%;
+}
+
+
+@stop
+
+
 @section('content_header')
 
-    <h3>ACTA DE TRASLADO DE EQUIPO MEDICO</h3>
+<b>ACTA DE TRASLADO DE EQUIPO MEDICO</b>
+
+@stop
+
+@section('subtitle')
+
+
+
+<h3 class="p-2 text-center"><b>Acta N°: {{$traslado->numero}}</b></h3>
+<p style="text-align: right; font-size: larger;"><b>Fecha: {{date("d/m/Y", strtotime($traslado->fecha))}}</b></p>
+
+
+
+
 
 @stop
 
 @section('body')
 
-   <div class="container" id="widget">
-        <div class="row justify-content-center">
-            <div class="d-flex justify-content-start"><img id="ministerio" src="{{ asset('img/ministerio.png') }}" width="150" alt="Logo"></div>
-            <div class="d-flex justify-content-center "><h3 class="p-4">ACTA DE TRASLADO DE EQUIPO MEDICO</h3></div>
-            <div class="d-flex justify-content-end"><img src="{{ asset('img/hpm.png') }}" width="120" height="100" alt=""></div>
-        </div>
-        <div class="p-2 d-flex justify-content-center">
-            <div class="row border border-dark">
-                <div class="col border border-dark" style="background-color:#aaa"><h5><strong>Numero de Acta:</strong></h5></div>
-                <div class="col border border-dark"><h4>{{ $traslado->numero }}</h4></div>
-                <div class="col border border-dark" style="background-color:#aaa"><h5><strong>Fecha de Acta:</strong></h5></div>
-                <div class="col border border-dark"><h4>{{date("d-m-Y", strtotime($traslado->fecha))}}</h4></div>
-            </div>
-        </div>
-        <div class="p-2 d-flex justify-content-center">
-        <table class=" table border border-dark table-sm" style="width: 80%;" >
-            <thead>
-                <th class="border border-dark" colspan="3"> Servicio Actual</th>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="border border-dark"> CR Actual</td>
-                    <td class="border border-dark">:</td>
-                    <td class="border border-dark">{{ $traslado->Actual->cr }}</td>
-                </tr>
-                <tr>
-                    <td class="border border-dark">Nombre del servicio Actual</td>
-                    <td class="border border-dark">:</td>
-                    <td class="border border-dark">{{ $traslado->Actual->nombre }}</td>
-                </tr>
-                <tr>
-                    <td class="border border-dark"> Ubicacion del servicio Actual</td>
-                    <td class="border border-dark">:</td>
-                    <td class="border border-dark">{{ $traslado->Actual->ubicacion }}</td>
-                </tr>
-            </tbody>
-        </table>
+<div class='row'>
+    <div class="column" style="padding-right:20px;">
+        <p style="text-align: left;"><b>1. Servicio Actual: </b> </p>
     </div>
-    <div class="p-2 d-flex justify-content-center">
-        <table class=" table border border-dark table-sm" style="width: 80%;" >
-            <thead>
-                <th class="border border-dark" colspan="3"> Servicio Destino</th>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="border border-dark"> CR Destino</td>
-                    <td class="border border-dark">:</td>
-                    <td class="border border-dark">{{ $traslado->Destino->cr }}</td>
-                </tr>
-                <tr>
-                    <td class="border border-dark">Nombre del servicio Destino</td>
-                    <td class="border border-dark">:</td>
-                    <td class="border border-dark">{{ $traslado->Destino->nombre }}</td>
-                </tr>
-                <tr>
-                    <td class="border border-dark"> Ubicacion del servicio Destino</td>
-                    <td class="border border-dark">:</td>
-                    <td class="border border-dark">{{ $traslado->Destino->ubicacion }}</td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="column" style="padding-left:20px;">
+        <p style="text-align: left;"><b>2. Servicio Destino: </b> </p>
     </div>
-    <div class="p-2 d-flex justify-content-center">
-        <table class=" table border border-dark table-sm" style="width: 80%;" >
-            <thead>
-                <th class="border border-dark" colspan="3"> Datos del Equipo</th>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="border border-dark"> Nombre</td>
-                    <td class="border border-dark">:</td>
-                    <td class="border border-dark">{{ $traslado->Equipo->Familia->nombre }}</td>
-                </tr>
-                <tr>
-                    <td class="border border-dark">N° de Inventario</td>
-                    <td class="border border-dark">:</td>
-                    <td class="border border-dark">{{ $traslado->Equipo->inventario }}</td>
-                </tr>
-                <tr>
-                    <td class="border border-dark"> Marca</td>
-                    <td class="border border-dark">:</td>
-                    <td class="border border-dark">{{ $traslado->Equipo->Marca->marca }}</td>
-                </tr>
-                <tr>
-                    <td class="border border-dark"> Modelo</td>
-                    <td class="border border-dark">:</td>
-                    <td class="border border-dark">{{ $traslado->Equipo->Modelo->modelo }}</td>
-                </tr>
-                <tr>
-                    <td class="border border-dark"> Serie</td>
-                    <td class="border border-dark">:</td>
-                    <td class="border border-dark">{{ $traslado->Equipo->serie }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="p-2 d-flex justify-content-center">
-        <table class=" table border border-dark table-sm" style="width: 80%;" >
-            <thead>
-                <tr>
-                <th class="border border-dark" colspan="4"> Accesorios del Equipo</th>
-                </tr>
-                <tr>
-                    <th class="border border-dark">Nombre</th>
-                    <th class="border border-dark">Marca</th>
-                    <th class="border border-dark">Modelo</th>
-                    <th class="border border-dark">Serie</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="border border-dark"><p></p></td>
-                    <td class="border border-dark"><p></p></td>
-                    <td class="border border-dark"><p></p></td>                    
-                    <td class="border border-dark"><p></p></td>
-                </tr>
-                <tr>
-                    <td class="border border-dark"><p></p></td>
-                    <td class="border border-dark"><p></p></td>
-                    <td class="border border-dark"><p></p></td>                    
-                    <td class="border border-dark"><p></p></td>
-                </tr>
-                <tr>
-                    <td class="border border-dark"><p></p></td>
-                    <td class="border border-dark"><p></p></td>
-                    <td class="border border-dark"><p></p></td>                    
-                    <td class="border border-dark"><p></p></td>
-                </tr>
-                
-            </tbody>
-        </table>
-    </div>
-         <div class="p-2 d-flex justify-content-center">
-        <table class="border border-dark" width="80%">
-            <thead>
-                <tr><th colspan="4"><strong>SERVICIO ACTUAL</strong></th></tr>
-                <tr>
-                <th >Cargo (Jefe / Supervisor / Designado)</th>
-                <th >Nombre</th>
-                <th >RUT</th>
-                <th >Firma</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td >____________________________</td>
-                    <td >____________________________</td>
-                    <td >____________________________</td>
-                    <td >____________________________</td>
-                </tr>
-            </tbody>
-        </table>
-        </div>
-        <div class="p-2 d-flex justify-content-center">
-       <table class="border border-dark" width="80%">
-            <thead>
-                <tr><th colspan="4"><strong>SERVICIO DESTINO</strong></th></tr>
-                <tr>
-                <th >Cargo (Jefe / Supervisor / Designado)</th>
-                <th >Nombre</th>
-                <th >RUT</th>
-                <th >Firma</th>
-                </tr>
-            </thead>
-            <tbody class="p-4">
-                <tr>
-                    <td >____________________________</td>
-                    <td >____________________________</td>
-                    <td >____________________________</td>
-                    <td >____________________________</td>
-                </tr>
-            </tbody>
-        </table>
-        </div>
-        
-    </div>
-    
- 
+</div>
 
-@stop  
-@section('css')
-<link rel="stylesheet" href="/css/bootstrap-print.min.css" media="print">
+<div class="row">
+    <div class="column" style="padding-right:20px;">
+        <table class="table table-striped text-justify">
+            <col width="auto">
+            <tbody>
+                <tr>
+                    <td><b>CR Actual: </b></td>
+                    <td><b> {{$traslado->Actual->cr}} </b></td>
+                </tr>
+                <tr>
+                    <td><b>Nombre del Servicio Actual:</b></td>
+                    <td><b>{{ $traslado->Actual->nombre }} </b></td>
+                </tr>
+                <tr>
+                    <td><b>Ubicación del Servicio Actual:</b></td>
+                    <td><b>{{ $traslado->Actual->ubicacion }} </b></td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+    <div class="column" style="padding-left:20px;">
+        <table class="table table-striped text-justify">
+            <col width="auto">
+            <tbody>
+                <tr>
+                    <td><b>CR Destino: </b></td>
+                    <td><b>{{ $traslado->Destino->cr }} </b></td>
+                </tr>
+                <tr>
+                    <td><b>Nombre del Servicio Destino:</b></td>
+                    <td><b>{{ $traslado->Destino->nombre }} </b></td>
+                </tr>
+                <tr>
+                    <td><b>Ubicación del Servicio Destino:</b></td>
+                    <td><b>{{ $traslado->Destino->ubicacion }} </b></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<p style="text-align: left;"><b>3. Datos del Equipo: </b> <br> </p>
+
+
+<table class="table table-striped text-justify" style="width: 100%">
+
+    <tbody>
+        <tr>
+            <td><b>Nombre: </b></td>
+            <td><b>{{ $traslado->Equipo->Familia->nombre }} </b></td>
+        </tr>
+        <tr>
+            <td><b>N° de Inventario:</b></td>
+            <td><b>{{ $traslado->Equipo->inventario }} </b></td>
+        </tr>
+        <tr>
+            <td><b> Marca:</b></td>
+            <td><b>{{ $traslado->Equipo->Marca->marca }} </b></td>
+        </tr>
+        <tr>
+            <td><b> Modelo:</b></td>
+            <td><b> {{ $traslado->Equipo->Modelo->modelo }}</b></td>
+        </tr>
+        <tr>
+            <td><b> Serie:</b></td>
+            <td><b>{{ $traslado->Equipo->serie }} </b></td>
+        </tr>
+    </tbody>
+</table>
+
+
+<p style="text-align: left;"><b>4. Accesorios del Equipo: </b> <br> </p>
+
+
+<table class="table table-striped text-justify">
+    <col width="auto">
+    <thead>
+        <th width="30px" style="text-align: center;"><b>#</b></th>
+        <th><b>Nombre: </b></th>
+        <th><b>Marca: </b></th>
+        <th><b>Modelo: </b></th>
+        <th><b>Serie: </b></th>
+    </thead>
+    <tbody>
+
+        @for ($i = 0; $i < 5; $i++) <tr>
+            <td width="30px" style="text-align: center">0{{$i+1}}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            </tr>
+            @endfor
+
+    </tbody>
+</table>
+
+
+
+<p style="text-align: left;"><b>5. Responsable {{$traslado->Actual->nombre}} </b> <br> </p>
+
+
+<table class="text-justify" cellpadding="7px" style="width: 100%">
+    <col width="200">
+
+
+    <tbody>
+        <tr>
+            <td><b>Cargo:</b></td>
+            <td><b>Nombre: </b></td>
+            <td><b>RUT: </b></td>
+            <td><b>Firma:</b> </td>
+        </tr>
+        <tr height="100px">
+
+
+            <td><i>Jefe/Supervisor/<br>Designado</i></td>
+            <td>______________________</td>
+            <td>______________________</td>
+            <td>______________________</td>
+
+        </tr>
+
+    </tbody>
+</table>
+
+
+<p style="text-align: left;"><b><br>6. Responsable {{$traslado->Destino->nombre}} </b> <br> </p>
+
+<table class="text-justify" cellpadding="7px" style="width: 100%">
+    <col width="200">
+
+
+    <tbody>
+        <tr>
+            <td><b>Cargo:</b></td>
+            <td><b>Nombre: </b></td>
+            <td><b>RUT: </b></td>
+            <td><b>Firma:</b> </td>
+        </tr>
+        <tr height="100px">
+
+
+            <td><i>Jefe/Supervisor/<br>Designado</i></td>
+            <td>______________________</td>
+            <td>______________________</td>
+            <td>______________________</td>
+
+        </tr>
+
+    </tbody>
+</table>
+
+
 @stop
-@section('js')
-<script src="{{ asset('js/html2canvas.js') }}">    </script>
-<script type="text/javascript">
- $(document).ready(function(){
-    $('#btnSave').on('click',function(){
-        html2canvas(document.getElementById('#widget')).then(function(canvas){
-            var anchorTag=document.createElement("a");
-            document.body.appendChild(anchorTag);
-            anchorTag.download="img.jpg";
-            anchorTag.href='_blank';
-            anchorTag.click();
-        });
-    });
- });
-
-</script>
-@stop 

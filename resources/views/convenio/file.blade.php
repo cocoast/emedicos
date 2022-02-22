@@ -30,6 +30,7 @@
 				         <option value="Anexo Economico">Anexo Economico</option>
 				         <option value="Oferta Economica">Oferta Economica</option>
 				         <option value="Certificado de Garantia">Certificado de Garantia</option>
+						 <option value="Presentacion Oferente">Presentacion Oferente</option>
 			     	</select>
 				</div>
 				<div class="col">

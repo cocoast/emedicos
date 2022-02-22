@@ -27,15 +27,15 @@
 		</div>
 		<div class="col">
 			<label for="" class="form-label"> Licitacion del Proyecto</label>
-			<input type="text" class="form-control" name="licitacion" id="licitacion" >
+			<input type="text" class="form-control" name="licitacion" tabindex="4" id="licitacion" >
 		</div>
 		<div class="col">
 			<label for="" class="form-label"> OC del Equipo/ Proyecto</label>
-			<input type="text" class="form-control" name="oc" id="oc" >
+			<input type="text" class="form-control" name="oc" tabindex="5" id="oc" >
 		</div>
 		<div class="col">
 			<label for="" class="form-label">EQ</label>
-			<select class="form-control" name="eq" id="eq" tabindex="4" required>
+			<select class="form-control" name="eq" id="eq" tabindex="6" required>
 				<option selected>Seleccione</option>
 				<option value="Critico">Critico</option>
 				<option value="Relevante">Relevante</option>
@@ -44,7 +44,7 @@
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Año de Fabricacion</label>
-			<input id="fabricacion" name="fabricacion" type="text" tabindex="5" class="form-control">
+			<input id="fabricacion" name="fabricacion" type="text" tabindex="7" class="form-control">
 		</div>
 	</div>
 	</div>
@@ -52,11 +52,11 @@
 	<div class="row align-items-start">
 		<div class="col">
 			<label for="" class="form-label">Valor del Equipo IVA Incluido</label>
-			<input id="valor" name="valor" type="text" tabindex="6" class="form-control">
+			<input id="valor" name="valor" type="text" tabindex="8" class="form-control">
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Tipo Activo</label >
-			<select class="form-control" name="tipoactivo" id="tipoactivo" tabindex="7" required>
+			<select class="form-control" name="tipoactivo" id="tipoactivo" tabindex="9" required>
 				<option selected>Seleccione</option>
 				<option value="Propio">Propio</option>
 				<option value="Arriendo">Arriendo</option>
@@ -66,7 +66,7 @@
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Archivador</label>
-			<input id="archivador" name="archivador" type="text" tabindex="8" class="form-control">
+			<input id="archivador" name="archivador" type="text" tabindex="10" class="form-control">
 		</div>
 	</div>
 	</div>
@@ -74,29 +74,29 @@
 		<div class="row align-items-start">
 		<div class="col">
 		<label for="" class="form-label">Marca</label>
-     	<input id="marca" name="marca" type="text" tabindex="9" class="form-control" required>
+     	<input id="marca" name="marca" type="text" tabindex="11" class="form-control" required>
 		</div>
 	<div class="col">
 		<label for="" class="form-label">Modelo</label>
-     <input id="modelo" name="modelo" type="text" tabindex="10" class="form-control" required>
+     <input id="modelo" name="modelo" type="text" tabindex="12" class="form-control" required>
 	</div>
 </div>
 	<div class="mb-3">
 		<div class="row align-items-start">
 			<div class="col">
 		<label for="" class="form-label" >Proveedor</label>
-     	<input id="proveedor" name="proveedor" type="text" tabindex="11" class="form-control" required>
+     	<input id="proveedor" name="proveedor" type="text" tabindex="13" class="form-control" required>
 	</div>
 	<div class="col">
 		<label for="" class="form-label">Servicio Clinico Responsable</label>
-     	<input id="servicioclinico" name="servicioclinico" tabindex="12" type="text" class="form-control" required>
+     	<input id="servicioclinico" name="servicioclinico" tabindex="14" type="text" class="form-control" required>
 	</div>
 </div>
 	<div class="mb-3">
 		<div class="row align-items-start">
 			 <div class="col">
 				<label for="" class="form-label">Familia del Equipo</label>
-     				<input id="familia" name="familia" type="text" tabindex="13" class="form-control" required>
+     				<input id="familia" name="familia" type="text" tabindex="15" class="form-control" required>
  			</div> 
  			<!-- <div class="col">
 			<label for="" class="form-label">Familia Equipo</label>
@@ -104,14 +104,14 @@
 		</div> -->
  			<div class="col">
      			<label for="" class="form-label">SubFamilia del Equipo</label>
-     			<input id="subfamilia" name="subfamilia" type="text" tabindex="14" class="form-control" required>
+     			<input id="subfamilia" name="subfamilia" type="text" tabindex="16" class="form-control" required>
 				</div>
 			</div>
 	</div>
 		<div class="row align-items-start">
 			<div class="col">
 				<label for="" class="form-label">Clase del Equipo</label>
-     			<select class="form-control" name="clase" id="clase" tabindex="15" required>
+     			<select class="form-control" name="clase" id="clase" tabindex="17" required>
          		<option selected>Seleccione</option>
          			@foreach($clase as $id=>$nombre)
          				<option value="{{$id}}">{{$nombre}}</option>
@@ -120,7 +120,7 @@
  			</div>
  			<div class="col">
      			<label for="" class="form-label">Sub Clase del Equipo</label>
-     			<select class="form-control" name="subclase" id="subclase" tabindex="16" required>
+     			<select class="form-control" name="subclase" id="subclase" tabindex="18" required>
         		<option selected>Seleccione</option>
         			@foreach($subclase as $id=>$nombre)
         				 <option value="{{$id}}">{{$nombre}}</option>
@@ -131,26 +131,26 @@
 			<div class="row align-items-start">
             <div class="col">
                 <label for="" class="form-label">Adjuntar Acta </label>
-                <input id="documento" name="documento" type="file"  class="form-control">
+                <input id="documento" name="documento" type="file" tabindex="19" class="form-control">
             </div>
           </div>
 			<h2>Garantias</h2>
 			<div class="row align-items-start">
 				<div class="col">
 					<label for="" class="form-label">Fecha de Vencimiento</label>
-	     			<input type="date" name="fin"  id="fin" tabindex="17" class="form-control">
+	     			<input type="date" name="fin"  id="fin" tabindex="20" class="form-control">
 	 			</div>
 	 			<div class="col">
 	     			<label for="" class="form-label">Cantidad de Mantenciones Disponibles</label>
-	     			<input type="text" name="mp" id="mp" tabindex="18" class="form-control">
+	     			<input type="text" name="mp" id="mp" tabindex="21" class="form-control">
 				</div>
 				<div class="col">
 	     			<label for="" class="form-label">Frecuencia de Mantenciones</label>
-	     			<input type="text" name="frecuencia" id="frecuencia" tabindex="19" class="form-control">
+	     			<input type="text" name="frecuencia" id="frecuencia" tabindex="22" class="form-control">
 				</div>
 				<div class="col">
 	     			<label for="" class="form-label">Mantenciones Anuales</label>
-	     			<input type="text" name="mpa" id="mpa" tabindex="19" class="form-control">
+	     			<input type="text" name="mpa" id="mpa" tabindex="23" class="form-control">
 				</div>
 			</div>
 	</div>
@@ -161,7 +161,7 @@
 		<a href="/equipo" class="btn btn-secondary">CANCELAR</a>
 	</div>
 	<div class="col">
-		<button  class="btn btn-primary" tabindex="20">GUARDAR</button>
+		<button  class="btn btn-primary" tabindex="24">GUARDAR</button>
 	</div>
 </div>
 

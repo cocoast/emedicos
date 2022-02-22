@@ -154,6 +154,7 @@ class ConveniosController extends Controller
     public function store(Request $request)
     {
         $convenio=new Convenio();
+        $proveedor=explode(' - ', $request->get('proveedor'))[0];
         if($request->get('tipoconvenio')=='Correctivo'){
             $convenio->nombre=$request->get('nombre');
             $convenio->licitacion=$request->get('licitacion');
@@ -167,7 +168,7 @@ class ConveniosController extends Controller
             $convenio->link=$request->get('link');
             $convenio->valor=$request->get('valor');
             $convenio->tipoconvenio=$request->get('tipoconvenio');
-            $convenio->proveedor=$request->get('proveedor');
+            $convenio->proveedor=$proveedor;
             $convenio->save();
              return redirect ('/convenio');
         }
@@ -184,7 +185,8 @@ class ConveniosController extends Controller
         $convenio->valor=$request->get('valor');
         $convenio->link=$request->get('link');
         $convenio->tipoconvenio=$request->get('tipoconvenio');
-        $convenio->proveedor=$request->get('proveedor');
+        $convenio->proveedor=$proveedor;
+        //  dd($convenio);
         $convenio->save();
         $cantidadpagos=$convenio->meses/$convenio->frecuenciapago;
         for ($i=0; $i < $cantidadpagos; $i++) { 

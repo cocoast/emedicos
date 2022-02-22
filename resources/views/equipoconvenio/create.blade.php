@@ -18,8 +18,8 @@
 	@csrf
  	<div class="row align-items-start">
  		<div class="col">
-			<label for="" class="form-label">Inventario del Equipo</label>
-			<input id="equipo" name="equipo" type="text" tabindex="1" class="form-control">
+			<label for="" class="form-label">Equipo</label>
+	     	<input id="equipo" name="equipo" type="text" tabindex="1"  class="form-control" required>
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Fecha de Incorporacion al Convenio</label>
@@ -29,13 +29,15 @@
 			<label for="" class="form-label">Valor del Equipo en el convenio</label>
 			<input id="valor" name="valor" type="text" tabindex="3" class="form-control">
 		</div>
+		</div>
+		<div class="row">
 		<div class="col">
 			<label for="" class="form-label">Mantenciones Preventivas Disponibles</label>
-			<input id="disponible" name="disponible" type="text" tabindex="3" class="form-control">
+			<input id="disponible" name="disponible" type="text" tabindex="4" class="form-control">
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Mantenimiento Preventivo</label>
-			<select class="form-control" name="mp" id="mp" tabindex="4">
+			<select class="form-control" name="mp" id="mp" tabindex="5">
 				<option selected>Seleccione</option>
 				<option value="Sin">Sin Mantenciones</option>
 				<option value="1">1 Mantención</option>
@@ -50,7 +52,7 @@
 <div class="row align-items-start">
  		<div class="col">
 			<label for="" class="form-label">Mano de Obra</label>
-			<select class="form-control" name="mc" id="mc" tabindex="5">
+			<select class="form-control" name="mc" id="mc" tabindex="6">
 				<option selected>Seleccione</option>
 				<option value="Sin">Sin Mano de Obra</option>
 				<option value="Full">Full Mano de Obra</option>
@@ -66,13 +68,15 @@
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Repuestos</label>
-			<select class="form-control" name="repuesto" id="repuesto" tabindex="6">
+			<select class="form-control" name="repuesto" id="repuesto" tabindex="7">
 				<option selected>Seleccione</option>
 				<option value="Sin">Sin repuestos</option>
 				<option value="Parcial">Repuestos Parciales</option>
 				<option value="Full">Full Repuestos</option>
 			</select>
 		</div>
+		</div>
+		<div class="row">
 		 <div class="col">
 			<label for="" class="form-label"> Convenio</label>
 			<input id="convenio" name="convenio"  type ="hidden" value="{{$convenios->id}}"type="text" class="form-control" readonly>
@@ -98,9 +102,16 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/app.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+   <link rel="stylesheet" href="{{ asset('vendor/jquery-ui/jquery-ui/jquery-ui.min.css') }}">
 @stop
 
 @section('js')
-    
+ <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="{{ asset('vendor/jquery-ui/jquery-ui/jquery-ui.min.js') }}"></script>
+<script type="text/javascript">
+	
+</script>
+    	
 @stop

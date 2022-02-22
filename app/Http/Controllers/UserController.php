@@ -33,7 +33,8 @@ class UserController extends Controller
      */
     public function create()
     {
-     
+     $roles=Role::all();
+     return view ('user.create')->compact('roles');
     }
 
     /**
@@ -82,7 +83,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {   
          $user=User::find($id);
          $user->name=$request->get('nombre');
          if($request->get('rol')!="Seleccione Rol"){

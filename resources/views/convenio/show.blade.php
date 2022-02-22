@@ -208,6 +208,7 @@
                     <td>{{$pagorealizado->memo}}</td>
                     <td >{{date("d-m-Y", strtotime($pagorealizado->fecha))}}</td>
                     <td>
+
                         @if($pagorealizado->oc!="ingresar"&&$pagorealizado->oc!=null&&$pagorealizado->oc!="")
                         <!-- Trigger the modal with a button -->
                             <button type="button" data-path="{{route('pagos.show', $pagorealizado->oc) }}" class="btn btn-primary btn-sm EquipoBtn">{{ $pagorealizado->oc }}</button>
@@ -220,6 +221,7 @@
                     <td>@if($pagorealizado->link!=null)<a href="{{asset($pagorealizado->link)}}" target="_blank">archivo</a>  @endif</td>
                     @can('convenio.edit')
                     <td>
+                        <a href="{{ route('pagos.pdf',$pagorealizado->id) }}" class="btn btn-warning" target="_blank"><i class="bi bi-clipboard-data"></i></a>
                         <!-- Trigger the modal with a button -->
                         <button type="button" data-path="{{route('pagos.edit', $pagorealizado->id) }}" class="btn btn-warning btn-sm EquipoBtn">
                        <i class="bi bi-pencil"></i></button>
@@ -255,17 +257,18 @@
                     <td>{{date("d-m-Y", strtotime($pagopendiente->fecha))}}</td>
                     <td>{{$pagopendiente->oc}}</td>
                     <td>{{$pagopendiente->valor}}</td>
-                    @can('convenio.edit')
+                   
                     <td>
-                        <a href="{{ route('pagos.ficha',$pagopendiente->id) }}" class="btn btn-warning" target="_blank"><i class="bi bi-clipboard-data"></i></a>
-                        <a href="{{ route('pagos.pdf',$pagopendiente->id) }}" class="btn btn-warning" target="_blank"><i class="bi bi-clipboard"></i></a>
+                        
+                        <a href="{{ route('pagos.pdf',$pagopendiente->id) }}" class="btn btn-warning" target="_blank"><i class="bi bi-clipboard-data"></i></a>
+                        @can('convenio.edit')
                          <!-- Trigger the modal with a button -->
                     <button type="button" data-path="{{route('pagos.edit', $pagopendiente->id) }}" class="btn btn-success btn-sm EquipoBtn">
                         <i class="bi bi-check-square-fill"></i></button>
-
+                        @endcan
 
                     </td>
-                    @endcan
+                   
                     </tr>
                     @endforeach
                 </tbody>

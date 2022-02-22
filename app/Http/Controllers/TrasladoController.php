@@ -9,6 +9,7 @@ use App\Models\Equipo;
 use PDF2;
 use Dompdf\Dompdf;
 use DateTime;
+
 class TrasladoController extends Controller
 {
     /**
@@ -61,13 +62,7 @@ class TrasladoController extends Controller
         $traslado->save();
         return redirect ('/traslado')->with('message','Acta Creada Satisfactoriamente')->with("status",'alert alert-success');  
     }
-    public function createPDF($id){
-        $traslado=Traslado::find($id);
-        
-        $pdf = PDF2::loadView('traslado.acta', compact('traslado'));
-        return $pdf->download('invoice.pdf');
-
-       }
+   
        public function Subir($id){
         $traslado=Traslado::find($id);
         return view('traslado.archivo')->with('traslado',$traslado);
@@ -125,10 +120,13 @@ class TrasladoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+   
+
+    public function show($id){
         $traslado=Traslado::find($id);
-        return view('traslado.acta')->with('traslado',$traslado);
+        $pdf = PDF2::loadView('traslado.acta', compact('traslado'));
+        return $pdf->inline('invoice.pdf');
+
     }
 
     /**

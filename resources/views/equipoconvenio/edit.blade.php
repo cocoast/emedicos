@@ -31,6 +31,8 @@
 			<label for="" class="form-label">Fecha de Incorporacion </label>
 			<input id="fechaincorporacion" name="fechaincorporacion" value="{{$equipoconvenio->fechaincorporacion}}" type="date" tabindex="2" class="form-control">
 		</div>
+		</div>
+		<div class="row">
 		<div class="col">
 			<label for="" class="form-label">Valor en el convenio</label>
 			<input id="valor" name="valor" value="{{$equipoconvenio->valor}}" type="text" tabindex="3" class="form-control">
@@ -78,6 +80,8 @@
 				<option value="Full">Full Repuestos</option>
 			</select>
 		</div>
+		</div>
+		<div class="row">
 		<div class="col">
 			<label for="" class="form-label">Seleccione Convenio</label>
 			<input id="convenioname" name="convenioname" value="{{$equipoconvenio->Convenio->nombre}}" type="text" tabindex="7" class="form-control" readonly>
