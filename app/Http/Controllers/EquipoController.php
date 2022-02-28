@@ -161,13 +161,15 @@ class EquipoController extends Controller
                 $eq="2.2";
             if($equipo->eq=="Sin")
                 $eq="Sin";
-            $fecha=new DateTime($equipo->fecha_adquisicion);
+            
             $carpeta=$_SERVER['DOCUMENT_ROOT'].'/storage/'.$eq.'/'.$equipo->Familia->nombre.'/'.$equipo->SubFamilia->nombre.'/'.$equipo->inventario."/";
             $carpetanombre='/storage/'.$eq.'/'.$equipo->Familia->nombre.'/'.$equipo->SubFamilia->nombre.'/'.$equipo->inventario."/";
-            $nombre=$equipo->inventario.'_'.$fecha->format('Y').'_ACTA_'.$fecha->format('m');
+            
             if(!file_exists($carpeta))
                 mkdir($carpeta,0777,true);
             if($request->hasFile('documento')){
+                $fecha=new DateTime($equipo->fecha_adquisicion);
+                $nombre=$equipo->inventario.'_'.$fecha->format('Y').'_ACTA_'.$fecha->format('m');
                 $file=$request->file('documento');
                 $nombre=$nombre.'.pdf';
                 if($file->guessExtension()=="pdf"){    
@@ -229,13 +231,15 @@ class EquipoController extends Controller
                 $eq="2.2";
             if($equipo->eq=="Sin")
                 $eq="Sin";
-            $fecha=new DateTime($equipo->fecha_adquisicion);
+            
             $carpeta=$_SERVER['DOCUMENT_ROOT'].'/storage/'.$eq.'/'.$equipo->Familia->nombre.'/'.$equipo->SubFamilia->nombre.'/'.$equipo->serie."/";
             $carpetanombre='/storage/'.$eq.'/'.$equipo->Familia->nombre.'/'.$equipo->SubFamilia->nombre.'/'.$equipo->serie."/";
-            $nombre=$equipo->inventario.'_'.$fecha->format('Y').'_ACTA_'.$fecha->format('m');
+            
             if(!file_exists($carpeta))
                 mkdir($carpeta,0777,true);
             if($request->hasFile('documento')){
+                $fecha=new DateTime($equipo->fecha_adquisicion);
+                $nombre=$equipo->inventario.'_'.$fecha->format('Y').'_ACTA_'.$fecha->format('m');
                 $file=$request->file('documento');
                 $nombre=$nombre.'.pdf';
                 if($file->guessExtension()=="pdf"){    
@@ -636,5 +640,47 @@ class EquipoController extends Controller
         return $data;
 
     }
+    public function subir($id)
+    {
+        $equipo=Equipo::find($id);
+        return view('equipo.archivo')->with('equipo',$equipo);
+    }
+
+    public function archivo(Request $request, $id)
+    {
+        $equipo=Equipo::find($id);
+        $eq="";
+            if($equipo->eq=="Critico")
+                $eq="2.1";
+            if($equipo->eq=="Relevante")
+                $eq="2.2";
+            if($equipo->eq=="Sin")
+                $eq="Sin";
+        if($equipo->inventario!='?')
+        $carpeta=$_SERVER['DOCUMENT_ROOT'].'/storage/'.$eq.'/'.$equipo->Familia->nombre.'/'.$equipo->SubFamilia->nombre.'/'.$equipo->inventario."/";
+        else
+        $carpeta=$_SERVER['DOCUMENT_ROOT'].'/storage/'.$eq.'/'.$equipo->Familia->nombre.'/'.$equipo->SubFamilia->nombre.'/'.$equipo->serie."/";
+
+        if(!file_exists($carpeta)){
+            mkdir($carpeta,0777,true);
+        }
+
+        if($request->hasFile('documento')){
+            $fecha=new DateTime($request->fecha);
+            $nombre=$equipo->inventario.'_'.$fecha->format('Y').'_'.$request->archivo.'_'.$fecha->format('m').'_'.$fecha->format('d');
+            $file=$request->file('documento');
+            $nombre=$nombre.'.pdf';
+                if($file->guessExtension()=="pdf"){    
+                    $file->move($carpeta, $nombre);
+                }
+        }
+        return redirect()->back();
+    }
 
 }
+
+
+
+            
+            
+            

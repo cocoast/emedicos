@@ -17,14 +17,30 @@ vertical-align: middle !important;
 @section('subtitle')
 <div class="text-center">
     <h3 class="p-2">
+        @if($pago->periodo==1)
+        @if($convenio->frecuenciapago == 1)
+        <b>Periodo que Informa: {{date("d-m-Y", strtotime('-1 months', strtotime($pago->fecha)))}} al {{date("d-m-Y", strtotime($pago->fecha))}} </b>
+        @elseif ($convenio->frecuenciapago == 3)
+        <b>Periodo que Informa: {{date("d-m-Y", strtotime('-3 months', strtotime($pago->fecha)))}} al {{date("d-m-Y", strtotime($pago->fecha))}} </b>
+        @elseif ($convenio->frecuenciapago == 4)
+        <b>Periodo que Informa: {{date("d-m-Y", strtotime('-4 months', strtotime($pago->fecha)))}} al {{date("d-m-Y", strtotime($pago->fecha))}} </b>
+        @elseif ($convenio->frecuenciapago == 6)
+        <b>Periodo que Informa: {{date("d-m-Y", strtotime('-6 months', strtotime($pago->fecha)))}} al {{date("d-m-Y", strtotime($pago->fecha))}} </b>
+        @elseif ($convenio->frecuenciapago == 12)
+        <b>Periodo que Informa: {{date("d-m-Y", strtotime('-1 year', strtotime($pago->fecha)))}} al {{date("d-m-Y", strtotime($pago->fecha))}} </b>
+        @endif
+        @else
         @if($convenio->frecuenciapago == 1)
         <b>Periodo que Informa: {{date("d-m-Y", strtotime('+1 days', strtotime('-1 months', strtotime($pago->fecha))))}} al {{date("d-m-Y", strtotime($pago->fecha))}} </b>
-        @elseif ($convenio->frecuenciapago == 4)
+        @elseif ($convenio->frecuenciapago == 3)
         <b>Periodo que Informa: {{date("d-m-Y", strtotime('+1 days', strtotime('-3 months', strtotime($pago->fecha))))}} al {{date("d-m-Y", strtotime($pago->fecha))}} </b>
+        @elseif ($convenio->frecuenciapago == 4)
+        <b>Periodo que Informa: {{date("d-m-Y", strtotime('+1 days', strtotime('-4 months', strtotime($pago->fecha))))}} al {{date("d-m-Y", strtotime($pago->fecha))}} </b>
         @elseif ($convenio->frecuenciapago == 6)
         <b>Periodo que Informa: {{date("d-m-Y", strtotime('+1 days', strtotime('-6 months', strtotime($pago->fecha))))}} al {{date("d-m-Y", strtotime($pago->fecha))}} </b>
         @elseif ($convenio->frecuenciapago == 12)
         <b>Periodo que Informa: {{date("d-m-Y", strtotime('+1 days', strtotime('-1 year', strtotime($pago->fecha))))}} al {{date("d-m-Y", strtotime($pago->fecha))}} </b>
+        @endif
         @endif
 
     </h3>
@@ -70,8 +86,10 @@ vertical-align: middle !important;
                 <td><b>
                         @if($convenio->frecuenciapago == 1)
                         Mensual
-                        @elseif ($convenio->frecuenciapago == 4)
+                        @elseif ($convenio->frecuenciapago == 3)
                         Trimestral
+                        @elseif ($convenio->frecuenciapago == 4)
+                        Cuatrimestral
                         @elseif ($convenio->frecuenciapago == 6)
                         Semestral
                         @elseif ($convenio->frecuenciapago == 12)

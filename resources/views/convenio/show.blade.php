@@ -67,7 +67,8 @@
 			<label for="" class="form-label">frecuencia Pago</label>
 			<input id="" value="
 			@if($convenio->frecuenciapago==1) Mensual
-        	@elseif($convenio->frecuenciapago==4) Trimestral
+            @elseif($convenio->frecuenciapago==3) Trimestral
+        	@elseif($convenio->frecuenciapago==4) Cuatrimestral
 	        @elseif($convenio->frecuenciapago==6) Semestral
 	        @elseif($convenio->frecuenciapago==12) Anual
 	        @elseif($convenio->frecuenciapago=="Manual") Manual

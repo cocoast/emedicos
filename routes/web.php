@@ -146,3 +146,12 @@ Route::get('pagos/{id}/pdf',[
         'uses'  =>  'App\Http\Controllers\PagosController@createPDF',
         'as'    =>  'pagos.pdf'
         ]);
+
+Route::Post('/equipo/{id}/archivo',[
+    'uses'  =>'App\Http\Controllers\EquipoController@Archivo',
+    'as'    =>'equipo.archivo'
+    ]);
+Route::get('equipo/{id}/subir',[
+        'uses'  =>  'App\Http\Controllers\EquipoController@Subir',
+        'as'    =>  'equipo.subir'
+        ]);

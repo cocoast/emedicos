@@ -65,10 +65,10 @@
 			<select class="form-control" name="frecuenciapago" id="frecuenciapago" tabindex="7">
 				<option value="{{$convenio->frecuenciapago}}">{{$convenio->frecuenciapago}}</option>
 				<option value="1">Mensual (cada mes)</option>
-				<option value="4">Trimestral (cada 4 meses)</option>
-				<option value="3">Cuatrimestral (cada 3 Meses)</option>
-				<option value="6">Semestral (cada 6 meses)</option>
-				<option value="12">Anual (cada 12 meses)</option>
+				<option value="3">Trimestral (Que se repite cada 3 meses)</option>
+				<option value="4">Cuatrimestral (Que se repite cada 4 meses)</option>
+				<option value="6">Semestral (Que se repite cada 6 meses)</option>
+				<option value="12">Anual (Que se repite cada 12 meses)</option>
 				<option value="Manual">Manual</option>
 			</select>
 		</div>

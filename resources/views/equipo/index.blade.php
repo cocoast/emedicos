@@ -48,7 +48,12 @@
                 @else 
                 <tr style="max-height: 5px;"  >
                     @endif
-                <td>{{$equipo->id}}</td>
+                <td>{{$equipo->id}} 
+                   <br>
+                 <!-- Trigger the modal with a button -->
+                     <button type="button" data-path="{{route('equipo.subir', $equipo->id) }}" alt="Carga de Archivos" class="btn btn-success  openBtn">
+                      <i class="bi bi-cloud-plus"></i></button> 
+                   </td>
                 <td>{{$equipo->ServicioClinico->nombre}}</td>
                 <td>{{$equipo->ServicioClinico->ubicacion}}</td>
                  <td> 
@@ -84,7 +89,8 @@
                     @method('DELETE')
                             <button class="btn btn-danger btn-sm" type="submit" onClick="javascript: return confirm('¿Estas seguro?');"><i class="bi bi-trash"></i></button>
                         </form> 
-                    @endcan                
+                    @endcan  
+                                
                 </td>
             </tr>
         @endforeach

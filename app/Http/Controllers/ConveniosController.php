@@ -268,49 +268,52 @@ class ConveniosController extends Controller
     public function update(Request $request, $id)
     {
         $convenio=Convenio::find($id);
-        if($convenio->tipoconvenio!='Correctivo'){
-        if($convenio->fechaincio!=$request->get('fechainicio')||$convenio->fechafin!=$request->get('fechafin')||$convenio->frecuenciapago!=$request->get('frecuenciapago')){
-            if(Pago::where('convenio',$convenio->id)->count()>0){
-                $pagos=Pago::where('convenio',$convenio->id)->get();
-                $i=0;
-                foreach($pagos as $pago){
-                        //transforma fecha de inicio en date
-                    $fecha=new DateTime($convenio->fechaincio);
-                        // agrega intervalo de tiempo a la fecha en formato date
-                    $fecha=$fecha->add(new DateInterval('P'.$convenio->frecuenciapago*($i+1).'M'));
-                        //transforma fecha de fin en date
-                    $actual=DateTime::createFromFormat('Y-m-d',$request->get('fechafin'));
-                        // Si la fecha de corte es mayor que la fecha de fin de contrato
-                        if($fecha>$actual){
-                            $pago->delete();
-                        }
-                        else{
-                            $pago->fecha=$fecha;
-                          
-                            $pago->save();
-                        }
-                    $i++;
-                    }
-            }
-            else{
-                $cantidadpagos=$convenio->meses/$convenio->frecuenciapago;
-                for ($i=0; $i < $cantidadpagos; $i++) { 
-                    $pagos=new Pago();
-                    $intervalo=new DateInterval('P'.$convenio->frecuenciapago*($i+1).'M');
-                    $fecha=new DateTime($convenio->fechaincio);
-                    $fecha=$fecha->add(new DateInterval('P'.$convenio->frecuenciapago*($i+1).'M'));
-                    //dd($fecha);
-                    $pagos->fecha=$fecha;
-                    $pagos->periodo=$i+1;
-                    $pagos->memo="ingresar";
-                    $pagos->estado="Pendiente";
-                    $pagos->oc="ingresar";
-                    $pagos->valor="ingresar";
-                    $pagos->convenio=$convenio->id;
-                    $pagos->save();
-                }
-            }       
+        $ninicio=new DateTime($request->fechainicio);
+        $nfin=new DateTime($request->fechafin);
+        $cinicio=new DateTime($convenio->fechaincio);
+        $cfin=new DateTime($convenio->fechafin);
+        $periodospagos=$request->meses/$request->frecuenciapago;
 
+        $count=1;
+        $aux="";
+        if($convenio->tipoconvenio!="Correctivo"){
+            if($ninicio!=$cinicio||$cfin!=$nfin||$convenio->meses!=$request->meses||$convenio->frecuenciapago!=$request->frecuenciapago){
+                $pagos=Pago::where('convenio',$convenio->id)->get();
+                foreach ($pagos as $pago) {
+                    $pagofecha=new DateTime($pago->fecha);
+                    //dd($pagofecha);
+                    //dd($ninicio->add(new DateInterval('P'.$convenio->frecuenciapago*($count).'M')));
+                    //dd($pagofecha!=$ninicio->add(new DateInterval('P'.$convenio->frecuenciapago*($count).'M')));
+                    if($pago->periodo!=$count){
+                        $pago->periodo=$count;
+                        
+                    }
+                    $nueva=$ninicio->add(new DateInterval('P'.$convenio->frecuenciapago*(1).'M'));
+                    if($pagofecha!=$nueva){
+                        $pago->fecha=$nueva;
+                        //$aux=$aux.' - Fecha '. date('Y-m-d',strtotime($pago->fecha));
+                    }
+                    $pago->save();
+                    $aux=$aux. ' \n'.' Contador '.$count;
+                    $aux=$aux.' - Fecha '.$nueva->format('d-m-Y');
+                    $count=$count+1;
+                }
+                $count=$pagos->count();
+                while($count<$periodospagos){
+                    $pago=new Pago();
+                    $pago->fecha=$ninicio->add(new DateInterval('P'.$convenio->frecuenciapago*(1).'M'));
+                    $pago->periodo=$count+1;
+                    $pago->memo="ingresar";
+                    $pago->estado="Pendiente";
+                    $pago->oc="ingresar";
+                    $pago->valor="ingresar";
+                    $pago->convenio=$convenio->id;
+                    $pago->save();
+                    $count=$count+1;
+                }
+
+                                
+            }
         }
         $convenio->nombre=$request->get('nombre');
         $convenio->licitacion=$request->get('licitacion');
@@ -325,7 +328,6 @@ class ConveniosController extends Controller
         $convenio->tipoconvenio=$request->get('tipoconvenio');
         $convenio->link=$request->get('link');
         $convenio->proveedor=$request->get('proveedorid');
-        //dd($convenio);
         $convenio->save();
         $carpeta=$_SERVER['DOCUMENT_ROOT'].'/storage/convenios/'.$convenio->id."/";
         if(!file_exists($carpeta))
@@ -342,28 +344,8 @@ class ConveniosController extends Controller
 
 
          return redirect ('/convenio');
+        
     }
-    else{
-        $carpeta=$_SERVER['DOCUMENT_ROOT'].'/storage/convenios/'.$convenio->id."/";
-        $convenio->link=$request->get('link');
-    if(!file_exists($carpeta)){
-         //dd($carpeta);
-            mkdir($carpeta,0777,true);
-        }
-        if($request->hasFile("documento")){
-            $file=$request->file('documento');
-            $nombre=$request->get("archivo").".".$file->guessExtension();
-            if($file->guessExtension()=="pdf"){
-               $file->move($carpeta, $nombre);
-               return redirect ('/convenio');
-            }
-            else
-                dd("no es .pdf");
-        }
-        $convenio->save();
-       return redirect ('/convenio');
-    }
-}
 
     /**
      * Remove the specified resource from storage.

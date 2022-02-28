@@ -9,6 +9,7 @@
 @section('content')
 <form action="/equipo" method="POST" enctype="multipart/form-data">
 	@csrf
+	
  	<div class="row align-items-start">
 		<div class="col">
 			<label for="" class="form-label">Inventario Equipo</label>
@@ -62,6 +63,7 @@
 				<option value="Arriendo">Arriendo</option>
 				<option value="Arriendo con donacion">Arriendo Con Donacion</option>
 				<option value="Comodato">Comodato</option>
+				<option value="Prestamo">Prestamo</option>
 			</select>
 		</div>
 		<div class="col">
