@@ -9,12 +9,9 @@
     <title> @yield('title')</title>
     <link rel="stylesheet" href="{{ base_path('public/vendor/adminlte/dist/css/adminlte.min.css') }}">
     <style>
-        
-        
-
         .table-striped>tbody>tr {
             color: #538135;
-            
+
         }
 
         .table-striped>tbody>tr>td,
@@ -27,9 +24,7 @@
             background-color: #e2efd9;
         }
 
-        @yield('style')
-
-        @media print {
+        @yield('style') @media print {
             footer {
                 page-break-after: always;
             }
@@ -56,7 +51,7 @@
                         </h3>
                     </td>
                     <td style="vertical-align:top">
-                        <img src="{{ base_path('public/img/hpm.png') }}" width="150" height="100" alt="">
+                        <img src="{{ base_path('public/img/hpm.jpg') }}" width="200" alt="">
                     </td>
                 </tr>
             </table>
@@ -70,7 +65,7 @@
 
         @yield('body')
 
-        
+
     </div>
 
 </body>

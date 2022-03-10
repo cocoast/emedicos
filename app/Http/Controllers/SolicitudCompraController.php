@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\solicitudCompra;
 use App\Models\ServicioClinico;
+use App\Models\DetalleSolicitud;
 use DateTime;
 
 class SolicitudCompraController extends Controller
@@ -17,9 +18,9 @@ class SolicitudCompraController extends Controller
     public function index()
     {   
         $fecha= new DateTime();
-        $sc=solicitudCompra::whereYear('fecha',$fecha->format('Y'))->get();
+        $scs=solicitudCompra::whereYear('fecha',$fecha->format('Y'))->get();
         //dd($sc);
-        return view('SC.index')->with('sc')->with('fecha',$fecha);
+        return view('SC.index')->with('scs',$scs)->with('fecha',$fecha);
     }
 
     /**
@@ -29,8 +30,7 @@ class SolicitudCompraController extends Controller
      */
     public function create()
     {
-        $servicios=ServicioClinico::orderBy('nombre','ASC')->pluck('nombre','id');
-        return view('SC.create')->with('servicios',$servicios);
+        return view('SC.create');
 
     }
 
@@ -43,6 +43,8 @@ class SolicitudCompraController extends Controller
     public function store(Request $request)
     {
         dd($request);
+        $size=count($request->get('field_tipo'));
+        dd($size);
         if(solicitudCompra::where('numero',$request->get('numero'))->whereYear('fecha',$request->get('fecha')->format('Y'))->count()==0){
             $sc=new solicitudCompra();
             $sc->numero=$request->get('numero');
@@ -57,22 +59,32 @@ class SolicitudCompraController extends Controller
             $sc->informe=$request->get('informe');
             $sc->referentetecnico=$request->get('reftectnico');
 
-            //Guardar Archivo
-            $sol=$sc->numero.$sc->fecha->format('Y');
+            //Guardar Informe
+            $tec=$sc->numero."-".$sc->fecha->format('Y');
             $carpeta='/storage/solicitudes/'.$sc->fecha->format('Y')."/";
             if (!file_exists($_SERVER['DOCUMENT_ROOT'].$carpeta))
                 mkdir($_SERVER['DOCUMENT_ROOT'].$carpeta,0777,true);
             if($request->hasFile("documento")){
                 $file=$request->file('documento');
-                $nombre=$sol.".".$file->guessExtension();
+                $nombre=$tec.".".$file->guessExtension();
                 if($file->guessExtension()=="pdf"){
                  $file->move($_SERVER['DOCUMENT_ROOT'].$carpeta, $nombre);
-                 $sc->archivo=$carpeta.$nombre;
+                 $sc->informe=$carpeta.$nombre;
                 }
             else
                 dd("no es un archivo pdf");
         }
-            
+          $sc->save();
+         for ($i=0; $i < $size ; $i++) { 
+             $dt=new DetalleSolicitud;
+             $dt->sc=$sc->id;
+             //aqui tengo que preguntar si es accesorio insumo o repuesto y linkearlo con producto de lo contrario guardar el nombre. 
+             $dt->producto=$request->get('field_producto')[$i];
+
+         }
+
+
+
         }
     }
 

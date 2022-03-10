@@ -140,6 +140,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         var table=$('#trasladostable').DataTable( {
+        "order": [[ 1, "desc" ]],
         buttons: ['excel'],
         responsive: true,
         searchPanes:{

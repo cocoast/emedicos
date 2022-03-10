@@ -7,51 +7,145 @@
 @stop
 
 @section('content')
-<!-- Nav tabs -->
-<div class="container">
-  <ul class="nav nav-tabs">
-    <li class="nav-link active"><a data-toggle="tab" href="#home">Home</a></li>
-    <li><a class="nav-link" data-toggle="tab" href="#menu1">Menu 1</a></li>
-    <li><a class="nav-link" data-toggle="tab" href="#menu2">Menu 2</a></li>
-    <li><a class="nav-link" data-toggle="tab" href="#menu3">Menu 3</a></li>
-  </ul>
-
-  <div class="tab-content">
-    <div id="home" class="tab-pane fade in active">
-      <h3>HOME</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+<div>
+    @if (session()->has('message'))
+    <div class="{{session('status')}} alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {{ session('message') }}
     </div>
-    <div id="menu1" class="tab-pane fade">
-      <h3>Menu 1</h3>
-      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
-    <div id="menu2" class="tab-pane fade">
-      <h3>Menu 2</h3>
-      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-    </div>
-    <div id="menu3" class="tab-pane fade">
-      <h3>Menu 3</h3>
-      <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-    </div>
-  </div>
+    @endif  
 </div>
+@can('equipo.create')
+<a href="{{route('sc.create') }}" class="btn btn-primary"> Generar solicitud de compra</a>
+@endcan
+<div class="container-fluid">
+    <table id="trasladostable" class="table table-striped table-hover mt-4" style="width:100%">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Numero</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Servicio Clinico</th>
+                <th scope="col">Referente</th>
+                <th>Detalle</th>
+                <th>Justificación</th>
+                <th scope="col">Monto</th>
+                <th scope="col">tipo</th>
+                <th scope="col">Documento</th>
+                @can('convenio.destroy')<th scope="col">Eliminar</th>@endcan
+                <th>Fun</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+        @foreach($scs as $sc)
+            <tr>
+                <td>{{ $sc->id}} @can('convenio.edit') <a class="btn btn-warning" href="/sc/{{$sc->id}}/edit "><i class="bi bi-pencil"></i></a> @endcan</td>
+                <td>{{ $sc->numero }}</td>
+                <td data-order="{{date("Ymd", strtotime($sc->fecha))}}">{{date("d-m-Y", strtotime($sc->fecha))}}</td>
+                <td>{{$sc->ServicioClinico->nombre}}</td>
+                <td>{{ $sc->referente }}</td>
+                <td>detalle</td>
+                <td>justificacion</td>
+                <td>{{ $sc->total }}</td>
+                <td>{{ $sc->tipo }}</td>
+                <td>documento</td>
+                
+                <td>    
+                 @can('convenio.destroy')<td><form action="{{route('sc.destroy',$sc->id)}}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                     <button class="btn btn-danger" type="submit" onClick="javascript: return confirm('¿Estas seguro?');"><i class="bi bi-trash"></i></button>
+                    </form> 
+               @endcan </td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal -->
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
 
 
 @stop
+
 @section('css')
 <!--BOOSTRAP ICONS-->
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<!--DATATABLE-->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css">
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css ">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/1.4.0/css/searchPanes.dataTables.min.css ">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css ">
+
+
 
 @stop
 
 @section('js')
 <!--JQUERY-->
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<!--DATATABLE-->
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.colVis.min.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/searchpanes/1.4.0/js/dataTables.searchPanes.min.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js "></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js "></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js "></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js "></script>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-@stop 
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var table=$('#trasladostable').DataTable( {
+        "order": [[ 1, "desc" ]],
+        buttons: ['excel'],
+        responsive: true,
+        searchPanes:{
+            layout: 'columns-5',
+            initCollapsed: true,
+            cascadePanes: true,
+        },
+        dom: 'PBfprtip', 
+        pageLength: 20
+        });
+
+} );
+
+
+</script>
+<script>
+   $('.openBtn').on('click',function(){
+    $('.modal-content').load($(this).data('path'),function(){
+        $('#myModal').modal({show:true});
+        console.log($('.openBtn').data('path'));
+    });
+});
+</script>
+
+@stop

@@ -24,7 +24,8 @@
 	<tr>
       <th scope="col">#</th>
       <th scope="col">MARCA</th>
-      <th scope="col">@can('marca.edit')FUNCIONES @endcan</th>
+      <th scope="col">@can('marca.edit')Editar @endcan</th>
+      <th scope="col">@can('marca.destroy')Eliminar @endcan</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -33,11 +34,14 @@
       <th scope="row">{{$marca->id}}</th>
       <td>{{$marca->marca}}</td>
       <td>@can('familia.edit')
+         <!-- Trigger the modal with a button -->
+        <button type="button" data-path="{{route('marca.edit',$marca->id ) }}" class="btn btn-info btn-sm openBtn"><i class="bi bi-pencil"></i> Editar</button>
+      </td>
+      <td>
       	<form action="{{route('marca.destroy',$marca->id)}}" method="POST">
-      	<a class="btn btn-info" href="/marca/{{$marca->id}}/edit ">EDITAR</a>
       	@csrf
       	@method('DELETE')
-      	<button class="btn btn-danger" type="submit" onClick="javascript: return confirm('¿Estas seguro?');">ELIMINAR</button>
+        <button class="btn btn-danger" type="submit" onClick="javascript: return confirm('¿Estas seguro?');"><i class="bi bi-trash"></i>Eliminar</button>
       	</form>
         @endcan
       </td>

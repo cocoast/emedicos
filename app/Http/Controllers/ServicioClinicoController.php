@@ -11,7 +11,7 @@ class ServicioClinicoController extends Controller
         $this->middleware('can:servicioclinico.index')->only('index');
         $this->middleware('can:servicioclinico.edit')->only('edit','update');
         $this->middleware('can:servicioclinico.create')->only('create','store');
-        $this->middleware('can:servicioclinico.delete')->only('destroy');
+        $this->middleware('can:servicioclinico.destroy')->only('destroy');
         $this->middleware('can:servicioclinico.show')->only('show');
     }
     /**
