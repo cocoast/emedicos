@@ -69,6 +69,7 @@ class TrasladoController extends Controller
     }
     public function Archivo(Request $request)
     {
+        //dd($request);
         $traslado = traslado::find($request->id);
         $equipo = Equipo::find($traslado->equipo);
         $fecha = new DateTime($traslado->fecha);

@@ -19,6 +19,7 @@ use DateTime;
 use App\Models\User;
 use App\Models\Garantia;
 use App\Models\Planificamp;
+use Illuminate\Support\Facades\Auth;
 
 
 class DashBoardController extends Controller
@@ -29,6 +30,14 @@ class DashBoardController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
+    {
+        //dd(Auth()->user()->roles()->first()->name);
+       return $this->DashEquiposMedicos();
+
+        
+    }
+    
+    public function DashEquiposMedicos()
     {
         $mp=$this->PlanMP();
         $preventivo=$this->ConveniosMantenimiento();
@@ -52,9 +61,8 @@ class DashBoardController extends Controller
                     ->get();
                   
         return view("dashboard.index")->with('preventivo',$preventivo)->with("arriendos",$arriendos)->with("correctivos",$correctivos)->with("data", $cantidadequipos)->with('garantias',$garantias)->with('realizados',$realizados)->with('porvencer',$porvencer)->with('hoy',$hoy)->with('vencido',$vencido)->with('mp',$mp);
-
-        
     }
+
     public function ConveniosMantenimiento(){
         $fecha=new DateTime();
         $year=$fecha->format('Y');
@@ -178,7 +186,12 @@ class DashBoardController extends Controller
             $pagos=Pago::where('convenio',$correctivo->id)->where('estado','Generado')->get();
             $tvalor+=$correctivo->valor;
             foreach($pagos as $pago)
-                $tcorrec=$tcorrec+$pago->valor;
+                if(is_numeric($pago->valor)){
+                    $valor=$pago->valor;
+                }
+                else
+                    $valor=0;
+                $tcorrec=$tcorrec+$valor;
             }
         $arr="";
         $arr=   [

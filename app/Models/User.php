@@ -72,4 +72,8 @@ class User extends Authenticatable
     {
         return 'profile/username';
     }
+
+    public function Dependence(){
+        return  $this->hasOne('App\Models\Dependence','user','id');
+    }
 }

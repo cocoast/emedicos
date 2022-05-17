@@ -28,11 +28,11 @@
 		</div>
 		<div class="col">
 			<label for="" class="form-label"> Licitacion del Proyecto</label>
-			<input type="text" class="form-control" name="licitacion" id="licitacion" >
+			<input type="text" class="form-control" name="licitacion" id="licitacion" value="{{ $equipo->licitacion }}">
 		</div>
 		<div class="col">
 			<label for="" class="form-label"> OC del Equipo/ Proyecto</label>
-			<input type="text" class="form-control" name="oc" id="oc" >
+			<input type="text" class="form-control" name="oc" id="oc" value="{{ $equipo->oc }}">
 		</div>
 		<div class="col">
 			<label for="" class="form-label">EQ {{ $equipo->eq}}</label>
@@ -134,26 +134,6 @@
             </div>
           </div>
       </div>
-			<h2>Garantias</h2>
-			
-			<div class="row align-items-start">
-				<div class="col">
-					<label for="" class="form-label">Fecha de Vencimiento</label>
-	     			<input type="date" name="fin"  id="fin" value="{{ $garantia->fin??"" }}" tabindex="16" class="form-control">
-	 			</div>
-	 			<div class="col">
-	     			<label for="" class="form-label">Cantidad de Mantenciones Disponibles</label>
-	     			<input type="text" name="mp" id="mp" value="{{ $garantia->mp?? "" }}" tabindex="17" class="form-control">
-				</div>
-				<div class="col">
-	     			<label for="" class="form-label">Frecuencia de Mantenciones</label>
-	     			<input type="text" name="frecuencia" id="frecuencia" value="{{ $garantia->frecuencia?? "" }}" tabindex="18" class="form-control">
-				</div>
-				<div class="col">
-	     			<label for="" class="form-label">Mantenciones Anuales</label>
-	     			<input type="text" name="mpa" id="mpa" value="{{ $garantia->mp ?? ""}}" tabindex="18" class="form-control">
-				</div>
-			</div>
 	</div>
 	
 <div class="mb-3">
@@ -170,6 +150,9 @@
 
 @section('css')
     <link rel="stylesheet" href="/css/admin_custom.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+   <link rel="stylesheet" href="{{ asset('vendor/jquery-ui/jquery-ui/jquery-ui.min.css') }}">
+
 @stop
 
 @section('js')

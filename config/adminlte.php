@@ -246,129 +246,180 @@ return [
             'url'  => 'admin/blog',
             'can'  => 'manage-blog',
         ],
-        
-       ['header' => 'Gestion de Equipos Medicos'],
-        [
-            'text'       => 'Equipos Medicos',
-            'icon_color' => 'red',
-            'url'        => 'equipo/',
-        ],
-        [
-            'text'       => 'Convenios',
-            'icon_color' => 'yellow',
-            'url'        => 'convenio/',
-        ],
-        [
-            'text'       => 'Planificacion MP',
-            'icon_color' => 'red',
-            'url'        => 'planifica/',
-        ],    
-        [
-            'text'          => 'Garantias',
-            'icon_color'    => 'blue',
-            'url'           => 'garantia/   ',
-            'label_color'   => 'success',
-            'label'         => 'new',
-        ],
-        [
-            'text'          => 'Solicitudes de Bajas',
-            'icon_color'    => 'blue',
-            'url'           => '/baja',
-            'label_color'   => 'success',
-            'label'         => 'new',
-        ],
-        [
-            'text'          => 'Servicio Tecnico',
-            'icon_color'    => 'green',
-            'url'           => '#',
-            'label_color'   => 'warning',
-            'label'         => 'soon',
-        ],
-        [
-            'text'          => 'Equipos Extraviados',
-            'icon_color'    => 'green',
-            'url'           => '#',
-            'label_color'   => 'warning',
-            'label'         => 'soon',
-        ],
-        [ 
-            'text'    => 'Servicio Clinico',
-            'url'     => 'servicioclinico/',
-            'can'     => 'servicioclinico.index',    
-        ],
-        [
-            'text'          => 'Traslados',
-            'icon_color'    => 'green',
-            'url'           => 'traslado/',
-            'label_color'   => 'danger',
-            'label'         => 'new',
-        ],
-        //crud
-         
-        [
-            'text'          => 'Componentes',
-            'icon'          => 'fas fa-fw fa-share',
-            'label'         => "CRUD",
-            'can'           => 'marca.index',
-            'label_color'   => 'warning',
+        //Equipos Medicos
+       
+        ['header' => 'Gestion de Equipos Médicos'],
 
-            
-            'submenu' => [       
-                [ 
-                    'text'    => 'Marca',
-                    'url'     => 'marca/',
-                    'can'     => 'marca.index',
-                ],
-                [ 
-                    'text'    => 'Modelo',
-                    'url'     => 'modelo/',
-                    'can'     => 'modelo.index',
-                    
-                ],
-                [ 
-                    'text'    => 'Familia',
-                    'url'     => 'familia/',
-                    'can'     => 'familia.index',
-                    
-                ],
-                [ 
-                    'text'    => 'SubFamilia',
-                    'url'     => 'subfamilia/',
-                    'can'     => 'subfamilia.index',
-                ],
-                [ 
-                    'text'    => 'Clase',
-                    'url'     => 'clase/',
-                    'can'     => 'clase.index',
-                ],
-                [ 
-                    'text'    => 'SubClase',
-                    'url'     => 'subclase/',
-                    'can'     => 'subclase.index',
-                    
-                ],
-                [ 
-                    'text'    => 'Proveedor',
-                    'url'     => 'proveedor/',
-                    'can'     => 'proveedor.index',
-                ],
+            [
+                'text'       => 'Equipos Medicos',
+                'icon_color' => 'red',
+                'url'        => 'equipo/',
+                'can'        => ['equipo.index'],
+            ],
+            [
+                'text'       => 'Convenios',
+                'icon_color' => 'yellow',
+                'url'        => 'convenio/',
+                'can'        => ['convenio.index'],
+            ],
+            [
+                'text'       => 'Planificacion MP',
+                'icon_color' => 'red',
+                'url'        => 'planifica/',
+                'can'        => 'planifica.index',
+            ],    
+            [
+                'text'          => 'Garantias',
+                'icon_color'    => 'blue',
+                'url'           => 'garantia/   ',
+                'can'           => 'garantia.index',
+            ],
+            [
+                'text'          => 'Solicitudes de Bajas',
+                'icon_color'    => 'blue',
+                'url'           => '/baja',
+                'can'           => 'baja.index',
+            ],
+            [
+                'text'          => 'Servicio Tecnico',
+                'icon_color'    => 'green',
+                'url'           => '#',
+                'label_color'   => 'warning',
+                'label'         => 'soon',
+                'can'           => 'st.index',
+            ],
+            [
+                'text'          => 'Equipos Extraviados',
+                'icon_color'    => 'green',
+                'url'           => '#',
+                'label_color'   => 'warning',
+                'label'         => 'soon',
+                'can'           => 'extraviado.index',
+            ],
+            [ 
+                'text'    => 'Servicios HPM',
+                'url'     => 'servicioclinico/',
+                'can'     => 'servicioclinico.index',    
+            ],
+            [
+                'text'          => 'Traslados',
+                'icon_color'    => 'green',
+                'url'           => 'traslado/',
+                'label_color'   => 'danger',
+                'label'         => 'new',
+                'can'        => 'traslado.index',
+            ],
+            //crud
+             
+            [
+                'text'          => 'Componentes',
+                'icon'          => 'fas fa-fw fa-share',
+                'label'         => "CRUD",
+                'can'           => 'marca.index',
+                'label_color'   => 'warning',
+
                 
-                [ 
-                    'text'    => 'Usuarios',
-                    'can'     => 'user.edit',   
-                    'url'     => 'user/'
-                    
-                ],
-                [ 
-                    'text'    => 'Roles',
-                    'can'     => 'user.edit',
-                    'url'     => 'role/'
-                    
+                'submenu' => [       
+                        [ 
+                            'text'    => 'Marca',
+                            'url'     => 'marca/',
+                            'can'     => 'marca.index',
+                        ],
+                        [ 
+                            'text'    => 'Modelo',
+                            'url'     => 'modelo/',
+                            'can'     => 'modelo.index',
+                            
+                        ],
+                        [ 
+                            'text'    => 'Familia',
+                            'url'     => 'familia/',
+                            'can'     => 'familia.index',
+                            
+                        ],
+                        [ 
+                            'text'    => 'SubFamilia',
+                            'url'     => 'subfamilia/',
+                            'can'     => 'subfamilia.index',
+                        ],
+                        [ 
+                            'text'    => 'Clase',
+                            'url'     => 'clase/',
+                            'can'     => 'clase.index',
+                        ],
+                        [ 
+                            'text'    => 'SubClase',
+                            'url'     => 'subclase/',
+                            'can'     => 'subclase.index',
+                            
+                        ],
+                        [ 
+                            'text'    => 'Proveedor',
+                            'url'     => 'proveedor/',
+                            'can'     => 'proveedor.index',
+                        ],
+                        
+                        [ 
+                            'text'    => 'Usuarios',
+                            'can'     => 'user.edit',   
+                            'url'     => 'user/'
+                            
+                        ],
+                        [ 
+                            'text'    => 'Roles',
+                            'can'     => 'user.edit',
+                            'url'     => 'role/'
+                            
+                        ],
+                        [ 
+                            'text'    => 'Permisos',
+                            'can'     => 'permiso.index',
+                            'url'     => 'permiso/'
+                            
+                        ],
                 ],
             ],
-        ],
+      
+
         
-        //endcrud
+        //end equipos medicos
+             //Licitaciones
+       
+        ['header' => 'Gestion de Licitaciones'],
+        [
+            'text'          => 'Licitaciones',
+            'icon_color'    => 'green',
+            'label_color'   => 'danger',
+            'label'         => 'new',
+            'can'           =>'licitaciones',
+            'url'           => 'licitaciones/',
+        ],
+        //Minsal
+         ['header' => 'Gestion Minsal'],
+        [
+            'text'          => 'Servicios de Salud',
+            'icon_color'    => 'blue',
+            'can'           =>'ssalud.index',
+            'url'           => 'ssalud/',
+        ],
+        [
+            'text'          => 'Centros de Salud',
+            'icon_color'    => 'blue',
+            'can'           =>'centrosalud.index',
+            'url'           => 'centrosalud/',
+        ],
+        [
+            'text'          => 'Sigfes',
+            'icon_color'    => 'blue',
+            'can'           =>'sigfe.index',
+            'url'           => 'sigfe/',
+        ],
+        [
+            'text'          => 'Convenios',
+            'icon_color'    => 'blue',
+            'can'           =>'minsal.convenio.index',
+            'url'           => 'minsalconvenio/',
+        ],
                
         // [
         //     'text'        => 'pages',

@@ -3,7 +3,13 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-<div><h3>Resumen Año {{ date('Y') }}</h3></div>
+@can('equipos.medicos')
+@section('content_top_nav_left')
+<div class="text-center"><h3>Resumen Año {{ date('Y') }}</h3></div>
+@endsection
+ @section('content_top_nav_right')
+ 
+ @endsection
    <div class="row align-items-start">
        <div class="col w-25">
             <div class="info-box bg-red">
@@ -11,9 +17,8 @@
               <div class="info-box-content">
                 <span class="info-box-text">Convenios de Mantenimiento Activos ({{$preventivo["cantidad"]}})</span>
                 <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($preventivo["pagado"])}}</span>
-                
                 <div class="progress">
-                  <div class="progress-bar" style="width: @if($preventivo["total"]==0) 0 @else{{ ($preventivo["pagado"]/$preventivo["total"])*100   }}@endif %"></div>
+                    <div class="progress-bar" style="width: @if($preventivo["pagado"]==0) 0; @else{{  ($preventivo["pagado"]/$preventivo["total"])*100}}@endif%"></div>
                 </div>
                 <span class="progress-description">
                   @if($preventivo["total"]==0) 0 @else {{ substr((  $preventivo["pagado"]/$preventivo["total"])*100,0,4) }} @endif% de: {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($preventivo["total"])}}
@@ -30,10 +35,10 @@
                     <span class="info-box-text">Convenios de Arriendo({{$arriendos["cantidad"]}})</span>
                     <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($arriendos["pagado"])}}</span>
                     <div class="progress">
-                    <div class="progress-bar" style="width: @if ($arriendos["total"]==0) 0 @else {{ ($arriendos["pagado"]/$arriendos["total"])*100 }} @endif%"></div>
+                      <div class="progress-bar" style="width: @if($arriendos["pagado"]==0) 0; @else{{  ($arriendos["pagado"]/$arriendos["total"])*100}}@endif%"></div>
                     </div>
                     <span class="progress-description">
-                    @if ($arriendos["total"]==0) 0 @else {{ substr(($arriendos["pagado"]/$arriendos["total"])*100,0,4) }}@endif % de: {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($arriendos["total"])}}
+                    @if ($arriendos["pagado"]==0) 0;  @else {{ substr(($arriendos["pagado"]/$arriendos["total"])*100,0,4) }}@endif % de: {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($arriendos["total"])}}
                     Equipos: {{ $arriendos["equipos"] }}
                     </span>
                 </div>
@@ -48,7 +53,7 @@
                     <span class="info-box-text">Convenios Correctivos({{$correctivos["cantidad"]}})</span>
                     <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($correctivos["pagado"])}}</span>
                     <div class="progress">
-                        <div class="progress-bar" style="width: @if ($correctivos["total"]==0) 0 @else {{ ($correctivos["pagado"]/$correctivos["total"])*100 }}@endif %"></div>
+                          <div class="progress-bar" style="width: @if($correctivos["pagado"]==0) 0; @else{{  ($correctivos["pagado"]/$correctivos["total"])*100}}@endif%"></div>
                     </div>
                     <span class="progress-description">
                     @if ($correctivos["total"]==0) 0 @else {{ substr(($correctivos["pagado"]/$correctivos["total"])*100,0,4) }}% de un total de {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($correctivos["total"])}}@endif
@@ -191,7 +196,13 @@
 <!-- /.card -->
     </div>
 </div>
+@endcan
+@can('licitaciones')
+<h1>aqui estaran las licitaciones</h1>
+@endcan
+@can('sigfe.index')
 
+ @endcan
 
    
 @stop

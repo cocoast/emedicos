@@ -30,7 +30,7 @@
 <table id="planificatable" class="table table-striped table-hover mt-4" style="width:100%">
 	<thead>
 	<tr>
-      <th scope="col">#</th>
+      <th scope="col">ID Equipo</th>
       <th scope="col">Servicio</th>
       <th scope="col">Inventario</th>
       <th scope="col">Serie</th>
@@ -51,12 +51,10 @@
 		@foreach($planificados as $mp)
 		  @if(empty($mp->Equipo->Bajas[0]))
         <tr>
-      <th scope="row">{{$mp->id}}@can('convenio.edit') <a class="btn btn-warning" href="/planifica/{{$mp->id}}/edit "><i class="bi bi-pencil"></i></a> @endcan</th>
+      <th scope="row">{{$mp->Equipo->id}}@can('convenio.edit') <a class="btn btn-warning" href="/planifica/{{$mp->id}}/edit "><i class="bi bi-pencil"></i></a> @endcan</th>
       <td>{{ $mp->Equipo->ServicioClinico->nombre }}</td>
-      <td><!-- Trigger the modal with a button -->
-        <button type="button" data-path="{{route('equipo.show', $mp->Equipo->id) }}" class="btn btn-primary btn-sm openBtn">{{$mp->Equipo->inventario}}</button></td>
-      <td><!-- Trigger the modal with a button -->
-        <button type="button" data-path="{{route('equipo.show', $mp->Equipo->id) }}" class="btn btn-primary btn-sm openBtn">{{ $mp->Equipo->serie }}</button></td>
+      <td><a href="{{route('equipo.show', $mp->Equipo->id) }}" class="btn btn-primary" target="_blank">{{$mp->Equipo->inventario}}</a></td>
+      <td><a href="{{route('equipo.show', $mp->Equipo->id) }}" class="btn btn-primary"  target="_blank"> {{ $mp->Equipo->serie }}</a></td>
       <td>{{ $mp->Equipo->Marca->marca }}</td>
       <td>{{ $mp->Equipo->Modelo->modelo }}</td>
       <td data-order="{{ date("Ymd", strtotime($mp->fechacorte)) }}">@php setlocale(LC_TIME, "spanish"); echo strftime("%B", strtotime(date("d-m-Y", strtotime($mp->fechacorte)))); @endphp</td>
@@ -80,7 +78,7 @@
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
-      
+    <!--Aqui Va la informacion del modal -->
   </div>
 </div>
 @stop
@@ -100,7 +98,7 @@
 
 @section('js')
 <!--JQUERY-->
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="js/jquery-3.6.0.min.js"></script>
 <!--DATATABLE-->
 
 <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
@@ -114,6 +112,8 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js "></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js "></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js "></script>
+
+
 
 
 

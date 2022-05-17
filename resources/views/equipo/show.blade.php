@@ -1,17 +1,17 @@
-@extends('ppa')
+@extends('adminlte::page')
 
-@section('title', 'Mostrar Equipo')
+@section('title', 'Show Equipo')
 
+
+ @section('content_top_nav_left')
+<div class="text-center"><h3> Datos del Equipo {{ $equipo->inventario }}</h3></div>
+
+@stop  
 @section('content_header')
-    <h1>Mostrar Equipo</h1>
 @stop
 
-@section('body')
-<div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Mostrar Equipo {{ $equipo->id }}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    </div>
-    <div class="modal-body">
+@section('content')
+
   <div class="row">
     <div class="col">
       	<div class="row align-items-start" >
@@ -117,7 +117,7 @@
       		</div>
 		</div>
     	<div class="row align-items-start mb-3">
-      		
+      		<a href="{{ route('equipo.pdf',$equipo->id) }}" target="_blank"> Acta</a>
         @can('equipo.edit')
       		<div class="col">
         		<br>
@@ -257,20 +257,73 @@
   </div>
 </div>
  </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-    </div>
+   
 @stop
 
 @section('css')
+
+<link rel="stylesheet" href="/css/app.css">
+
+
+
+<!--BOOSTRAP ICONS-->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+<!--DATATABLE-->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css">
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css ">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/1.4.0/css/searchPanes.dataTables.min.css ">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css ">
+
 
 
 @stop
 
 @section('js')
+<!--JQUERY-->
+<script type="text/javascript" src="js/jquery-3.6.0.min.js"></script>
+<!--DATATABLE-->
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.colVis.min.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/searchpanes/1.4.0/js/dataTables.searchPanes.min.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js "></script>
+<script type="text/javascript" src="js/jszip.min.js "></script>
+
+<script type="text/javascript" src="js/vfs_fonts.js "></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js "></script>
+
 
 
 <script type="text/javascript">
+   $(document).ready(function() {
+    let table = $('#papeles').DataTable({
+    	"order": [0,'desc']
+    });
+
+});
+
+ $('.openBtn').on('click',function(){
+    $('.modal-content').load($(this).data('path'),function(){
+        $('#myModal').modal({show:true});
+        console.log($('.openBtn').data('path'));
+    });
+});
+ 
+</script>
+<script>
+$('.openRtls').on('click',function(){
+
+    $('.modal-body').load($(this).data('path'),function(){
+        $('#myModal').modal({show:true});
+        console.log($('.openBtn').data('path'));
+    });
+});
 
 
-</script>@stop
+
+</script>
+@stop

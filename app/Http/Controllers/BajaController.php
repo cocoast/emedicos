@@ -10,11 +10,11 @@ use DateTime;
 class BajaController extends Controller
 {
      public function __construct(){
-        $this->middleware('can:convenio.index')->only('index');
-        $this->middleware('can:convenio.edit')->only('edit','update');
-        $this->middleware('can:convenio.create')->only('create','store');
-        $this->middleware('can:convenio.destroy')->only('destroy');
-        $this->middleware('can:convenio.show')->only('show');
+        $this->middleware('can:baja.index')->only('index');
+        $this->middleware('can:baja.edit')->only('edit','update');
+        $this->middleware('can:baja.create')->only('create','store');
+        $this->middleware('can:baja.destroy')->only('destroy');
+        $this->middleware('can:baja.show')->only('show');
     }
     /**
      * Display a listing of the resource.

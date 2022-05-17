@@ -8,7 +8,7 @@
 @stop
 
 @section('content')
-<form action="/planifica" method="POST">
+<form action="/planifica" method="POST" >
 	@csrf
  	<div class="row align-items-start">
 		<div class="col">
@@ -39,7 +39,6 @@
 		<div class="col">
 			<label for="" class="form-label">Equipos (separar por espacio)</label>
 			<textarea name="equiposdatos" id="equiposdatos" class="form-control" tabindex="3" required></textarea>
-			
 		</div>
 	
 		<div class="col">

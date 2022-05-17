@@ -84,6 +84,7 @@ vertical-align: middle !important;
             <tr>
                 <td><b>Tipo de Emisión de OC</b></td>
                 <td><b>
+                    @if($convenio->tipoconvenio!='Correctivo')
                         @if($convenio->frecuenciapago == 1)
                         Mensual
                         @elseif ($convenio->frecuenciapago == 3)
@@ -96,7 +97,9 @@ vertical-align: middle !important;
                         Anual
                         @endif
                         , cuota {{$pago->periodo}} de {{$convenio->meses/$convenio->frecuenciapago}}
-
+                    @else
+                        cuota {{$pago->periodo}}
+                        @endif
                     </b></td>
             </tr>
             <tr>
@@ -105,7 +108,7 @@ vertical-align: middle !important;
 
             </tr>
             <tr>
-                <td><b>Monto Mensual contrato Neto</b></td>
+                <td><b>Monto cuota contrato IVA incluido</b></td>
                 <td><b> {{ $valor }} </b></td>
             </tr>
 
@@ -123,7 +126,7 @@ vertical-align: middle !important;
 
         <tbody>
             <tr>
-                <td><b>Cumplimiento de la Mantención preventiva. Art. 10 del contrato.</b></td>
+                <td><b>Cumplimiento de la Mantención preventiva segun Contrato.</b></td>
                 <td><b>Si ______</b></td>
                 <td><b>No ______ <br> Observaciones: <br> <br> <br> </b></td>
             </tr>
@@ -168,9 +171,7 @@ vertical-align: middle !important;
         <col width="323">
 
         <tr>
-            <td><b>Indicar si existe cumplimiento en cuanto a los tiempos de reparación de los equipos establecido en el convenio de 24 horas más tiempo de traslados art. 10 del contrato.
-                    <br>Respuesta telefónica 60 minutos
-                    <br>Despacho de repuestos 5 días hábiles.(Adjuntar formulario)</b>
+            <td><b>Indicar si existe cumplimiento en cuanto a los tiempos de reparación de los equipos establecido en el convenio
             </td>
             <td><b>Si ______</b></td>
             <td><b>No ______ <br> Observaciones: <br> <br> <br> <br> <br> <br> <br> </b></td>
@@ -208,8 +209,8 @@ vertical-align: middle !important;
 
         <tr>
             <td><b>Cumplimiento de conformidad en la ejecución de manteniciones preventivas y correctivas</b></td>
-            <td>Cumplimiento = <br>Cantidad de Equipos Conforme / <br>Cantidad de Equipos en Convenio</td>
-            <td><b> ____/{{count($convenio->EquipoConvenio)}}</b></td>
+            <td>@if($convenio->tipoconvenio!="Correctivo")Cumplimiento = <br>Cantidad de Equipos Conforme / <br>Cantidad de Equipos en Convenio @else Cumplimiento = <br> Ejecucion de los servicios (SI/NO)@endif </td>
+            <td>@if($convenio->tipoconvenio!="Correctivo")<b> ____/{{count($convenio->EquipoConvenio)}}</b> @else<b> _____</b>@endif  </td>
             <td><b>____%</b></td>
         </tr>
     </table>
@@ -257,7 +258,7 @@ vertical-align: middle !important;
 </ul>
 
 <p><br /><br /></p>
-
+@if($convenio->tipoconvenio!='Correctivo')
 <div style="page-break-after: always;">
 
 </div>
@@ -324,4 +325,5 @@ vertical-align: middle !important;
     </table>
 
 </div>
+@endif
 @stop

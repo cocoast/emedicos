@@ -28,6 +28,7 @@
 			<label for="" class="form-label">Licitacion ID</label>
 			@if($convenio->link)
 			<a href="{{ $convenio->link }}" target="_blank"><input id="licitacion" value="{{$convenio->licitacion}}" name="licitacion" type="text" tabindex="2" class="btn btn-success"readonly></a>
+           
 			@else
 			<input id="licitacion" value="{{$convenio->licitacion}}" name="licitacion" type="text" tabindex="2" class="form-control"readonly>
 			@endif
@@ -211,8 +212,8 @@
                     <td>
 
                         @if($pagorealizado->oc!="ingresar"&&$pagorealizado->oc!=null&&$pagorealizado->oc!="")
-                        <!-- Trigger the modal with a button -->
-                            <button type="button" data-path="{{route('pagos.show', $pagorealizado->oc) }}" class="btn btn-primary btn-sm EquipoBtn">{{ $pagorealizado->oc }}</button>
+                       
+                            <a href="{{route('pagos.show', $pagorealizado->oc) }}" class="" target="_blank"> {{ $pagorealizado->oc }}</a>
                             
                             @else
                             {{ $pagorealizado->oc  }}
@@ -357,6 +358,7 @@
 <script type="text/javascript">
 	$(document).ready(function() {
     $('#pagosGeneradostables').DataTable({
+        "order": [[ 1, "desc" ]],
     	responsive:true,
      "dom": "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
         "<'row'<'col-sm-12'tr>>" +

@@ -7,14 +7,24 @@
 @stop
 
 @section('body')
+
+<form action="/equipo/archivo" method="POST" enctype="multipart/form-data">
+@csrf
 <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Agregar Archivo</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     </div>
     <div class="modal-body">
-	  	 <form action="/equipo/{{$equipo->id}}/archivo" method="POST" enctype="multipart/form-data">
-	  	 	@csrf
-
+	  	 @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+ 		<input type="text" hidden class="form-control" name="id" value="{{ $equipo->id }}">
 		  	<div class="mb-3">
 		  		<div class="row">
 		  			<div class="col">
@@ -30,20 +40,23 @@
 				         <option value="MP">Mantencion Preventiva</option>
 				         <option value="MC">Mantencion Correctiva</option>
 				         <option value="Acta">Acta de Recepción</option>
+				          <option value="Arriendo">Acta de Arriendo</option>
 			     	</select>
 				</div>
 				<div class="col">
-					<label>Adjunte Archivos</label>
-					<input  name="documento" type="file" class="form-control">
+					<label for="" class="form-label">Seleccione un Archivo </label>
+                <input id="documento" name="documento" type="file"  class="form-control">
 				</div>
-				<button class="btn btn-primary">Enviar</button>
+				
 			</div>
 		</div>
-    </form>    
+       
  	</div>
     <div class="modal-footer">
+    	<button class="btn btn-primary">Enviar</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
     </div>
+    </form> 
 @stop
 
 @section('css')

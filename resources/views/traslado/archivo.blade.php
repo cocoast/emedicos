@@ -9,14 +9,14 @@
 @stop
 
 @section('body')
-
+  <form action="/traslado/archivo" method="POST" enctype="multipart/form-data">
+        @csrf
     <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Subir Acta</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     </div>
     <div class="modal-body">
-    <form action="/traslado/archivo" method="POST" enctype="multipart/form-data">
-        @csrf
+  
         <input type="text" hidden class="form-control" name="id" value="{{ $traslado->id }}">
         <div class="row align-items-start">
             <div class="col">
@@ -63,10 +63,9 @@
                 <input id="documento" name="documento" type="file"  class="form-control">
             </div>
         </div>
-            <button  class="btn btn-primary" >GUARDAR</button>
-    </form>
     </div>
     <div class="modal-footer">
+        <button  class="btn btn-primary" >GUARDAR</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-    </div>
+    </div> </form>
 @stop

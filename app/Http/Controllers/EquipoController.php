@@ -28,7 +28,6 @@ class EquipoController extends Controller
 {
     public function __construct()
     {
-
         $this->middleware('can:equipo.index')->only('index');
         $this->middleware('can:equipo.edit')->only('edit', 'update');
         $this->middleware('can:equipo.create')->only('create', 'store');
@@ -43,8 +42,8 @@ class EquipoController extends Controller
     public function index()
     {
 
+        //dd(Auth()->user()->servicio);
         $equipos = Equipo::all();
-
         $fecha = new DateTime();
         $fecha = $fecha->format('d-m-Y');
         $year = date('Y', strtotime($fecha));
@@ -261,7 +260,7 @@ class EquipoController extends Controller
                     $garantia->mp = $request->get('mp');
                     $garantia->frecuencia = $request->get('frecuencia');
                     $garantia->equipo = $equipo->id;
-                    $garantia->proveedor = $request->get('proveedor');
+                    $garantia->proveedor = $proveedor;
                     $garantia->save();
                 }
                 return redirect('/equipo')->with('message', 'El Equipo ' . $equipo->serie . ' a sido Ingresado')->with('status', 'alert alert-success');
@@ -282,6 +281,7 @@ class EquipoController extends Controller
     {
         $blyottloc = "Sin Registro";
         $blyotttemp = "Sin Registro";
+        $equipo="";
         if (session('rtls') == null || session('rtls') == '"Token has expired."')
             session(['rtls' => EquipoController::BlyottConec()]);
         $equipo = Equipo::find($id);
@@ -292,19 +292,33 @@ class EquipoController extends Controller
             session(['rtls' => EquipoController::BlyottConec()]);
             $cadena = EquipoController::BlyottAsset(session('rtls'), $equipo->inventario);
             if ($cadena != "sin Registro") {
+                if($cadena->LocationDetails==null){
+                $blyottloc="Sin Registro";
+                $blyotttemp="Sin Registro";
+           }
+           else{
                 $blyottloc = $cadena->LocationDetails->LocationName;
                 $blyotttemp = $cadena->TagDetails->TagActivities[0]->Temperature;
+            
             }
+        }   
 
-            return view('equipo.rtls')->with('blyottloc', $blyottloc)->with('blyotttemp', $blyotttemp);
+            return view('equipo.rtls')->with('blyottloc', $blyottloc)->with('blyotttemp', $blyotttemp)->with('equipo',$equipo);
         }
 
         if ($cadena != "sin Registro") {
+           if($cadena->LocationDetails==null){
+                $blyottloc="sin Registro";
+                $blyotttemp="sin Registro";
+           }
+           else{
+
             $blyottloc = $cadena->LocationDetails->LocationName;
             $blyotttemp = $cadena->TagDetails->TagActivities[0]->Temperature;
         }
+        }
 
-        return view('equipo.rtls')->with('blyottloc', $blyottloc)->with('blyotttemp', $blyotttemp);
+        return view('equipo.rtls')->with('blyottloc', $blyottloc)->with('blyotttemp', $blyotttemp)->with('equipo',$equipo);
     }
 
     public function show($id)
@@ -348,7 +362,7 @@ class EquipoController extends Controller
             $convenio = "Sin Convenio";
         }
         //si tiene inventario toma ruta con 2 o 2A
-        if (strncmp($equipo->inventario, '2', 1) === 0) {
+        if ($equipo->inventario!='?') {
             $directorio = 'storage/' . $eq . '/' . $equipo->Familia->nombre . '/' . $equipo->SubFamilia->nombre . '/' . $equipo->inventario;
             //dd($equipo);
 
@@ -403,20 +417,14 @@ class EquipoController extends Controller
     public function edit($id)
     {
         $equipo = Equipo::find($id);
-        $familia = Familia::orderBy('nombre', 'ASC')->pluck('nombre', 'id');
-        $subfamilia = SubFamilia::orderBy('nombre', 'ASC')->pluck('nombre', 'id');
+       
         $clase = Clase::orderBy('nombre', 'ASC')->pluck('nombre', 'id');
         $subclase = Subclase::orderBy('nombre', 'ASC')->pluck('nombre', 'id');
         $garantia = Garantia::where('equipo', $equipo->id)->first();
 
-        $proveedor = Proveedor::orderBy('nombre', 'ASC')->get()->pluck('nombre', 'id');
-
-        //orderBy('nombre','ASC')->pluck('nombre','rut');
-        $servicioclinico = ServicioClinico::orderBy('nombre', 'ASC')->pluck('nombre', 'id');
-        $modelo = Modelo::orderBy('modelo', 'ASC')->pluck('modelo', 'id');
-        $marca = Marca::orderBy('marca', 'ASC')->pluck('marca', 'id');
+       
         //dd($equipo);
-        return view('equipo.edit')->with('familia', $familia)->with('subfamilia', $subfamilia)->with('clase', $clase)->with('subclase', $subclase)->with('proveedor', $proveedor)->with('servicioclinico', $servicioclinico)->with('modelo', $modelo)->with('marca', $marca)->with('equipo', $equipo)->with('garantia', $garantia);
+        return view('equipo.edit')->with('clase', $clase)->with('subclase', $subclase)->with('equipo', $equipo)->with('garantia', $garantia);
     }
 
     /**
@@ -486,17 +494,7 @@ class EquipoController extends Controller
         }
 
         $equipo->save();
-        if ($request->get('fin') != null) {
-            $garantia = new Garantia();
-            $fecha = DateTime::createFromFormat('d-m-Y', $request->get('fecha_adquisicion'));
-            $garantia->inicio = $fecha;
-            $garantia->fin = $request->get('fin');
-            $garantia->mp = $request->get('mp');
-            $garantia->frecuencia = $request->get('frecuencia');
-            $garantia->equipo = $equipo->id;
-            $garantia->proveedor = $proveedor;
-            $garantia->save();
-        }
+        
         return redirect('/equipo')->with('message', 'El Equipo ' . $equipo->inventario . ' a sido actualizado')->with('status', 'alert alert-warning');
     }
 
@@ -642,9 +640,11 @@ class EquipoController extends Controller
         return view('equipo.archivo')->with('equipo', $equipo);
     }
 
-    public function archivo(Request $request, $id)
+    public function archivo(Request $request)
     {
-        $equipo = Equipo::find($id);
+        //dd($request);
+        $request->validate(['documento' => 'required|max:6000',]);
+        $equipo = Equipo::find($request->get('id'));
         $eq = "";
         if ($equipo->eq == "Critico")
             $eq = "2.1";
@@ -660,11 +660,11 @@ class EquipoController extends Controller
         if (!file_exists($carpeta)) {
             mkdir($carpeta, 0777, true);
         }
-
+         //dd($request->hasFile('documento'));
         if ($request->hasFile('documento')) {
+            $file = $request->file('documento');
             $fecha = new DateTime($request->fecha);
             $nombre = $equipo->inventario . '_' . $fecha->format('Y') . '_' . $request->archivo . '_' . $fecha->format('m') . '_' . $fecha->format('d');
-            $file = $request->file('documento');
             $nombre = $nombre . '.pdf';
             if ($file->guessExtension() == "pdf") {
                 $file->move($carpeta, $nombre);
@@ -677,39 +677,56 @@ class EquipoController extends Controller
         $equipo = Equipo::find($id);
         $oce = 0;
         $licitacion = 0;
-        $garantia = 0;
-        $convenio = 0;
-        $equipoconvenio = 0;
+        $garantia=0;
+        $convenio=0;
+        $equipoconvenio=0;
+       
+        if($equipo->tipoactivo=="Arriendo"||$equipo->tipoactivo=="Arriendo con donacion"){
+           for ($i=0; $i <$equipo->EquipoConvenio->count() ; $i++) { 
+                    if($equipo->EquipoConvenio[$i]->Convenio->tipoconvenio=="Arriendo"||$equipo->EquipoConvenio[$i]->Convenio->tipoconvenio=="Arriendo con Donacion"){
+                        $convenio=Convenio::find($equipo->EquipoConvenio[$i]->Convenio->id);
+                        $equipoconvenio=EquipoConvenio::find($equipo->EquipoConvenio[$i]->id);
+                    }
 
-        if ($equipo->tipoactivo == "Arriendo" || $equipo->tipoactivo == "Arriendo con donacion") {
-            for ($i = 0; $i < $equipo->EquipoConvenio->count(); $i++) {
-                if ($equipo->EquipoConvenio[$i]->Convenio->tipoconvenio == "Arriendo" || $equipo->EquipoConvenio[$i]->Convenio->tipoconvenio == "Arriendo con Donacion") {
-                    $convenio = Convenio::find($equipo->EquipoConvenio[$i]->Convenio->id);
-                    $equipoconvenio = EquipoConvenio::find($equipo->EquipoConvenio[$i]->id);
-                }
-            }
+           }
+           if(Garantia::where('equipo',$equipo->id)){
+            $garantia = Garantia::where('equipo',$equipo->id)->first();
 
-            $garantia = new Garantia;
+            $fin = new DateTime($garantia->fin);
+            $inicio = new DateTime( $garantia->inicio);
+            $interval = $inicio->diff($fin);
+            $garantia->meses_garantia = $interval->m + ($interval->y * 12);
+            $garantia->frecuencia=12/$equipoconvenio->mp;
+
+           
+           }
+           else{
+            $garantia =new Garantia;
             $fin = new DateTime($convenio->fechafin);
             $inicio = new DateTime($convenio->fechaincio);
             $interval = $inicio->diff($fin);
             $garantia->meses_garantia = $interval->m + ($interval->y * 12);
-            $garantia->frecuencia = 12 / $equipoconvenio->mp;
-        } else 
-     if ($equipo->tipoactivo == "Propio") {
-
-            if (Garantia::where('equipo', '=', $id)->first()) {
-                $garantia = Garantia::where('equipo', '=', $id)->first();
-                $fin = new DateTime("$garantia->fin");
-                $inicio = new DateTime("$garantia->inicio");
-                $interval = $inicio->diff($fin);
-                $garantia->meses_garantia = $interval->m + ($interval->y * 12);
+            $garantia->frecuencia=12/$equipoconvenio->mp;
+           }
+            
             }
 
+         
+else 
+     if($equipo->tipoactivo=="Propio"){
+        
+        if(Garantia::where('equipo', '=', $id)->first()){
+            $garantia = Garantia::where('equipo', '=', $id)->first();
+            $fin = new DateTime("$garantia->fin");
+            $inicio = new DateTime("$garantia->inicio");
+            $interval = $inicio->diff($fin);
+            $garantia->meses_garantia = $interval->m + ($interval->y * 12);
+        } 
+
+       
 
 
-
-            /*        if ($equipo->tipoactivo == "Arriendo" || $equipo->tipoactivo == "Arriendo con Donacion") {
+        /*        if ($equipo->tipoactivo == "Arriendo" || $equipo->tipoactivo == "Arriendo con Donacion") {
             $conv_garant = Garantia::where('equipo', '=', $id)->get();
             //dd($conv_garant);
         } else if ($equipo->tipoactivo == "Propio") {
@@ -734,11 +751,11 @@ class EquipoController extends Controller
             }
         }
 
+        dd($convenio);
+
         */
-        }
 
-        #dd($oce);
-
+}
 
         if ($equipo->oc != "") {
             $oc = $equipo->oc;
@@ -746,7 +763,7 @@ class EquipoController extends Controller
             $data = json_decode(file_get_contents($url), true);
 
             $oce = $data["Listado"][0];
-            if ($oce["CodigoLicitacion"] != "") { //Al final API responde con "" cuando CodLic está vacío
+            if ($oce["CodigoLicitacion"] != null) {
                 $lici = $oce["CodigoLicitacion"];
 
                 $url = "http://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json?codigo=" . $lici . "&ticket=51F64BE8-87A8-404B-B5C6-E954D059117C";
@@ -757,14 +774,15 @@ class EquipoController extends Controller
             $oce = 0;
         }
 
-        #$oce->licitacion = $licitacion;
 
-        dd(session());
+
+        #dd($oce);
 
 
 
         #dd($garantia);
-        $pdf = PDF2::loadview('equipo.acta', compact('equipo', 'oce', 'licitacion', 'garantia', 'convenio'));
+        $pdf = PDF2::loadview('equipo.acta', compact('equipo', 'oce', 'licitacion', 'garantia','convenio'));
         return $pdf->inline("acta.pdf");
     }
+   
 }

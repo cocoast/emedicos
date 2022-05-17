@@ -8,6 +8,14 @@ use DateTime;
 
 class GarantiaController extends Controller
 {
+
+    public function __construct(){
+        $this->middleware('can:garantia.index')->only('index');
+        $this->middleware('can:garantia.edit')->only('edit','update');
+        $this->middleware('can:garantia.create')->only('create','store');
+        $this->middleware('can:garantia.destroy')->only('destroy');
+        $this->middleware('can:garantia.show')->only('show');
+    } 
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +34,7 @@ class GarantiaController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**

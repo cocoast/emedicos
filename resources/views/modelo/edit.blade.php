@@ -14,8 +14,8 @@
 		<label for="" class="form-label">Nombre de la modelo</label>
 		<input id="modelo" name="modelo" type="text" value="{{$modelo->modelo}}" tabindex="1" class="form-control">
 	</div>
-	<a href="/modelo" class="btn-secondary" tabindex="2">CANCELAR</a>
-	<button  class="btn-primary" tabindex="3">GUARDAR</button>
+	<a href="/modelo" class="btn btn-secondary" tabindex="2">CANCELAR</a>
+	<button  class="btn btn-primary" tabindex="3">GUARDAR</button>
 </form>
 @stop
 

@@ -55,16 +55,10 @@
         @if (App\Models\Planificamp::whereYear('fechacorte',$year)->where('equipo',$equipo->id)->count()>0)
         <tr>    
             
-            <td><a href="/servicioclinico/{{$equipo->ServicioClinico->id}}">{{ $equipo->ServicioClinico->nombre }}</a></td>
-           <td> <!-- Trigger the modal with a button -->
-                    <button type="button" data-path="{{route('equipo.show', $equipo->id) }}" class="btn btn-primary btn-sm openBtn">
-                        {{$equipo->inventario}}</button>
-                </td>
-                <td>
-         <!-- Trigger the modal with a button -->
-                <button type="button" data-path="{{route('equipo.show', $equipo->id) }}" class="btn btn-primary btn-sm openBtn">
-                    {{$equipo->serie}}</button>
-                </td>
+            <td><!-- Trigger the modal with a button -->
+                    <button type="button" data-path="{{route('servicioclinico.show', $equipo->ServicioClinico->id) }}" class="btn btn-success btn-sm openBtn">{{$equipo->ServicioClinico->nombre}}</button>
+           <td> <a href="{{route('equipo.show', $equipo->id) }}" class="btn btn-primary btn-sm" target="_blank">{{ $equipo->inventario }}</a></td>
+                <td><a href="{{route('equipo.show', $equipo->id) }}" class="btn btn-primary btn-sm" target="_blank">{{ $equipo->serie }}</td>
             <td>{{ $equipo->Marca->marca }}</td>
             <td>{{ $equipo->Modelo->modelo }}</td>
         

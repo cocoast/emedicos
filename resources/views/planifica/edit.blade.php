@@ -8,7 +8,7 @@
 @stop
 
 @section('content')
- <form action="/planifica/{{$planifica->id}}" method="POST">
+ <form action="/planifica/{{$planifica->id}}" method="POST" enctype="multipart/form-data">
 	@csrf
 	@method('PUT')
  	<div class="row align-items-start">
@@ -23,7 +23,7 @@
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Fecha Planificada</label>
-			<input type="date" name="fecha" id="fecha" value="{{ $planifica->fechacorte }}" class="form-control"  readonly>
+			<input type="date" name="fecha" id="fecha" value="{{ $planifica->fechacorte }}" class="form-control"  >
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Tipo de Mantencion</label>
@@ -46,7 +46,14 @@
 			<label for="" class="form-label">Fecha de Programacion</label>
 			<input type="date" name="programacion" id="programacion" class="form-control" tabindex="1">
 		</div>
+		
 	</div>
+	<div class="row align-items-start">
+	<div class="col">
+					<label>Adjunte Mantencion Preventiva</label>
+					<input  name="documento" type="file" class="form-control">
+				</div>
+				</div>
 	<br>
 	<a href="/planifica" class="btn btn-secondary" tabindex="2">CANCELAR</a>
 	<button  class="btn btn-primary" tabindex="3">GUARDAR</button>

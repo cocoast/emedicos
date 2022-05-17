@@ -1,23 +1,40 @@
 @extends('adminlte::page')
 
 @section('title', 'Equipos')
-
-@section('content_header')
-    <h1>Listado de Equipos</h1>
-@stop
-@livewireStyles
 @section('content')
+@section('content_top_nav_left')
+<div class="text-center"><h3>Listado de Equipos</h3></div>
+@endsection     
 <div>
     @if (session()->has('message'))
     <div class="{{session('status')}} alert-dismissible">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         {{ session('message') }}
-    </div>
+    </div>  
     @endif  
 </div>
 @can('equipo.create')
     <a href="{{route('equipo.create')}}" class="btn btn-primary btn-sm">Agregar Equipo</a>
 @endcan
+
+
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Filtros de la Tabla</h3>
+    <div class="card-tools">
+      <!-- Collapse Button -->
+      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body" id="searchpanes">
+    <!-- Aqui va la info-->
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+
 
  
  <table id="equipostable" class="table table-condensed table-hover mt-4" style="width:100%;font-size: 0.75vw; ">
@@ -56,16 +73,8 @@
                    </td>
                 <td>{{$equipo->ServicioClinico->nombre}}</td>
                 <td>{{$equipo->ServicioClinico->ubicacion}}</td>
-                 <td> 
-            <!-- Trigger the modal with a button -->
-                    <button type="button" data-path="{{route('equipo.show', $equipo->id) }}" class="btn btn-primary btn-sm openBtn">
-                        {{$equipo->inventario}}</button>
-                </td>
-                <td>
-         <!-- Trigger the modal with a button -->
-                <button type="button" data-path="{{route('equipo.show', $equipo->id) }}" class="btn btn-primary btn-sm openBtn">
-                    {{$equipo->serie}}</button>
-                </td>
+                <td> <a href="{{route('equipo.show', $equipo->id) }}" class="btn btn-primary btn-sm" target="_blank">{{ $equipo->inventario }}</a></td>
+                <td><a href="{{route('equipo.show', $equipo->id) }}" class="btn btn-primary btn-sm" target="_blank">{{ $equipo->serie }}</td>
                 <td>{{$equipo->eq}}</td>
                 <td>{{$equipo->Familia->nombre}}</td>
                 <td>{{$equipo->SubFamilia->nombre}}</td>
@@ -77,9 +86,7 @@
                 <td>{{$equipo->fecha_adquisicion}}</td>
                 <td>{{$equipo->archivador}}</td>        
                 <td width="10px">
-                <!-- Trigger the modal with a button -->
-                    <button type="button" data-path="{{route('equipo.rtls', $equipo->id) }}" class="btn btn-info btn-sm openRtls">
-                       <i class="bi bi-geo-alt"></i></button>
+                <a href="{{route('equipo.rtls', $equipo->id) }}" target="_blank" class="btn btn-secondary"><i class="bi bi-geo-alt"></i></a>
                     @can('equipo.edit')
                         <a class="btn btn-warning btn-sm" href="/equipo/{{$equipo->id}}/edit "><i class="bi bi-pencil"></i></a>
                     @endcan
@@ -145,33 +152,23 @@
 
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        var table=$('#equipostable').DataTable( {
-        buttons: ['excel'],
+   $(document).ready(function() {
+    let table = $('#equipostable').DataTable({
+         dom: 'Bfrtip',
+        buttons: ['excel'],  
         responsive: true,
         searchPanes:{
             layout: 'columns-5',
             initCollapsed: true,
             cascadePanes: true,
-        },
-        dom: 'PBfprtip', 
-        "columnDefs": [{
-        "targets": [6,10, 14,13 ],
-        "visible": false
-        }],
-        pageLength: 20
-        });
-
-     $('a.toggle-vis').on( 'click', function (e) {
-        e.preventDefault();
- 
-        // Get the column API object
-        var column = table.column( $(this).attr('data-column') );
- 
-        // Toggle the visibility
-        column.visible( ! column.visible() );
-    } );
-} );
+        },  
+          pageLength: 25,
+    });
+     
+    new $.fn.dataTable.SearchPanes(table, {});  
+    table.searchPanes.container().prependTo("#searchpanes");
+    table.searchPanes.resizePanes();
+});
 
  $('.openBtn').on('click',function(){
     $('.modal-content').load($(this).data('path'),function(){

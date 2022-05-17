@@ -189,9 +189,17 @@ class PagosController extends Controller
         $pago = Pago::find($id);
         $convenio = Convenio::find($pago->Convenio->id);
         $counter = 0;
+        if($convenio->tipoconvenio!="Correctivo"){
+        
         $valor = PagosController::ValorPagar($pago->id);
         $ncuotas = $convenio->meses / $convenio->frecuenciapago;
 
+        $pdf = PDF2::loadview('pagos.ficha', compact('pago', 'convenio', 'counter', 'valor'));
+        return $pdf->inline("{$convenio->nombre}, cuota {$pago->periodo} de {$ncuotas}.pdf");
+    }
+        else
+        $valor="$";
+        $ncuotas=$pago->periodo;
         $pdf = PDF2::loadview('pagos.ficha', compact('pago', 'convenio', 'counter', 'valor'));
         return $pdf->inline("{$convenio->nombre}, cuota {$pago->periodo} de {$ncuotas}.pdf");
     }

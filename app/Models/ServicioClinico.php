@@ -19,5 +19,8 @@ class ServicioClinico extends Model
   }
     public function Destino(){
      return $this->hasMany('App\Models\Traslado', 'destino');
-  }  
+  }
+  public function Establecimiento(){
+        return $this->belongsTo('App\Models\Establecimiento','establecimiento','id');
+    }  
 }

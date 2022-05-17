@@ -80,7 +80,7 @@ class RoleController extends Controller
     {
         //dd($request->permisos);
         $role=Role::find($id);
-        $role->permissions()->sync($request->permisos);
+        $role->syncPermissions($request->permisos);
         return redirect()->route('role.index');
     }
 

@@ -11,7 +11,7 @@ class FamiliaController extends Controller
         $this->middleware('can:familia.index')->only('index');
         $this->middleware('can:familia.edit')->only('edit','update');
         $this->middleware('can:familia.create')->only('create','store');
-        $this->middleware('can:familia.delete')->only('destroy');
+        $this->middleware('can:familia.destroy')->only('destroy');
         $this->middleware('can:familia.show')->only('show');
     }
     /**

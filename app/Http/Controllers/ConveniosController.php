@@ -54,7 +54,12 @@ class ConveniosController extends Controller
             $pagos=Pago::where('convenio',$correctivo->id)->where('fecha','LIKE','%'.$year)->where('estado','Generado')->get();
             //dd($pagos);
             foreach($pagos as $pago)
-                $tcorrec=$tcorrec+$pago->valor;
+                if(is_numeric($pago->valor)){
+                    $valor=$pago->valor;
+                }
+                else
+                    $valor=0;
+                $tcorrec=$tcorrec+$valor;
             }
             //dd($tcorrec);   
         foreach($preventivos as $preventivo){
@@ -381,5 +386,35 @@ class ConveniosController extends Controller
             else
                 dd("no es .pdf");
         }
+    }
+    public function Baja($id){
+        $convenio=Convenio::find($id);
+        $pagos=Pago::where('convenio',$convenio->id)->get();
+        return view('convenio.baja')->with('convenio',$convenio)->with('pagos',$pagos);
+    }
+    public function darBaja(Request $request,$id){
+        $convenio=Convenio::find($id);
+        $ultimopago=Pago::find($request->get('pago'));
+        $pagosdelete=Pago::where('convenio',$convenio->id)->where('periodo','>',$ultimopago->periodo)->get();
+        $carpeta=$_SERVER['DOCUMENT_ROOT'].'/storage/convenios/'.$convenio->id."/";
+        if(!file_exists($carpeta)){
+            mkdir($carpeta,0777,true);
+        }
+        if($request->hasFile("documento")){
+            $file=$request->file('documento');
+            $nombre="Resolucion Termino Contrato.".$file->guessExtension();
+            if($file->guessExtension()=="pdf"){
+               $file->move($carpeta, $nombre);
+               foreach($pagosdelete as $pago){
+                    $pago->delete();
+                }
+                $convenio->fechafin=date('d-m-Y',strtotime($ultimopago->fecha));
+                $convenio->save();
+            }
+        }
+            else
+                dd("no es .pdf");
+        return redirect('convenio/')->with('funciono');
+
     }
 }

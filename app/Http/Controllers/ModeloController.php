@@ -11,7 +11,7 @@ class ModeloController extends Controller
         $this->middleware('can:modelo.index')->only('index');
         $this->middleware('can:modelo.edit')->only('edit','update');
         $this->middleware('can:modelo.create')->only('create','store');
-        $this->middleware('can:modelo.delete')->only('destroy');
+        $this->middleware('can:modelo.destroy')->only('destroy');
         $this->middleware('can:modelo.show')->only('show');
     }
     /**

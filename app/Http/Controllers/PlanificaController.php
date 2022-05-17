@@ -9,10 +9,19 @@ use App\Models\EquipoConvenio;
 use App\Models\Garantia;
 use App\Models\Proveedor;
 use App\Models\Convenio;
+use DateTime;
 
 
 class PlanificaController extends Controller
 {
+
+      public function __construct()
+    {
+        $this->middleware('can:planifica.index')->only('index');
+        $this->middleware('can:planifica.edit')->only('edit', 'update');
+        $this->middleware('can:planifica.create')->only('create', 'store');
+        $this->middleware('can:planifica.delete')->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -183,10 +192,47 @@ class PlanificaController extends Controller
     {
         $programacion=date('Y-m-d',strtotime($request->get('programacion')));
         $planifica=Planificamp::find($id);
+        $equipo=$planifica->Equipo;
+        //dd($request->get('fecha'));
+       
+        $eq = "";
+        if ($equipo->eq == "Critico")
+            $eq = "2.1";
+        if ($equipo->eq == "Relevante")
+            $eq = "2.2";
+        if ($equipo->eq == "Sin")
+            $eq = "Sin";
+        if($request->file('documento')!=null){
+            if($equipo->inventario!='?'){
+                $carpeta = $_SERVER['DOCUMENT_ROOT'] . '/storage/' . $eq . '/' . $equipo->Familia->nombre . '/' . $equipo->SubFamilia->nombre . '/' . $equipo->inventario . "/";
+            }
+            else{
+                $carpeta = $_SERVER['DOCUMENT_ROOT'] . '/storage/' . $eq . '/' . $equipo->Familia->nombre . '/' . $equipo->SubFamilia->nombre . '/' . $equipo->serie . "/";  
+            }
+        }
+        if($planifica->fechacorte!=$request->get('fecha')){
+
+            $planifica->fechacorte=$request->get('fecha');
+            $planifica->save();
+            return redirect('/planifica/listado/')->with('message', 'ha sido Editada el mes de planificacion')->with('status','alert alert-success');
+        }
         if(date('m-Y',strtotime($planifica->fechacorte))==date('m-Y',strtotime($programacion))){
             $planifica->fechaprogramacion=$programacion;
-            $planifica->proveedor=$request->get('responsable');
+            $planifica->proveedor=$request->get('responsable');    
+            if (!file_exists($carpeta))
+                mkdir($carpeta, 0777, true);
+            if ($request->hasFile('documento')) {
+                $fecha = new DateTime($programacion);
+                $nombre = $equipo->inventario . '_' . $fecha->format('Y') . '_MP_' . $fecha->format('m');
+                //Captura de archivo view create
+                $file = $request->file('documento');
+                $nombre = $nombre . '.pdf';
+                if ($file->guessExtension() == "pdf") {
+                    $file->move($carpeta, $nombre);
+                }
+            }
             $planifica->save();
+
             return redirect('/planifica/listado/')->with('message', 'El Equipo '.$planifica->Equipo->inventario.' ha sido Programada para el dia: '.date('d-m-Y',strtotime($planifica->fechaprogramacion)))->with('status','alert alert-success');
         }
         else
@@ -210,7 +256,8 @@ class PlanificaController extends Controller
                     }
                     else
                         return redirect('/planifica/listado/')->with('message', 'El Equipo no ha sido Programado Por no encontrarse en mes programado')->with('status','alert alert-danger');
-    }
+    
+}
 
     /**
      * Remove the specified resource from storage.

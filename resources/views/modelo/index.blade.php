@@ -13,6 +13,7 @@
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         {{ session('message') }}
     </div>
+</div>
     @endif
 @can('modelo.create')
 <!-- Trigger the modal with a button -->

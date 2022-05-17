@@ -3,6 +3,9 @@
 @section('title', 'Convenios')
 
 @section('content_header')
+@section('content_top_nav_left')
+<div class="text-center"><h3>Listado de Convenios</h3></div>
+@endsection
 <div class="d-flex justify-content-center">
     <div class="col">
         <div class="card text-white bg-primary mb-3">
@@ -11,9 +14,7 @@
             </div>
         </div>        
     </div>
-    <div class="col ">
-        <h2>Listado de Convenios de EEMM</h2>
-    </div>
+    
     <div class="col">
         <div class="card text-white bg-primary mb-3">
             <div class="card-body">
@@ -118,7 +119,10 @@
       <th scope="col">TIPO </th>
       <th scope="col">PROVEEDOR</th>
       <th>Cantidad</th>
-      <th scope="col">FUNCIONES</th>
+      @can('convenio.show')<th scope="col">Ver</th>@endcan
+      @can('convenio.edit')<th scope="col">Editar</th>@endcan
+      @can('convenio.destroy')<th scope="col">Eliminar</th>@endcan
+      @can('convenio.baja')<th scope="col">Dar de Baja</th>@endcan
 	</tr>
 	</thead>
 	<tbody>
@@ -155,22 +159,28 @@
       <td>{{$convenio->tipoconvenio}}</td>
       <td>{{$convenio->Proveedor->nombre}}</td>
       <td>{{ $convenio->EquipoConvenio->count() }}</td>
-           <td>
-      @can('convenio.edit')
-            <a class="btn btn-warning btn-sm" href="/convenio/{{$convenio->id}}/edit "><i class="bi bi-pencil"></i></a>
-      @endcan
-      @can('convenio.show')
+    @can('convenio.show')
+      <td>
         <a class="btn btn-info btn-sm" href="/convenio/{{$convenio->id}}"><i class="bi bi-eye"></i></a>
+      </td>    
     @endcan
+    @can('convenio.edit')
+      <td>
+        <a class="btn btn-warning btn-sm" href="/convenio/{{$convenio->id}}/edit "><i class="bi bi-pencil"></i></a>
+     </td>     
+    @endcan      
     @can('convenio.destroy')
-      	 <form action="{{route('convenio.destroy',$convenio->id)}}" method="POST">
-      	@csrf
-      	@method('DELETE')
-      	<button class="btn btn-danger btn-sm" type="submit" onClick="javascript: return confirm('¿Estas seguro?');"><i class="bi bi-trash"></i></button>
-      	</form> 
-    
-        @endcan
-          </td>
+        <td>
+         <form action="{{route('convenio.destroy',$convenio->id)}}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button class="btn btn-danger btn-sm" type="submit" onClick="javascript: return confirm('¿Estas seguro?');"><i class="bi bi-trash"></i></button>
+         </form>  
+      </td>
+    @endcan
+    @can('convenio.baja')
+        <td> <a class="btn btn-secondary btn-sm" href="/convenio/{{$convenio->id}}/baja "><i class="bi bi-file-earmark-excel-fill"></i></a></td> 
+    @endcan
     </tr>
     @endforeach
 	</tbody>

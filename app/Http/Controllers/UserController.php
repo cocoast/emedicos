@@ -5,6 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Dependence;
+use App\Models\Ssalud;
+use App\Models\CentroSalud;
+
 
 class UserController extends Controller
 {
@@ -14,6 +20,7 @@ class UserController extends Controller
         $this->middleware('can:user.create')->only('create','store');
         $this->middleware('can:user.destroy')->only('destroy');
         $this->middleware('can:user.show')->only('show');
+        $this->middleware('can:user.destroy')->only('delete');
     }
     /**
      * Display a listing of the resource.
@@ -34,7 +41,7 @@ class UserController extends Controller
     public function create()
     {
      $roles=Role::all();
-     return view ('user.create')->compact('roles');
+     return view ('user.create')->with('roles',$roles);
     }
 
     /**
@@ -45,7 +52,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-       
+        $user =new User;
+       $user->name=$request->get('nombre');
+       $user->email=$request->get('mail');
+       $user->password=Hash::make($request->get('password'));
+       $user->save();
+       $user->assignRole($request->get('rol'));
+       return redirect('/user');
+
     }
 
     /**
@@ -67,7 +81,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $roles= Role::all();
+        $roles=Role::all();
         $user=User::find($id);
         $role=Role::find(1);
        
@@ -114,5 +128,53 @@ class UserController extends Controller
 
         
        
+    }
+     public function delete($id)
+    {
+        $user = User::find($id);
+        $user->delete();
+        return redirect('/user');
+    }
+    public function GoDependencia($id){
+        $user=User::find($id);
+
+        $servicios=Ssalud::all();
+        $centros=CentroSalud::all();
+        return view('user.dependencia')->with('user',$user)->with('centros',$centros)->with('servicios',$servicios);
+    }
+    public function Dependencia(Request $request, $id){
+        $user=User::find($id);
+
+        $servicio="";
+        $centro="";
+        if(explode('-',$request->get('dependencia'))[0]=='servicio'){
+            $ide=explode('-',$request->get('dependencia'))[1];
+            $servicio=Ssalud::find($ide);
+            if(!$user->Dependence)
+                $dependencia=new Dependence;
+                else
+                    $dependencia=Dependence::find($user->Dependence->id);
+            $dependencia->user=$user->id;
+            $dependencia->dependencetable_id=$servicio->id;
+            $dependencia->dependencetable_type=$servicio->getMorphClass();
+            $dependencia->save();
+            return redirect ('/user');
+        }
+         if(explode('-',$request->get('dependencia'))[0]=='centro'){
+            $ide=explode('-',$request->get('dependencia'))[1];
+            $centro=CentroSalud::find($ide);
+            //dd($ide);
+            if(!$user->Dependence)
+                $dependencia=new Dependence;
+                else
+                    $dependencia=Dependence::find($user->Dependence->id);
+            $dependencia->user=$user->id;
+            $dependencia->dependencetable_id=$centro->id;
+            $dependencia->dependencetable_type=$centro->getMorphClass();
+            $dependencia->save();
+            return redirect ('/user');
+        }
+        
+
     }
 }
