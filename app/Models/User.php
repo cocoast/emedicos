@@ -76,4 +76,8 @@ class User extends Authenticatable
     public function Dependence(){
         return  $this->hasOne('App\Models\Dependence','user','id');
     }
+    public function role()
+{
+    return $this->belongsTo(Role::class, 'roles_id');
+}
 }

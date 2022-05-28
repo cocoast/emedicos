@@ -280,6 +280,7 @@ vertical-align: middle !important;
         </thead>
         <tbody>
             @foreach($convenio->EquipoConvenio as $equipoconvenio)
+            @if($equipoconvenio->fechaincorporacion<$pago->fecha)
             <tr>
                 <td style="padding-left: 4px; padding-right: 4px; text-align: center">
                     @if($counter+1 <10) <b>0{{ $counter+1 }}</b>
@@ -294,9 +295,10 @@ vertical-align: middle !important;
                 <td>{{$equipoconvenio->Equipo->Familia->nombre}}</td>
                 <td>{{$equipoconvenio->Equipo->Modelo->modelo}}</td>
                 <td>{{date("d-m-Y", strtotime($equipoconvenio->fechaincorporacion))}}</td>
-                <td>{{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY_ACCOUNTING)->format($equipoconvenio->valor/($convenio->meses/$convenio->frecuenciapago))}}</td>
+                <td>{{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY_ACCOUNTING)->format($equipoconvenio->valor/(($convenio->meses / $convenio->frecuenciapago)-($pago->periodo-1)))}}</td>
 
             </tr>
+            @endif
             <!-- Si el contador de equipos llega al máximo soportado por página; termina la tabla anterior e inicia una nueva.  -->
             @if((++$counter == 24 ) && (count($convenio->EquipoConvenio) > 24))
         </tbody>

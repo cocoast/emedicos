@@ -31,7 +31,10 @@ class PlanificaController extends Controller
     {
         $year=date('Y');
         $equipos=Equipo::all();
+       //$conmp=Planificamp::whereYear('fechacorte',$year)->where('tipomp','interna')->get();
         $paso=0;
+        //$equi=$conmp->unique('equipo');
+        //dd($equi);
         
         //$planificados=Planificamp::join('bajas','bajas.equipo',"=",'planificamps.equipo')->select('planificamps.id','planificamps.fechacorte','planificamps.fechaprogramacion','planificamps.tipomp','planificamps.equipo','planificamps.proveedor')->where('bajas.equipo','!=','planificamps.equipo')->get();
        
@@ -223,7 +226,10 @@ class PlanificaController extends Controller
                 mkdir($carpeta, 0777, true);
             if ($request->hasFile('documento')) {
                 $fecha = new DateTime($programacion);
-                $nombre = $equipo->inventario . '_' . $fecha->format('Y') . '_MP_' . $fecha->format('m');
+                if($equipo->inventario!='?')
+                $nombre = $equipo->inventario . '_' . $fecha->format('Y') . '_' . $request->archivo . '_' . $fecha->format('m') . '_' . $fecha->format('d');
+                else
+                    $nombre = $equipo->serie . '_' . $fecha->format('Y') . '_' . $request->archivo . '_' . $fecha->format('m') . '_' . $fecha->format('d');
                 //Captura de archivo view create
                 $file = $request->file('documento');
                 $nombre = $nombre . '.pdf';

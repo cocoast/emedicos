@@ -3,10 +3,9 @@
 @section('title', 'Convenios')
 
 @section('content_top_nav_left')
-<div class="text-center"><h3>Listado de Completo de Convenios</h3></div>
+<div class="text-center"><h3>Listado de Convenios Año {{ date('Y') }} para {{ $centro->nombre }}</h3></div>
 @endsection
 @section('content')
-<!-- Alertas -->
 <div>
 @if (session()->has('message'))
 <div class="{{session('status')}} alert-dismissible">
@@ -15,9 +14,9 @@
 @endif
 </div>
 <!---Fin de Alertas-->
-</div>
+
 <div class="row align-items-start">
-  @foreach($sigfes as $sigfe)
+  @foreach(App\Models\Sigfe::all() as $sigfe)
   <div class="col">
     <!-- Apply any bg-* class to to the info-box to color it -->
     <div class="info-box bg-info">
@@ -39,16 +38,19 @@
   </div>
 
   @endforeach
-</div>
-<!---->
 
+ <div class="col">
+    @can('minsal.convenio.create')
+    <!-- Trigger the modal with a button -->
+            <button type="button" data-path="{{route('minsalconvenio.create') }}" class="btn btn-primary EquipoBtn"><i class="bi bi-file-plus">Agregar Convenio</i> </button>
+    @endcan
+</div>
 <div class="container-fluid ">
   
  <table id="conveniostables" class="table table-striped table-hover mt-4" style="width:100%">
 	<thead>
 	<tr>
-      <th scope="col">Servicio de Salud</th>
-      <th scope="col">Institución</th>
+      <th scope="col">#</th>
       <th scope="col">Nombre</th>
       <th scope="col">Resolución Aprobatoria</th>
       <th scope="col">Fecha Resolución</th>
@@ -57,15 +59,16 @@
       <th scope="col">Monto Anual</th>
       <th scope="col">Subasignacion Sigfe</th>
       <th scope="col">Glosa</th>
-      @can('minsal.convenio.show')<th scope="col">Pagos</th>@endcan
-     
+      @can('minsal.pago.create')<th scope="col">Generar Pagos</th>@endcan
+      @can('minsal.convenio.show')<th scope="col">Ver Pagos</th>@endcan
+      @can('minsal.convenio.edit')<th scope="col">Editar</th>@endcan
+      @can('minsal.convenio.destroy')<th scope="col">Eliminar</th>@endcan
 	</tr>
 	</thead>
 	<tbody>
 		@foreach($convenios as $convenio)	      
     <tr>
-      <td><a href="{{ route('ssalud.show',$convenio->dependencetable->Ssalud->id) }}">{{ $convenio->dependencetable->Ssalud->nombre ?? $convenio->dependencetable->nombre  }}</a></td>
-      <td>{{ $convenio->dependencetable->nombre }}</td>
+      <td>{{ $convenio->id }}</td>
       <td>{{$convenio->nombre}}</td>
       <td>{{$convenio->resolucion}}</td>  
       <td data-order="{{date("Ymd", strtotime($convenio->fecha_resolucion))}}">{{date("d-m-Y", strtotime($convenio->fecha_resolucion))}}</td>
@@ -74,13 +77,34 @@
       <td>${{NumberFormatter::create( 'es_CL', NumberFormatter::DECIMAL )->format($convenio->monto_anual)}}</td>  
       <td>{{ $convenio->Sigfe->nombre }}</td>
       <td>{{$convenio->glosa}}</td>
+       @can('minsal.pago.create')
+      <td>
+        <!-- Trigger the modal with a button -->
+            <button type="button" data-path="{{ route('minsalfactura.create',$convenio->id) }}" class="btn btn-success EquipoBtn"><i class="bi bi-cash-coin"></i> </button>
+      </td>    
+    @endcan
     @can('minsal.convenio.show')
       <td>
         <!-- Trigger the modal with a button -->
             <button type="button" data-path="{{ route('minsalfactura.show',$convenio->id) }}" class="btn btn-info EquipoBtn"><i class="bi bi-wallet2"></i> </button>
       </td>    
-      @endcan
-   
+    @endcan
+    @can('minsal.convenio.edit')
+      <td>
+        <!-- Trigger the modal with a button -->
+        <button type="button" data-path="{{ route('minsalconvenio.edit',$convenio->id) }} " class="btn btn-warning EquipoBtn"><i class="bi bi-pencil"></i> </button>
+        
+     </td>     
+    @endcan      
+    @can('minsal.convenio.destroy')
+        <td>
+         <form action="{{route('minsalconvenio.destroy',$convenio->id)}}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button class="btn btn-danger" type="submit" onClick="javascript: return confirm('¿Estas seguro?');"><i class="bi bi-trash"></i></button>
+         </form>  
+      </td>
+    @endcan
     </tr>
     @endforeach
 	</tbody>

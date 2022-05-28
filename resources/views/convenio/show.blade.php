@@ -85,7 +85,16 @@
 			<input id="" value="{{$convenio->Proveedor->nombre}}" name="" type="text" tabindex="2" class="form-control"readonly>
 		</div>
 	</div>
-	<h1 class="focus text-danger">Monto Disponible:$ <strong> {{NumberFormatter::create( 'es_CL', NumberFormatter::DECIMAL )->format($convenio->valor-$gasto)}}</strong></h1>
+    <div class="row align-items-start">
+        <div class="col">
+    <h1 class="focus text-danger">Monto Disponible:$ <strong> {{NumberFormatter::create( 'es_CL', NumberFormatter::DECIMAL )->format($convenio->valor-$gasto)}}</strong></h1>        
+        </div>
+<div class="col">
+    <h1 class="focus text-info">Valor Equipos en Convenio:$ <strong> {{NumberFormatter::create( 'es_CL', NumberFormatter::DECIMAL )->format($valorequipo)}}</strong></h1>
+</div>
+    </div>
+	
+    
 	<ul class="nav nav-tabs">
     <li class="active"><a class="nav-link" data-toggle="tab" href="#home">Equipos</a></li>
     <li><a class="nav-link" data-toggle="tab" href="#menu1">Documentos</a></li>
@@ -276,10 +285,10 @@
                 </tbody>
             </table>
             @can('convenio.edit')
-            <?php
-            if($convenio->tipoconvenio=='Correctivo')
-            echo('<a class="btn btn-success" href="'.route('pagos.create', $convenio->id).'">Agregar Pago</a>');
-            ?>
+
+            @if($convenio->tipoconvenio=='Correctivo')
+                <a class="btn btn-success" href="{{ route('pagos.create', $convenio->id) }}">Agregar Pago</a>
+            @endif
             @endcan
     </div>
   </div>

@@ -14,12 +14,13 @@
 
         {{-- Custom left links --}}
         @yield('content_top_nav_left')
+        
     </ul>
 
 
     {{-- Navbar right links --}}
     <ul class="navbar-nav ml-auto">
-      <a class="nav-link disabled" href="#"><strong> <?php setlocale(LC_ALL,"es_ES"); echo strftime("%A %d de %B del %Y %H:%M");?></strong></a>
+     
         {{-- Custom right links --}}
         @yield('content_top_nav_right')
         {{-- Configured right links --}}

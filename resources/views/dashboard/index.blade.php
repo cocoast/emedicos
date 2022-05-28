@@ -5,153 +5,158 @@
 @section('content_header')
 @can('equipos.medicos')
 @section('content_top_nav_left')
-<div class="text-center"><h3>Resumen Año {{ date('Y') }}</h3></div>
+
+
+<div class="text-center"> 
+    <h3>Resumen Año {{ date('Y') }}</h3>
+</div>
 @endsection
  @section('content_top_nav_right')
- 
  @endsection
-   <div class="row align-items-start">
-       <div class="col w-25">
-            <div class="info-box bg-red">
-              <span class="info-box-icon"><i class="bi bi-wallet2"></i></span>
-              <div class="info-box-content">
-                <span class="info-box-text">Convenios de Mantenimiento Activos ({{$preventivo["cantidad"]}})</span>
-                <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($preventivo["pagado"])}}</span>
-                <div class="progress">
-                    <div class="progress-bar" style="width: @if($preventivo["pagado"]==0) 0; @else{{  ($preventivo["pagado"]/$preventivo["total"])*100}}@endif%"></div>
-                </div>
-                <span class="progress-description">
-                  @if($preventivo["total"]==0) 0 @else {{ substr((  $preventivo["pagado"]/$preventivo["total"])*100,0,4) }} @endif% de: {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($preventivo["total"])}}
-                 Equipos: {{ $preventivo["equipos"] }}
-                </span>
-              </div>
-            </div>
-        </div>
+<div class="row align-items-start">
+    <input id="dash" name="dash" type="search" class="form-control"  placeholder="Ingrese caracteres para buscar">
+</div>
 
-        <div class="col w-25">
-            <div class="info-box bg-green">
-                <span class="info-box-icon"><i class="bi bi-wallet2"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Convenios de Arriendo({{$arriendos["cantidad"]}})</span>
-                    <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($arriendos["pagado"])}}</span>
-                    <div class="progress">
-                      <div class="progress-bar" style="width: @if($arriendos["pagado"]==0) 0; @else{{  ($arriendos["pagado"]/$arriendos["total"])*100}}@endif%"></div>
-                    </div>
-                    <span class="progress-description">
-                    @if ($arriendos["pagado"]==0) 0;  @else {{ substr(($arriendos["pagado"]/$arriendos["total"])*100,0,4) }}@endif % de: {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($arriendos["total"])}}
-                    Equipos: {{ $arriendos["equipos"] }}
-                    </span>
-                </div>
+<div class="row align-items-start">
+   <div class="col w-25">
+        <div class="info-box bg-red">
+          <span class="info-box-icon"><i class="bi bi-wallet2"></i></span>
+          <div class="info-box-content">
+            <span class="info-box-text">Convenios de Mantenimiento Activos ({{$preventivo["cantidad"]}})</span>
+            <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($preventivo["pagado"])}}</span>
+            <div class="progress">
+                <div class="progress-bar" style="width: @if($preventivo["pagado"]==0) 0; @else{{  ($preventivo["pagado"]/$preventivo["total"])*100}}@endif%"></div>
             </div>
-        </div>
-
-        <div class="col w-25">
-                         
-            <div class="info-box bg-orange">
-                <span class="info-box-icon"><i class="bi bi-wallet2"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Convenios Correctivos({{$correctivos["cantidad"]}})</span>
-                    <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($correctivos["pagado"])}}</span>
-                    <div class="progress">
-                          <div class="progress-bar" style="width: @if($correctivos["pagado"]==0) 0; @else{{  ($correctivos["pagado"]/$correctivos["total"])*100}}@endif%"></div>
-                    </div>
-                    <span class="progress-description">
-                    @if ($correctivos["total"]==0) 0 @else {{ substr(($correctivos["pagado"]/$correctivos["total"])*100,0,4) }}% de un total de {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($correctivos["total"])}}@endif
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>       
-    
-    <div class="row align-items-start ">
-        <div class="col w-25">
-            <canvas id="myChart"></canvas>
-        </div>
-        <div class="col w-25">
-            <canvas id="myGar"></canvas>
-        </div>
-        <div class="col w-25">
-            <canvas id="myMan"></canvas>
+            <span class="progress-description">
+              @if($preventivo["total"]==0) 0 @else {{ substr((  $preventivo["pagado"]/$preventivo["total"])*100,0,4) }} @endif% de: {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($preventivo["total"])}}
+             Equipos: {{ $preventivo["equipos"] }}
+            </span>
+          </div>
         </div>
     </div>
-    <div class="row">
-  <!-- Tarjeta de PAgos Realizados -->
-        <div class="col w-25" >
-            <div class="card card-success">
-                <div class="card-header">
-                    <h3 class="card-title ">Ultimos Pagos</h3>
-                    <div class="card-tools">
-                        <!-- Buttons, labels, and many other things can be placed here! -->
-                        <!-- Here is a label for example -->
-                        <span class="badge badge-success">Importante</span>
-                    </div>
+
+    <div class="col w-25">
+        <div class="info-box bg-green">
+            <span class="info-box-icon"><i class="bi bi-wallet2"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Convenios de Arriendo({{$arriendos["cantidad"]}})</span>
+                <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($arriendos["pagado"])}}</span>
+                <div class="progress">
+                  <div class="progress-bar" style="width: @if($arriendos["pagado"]==0) 0; @else{{  ($arriendos["pagado"]/$arriendos["total"])*100}}@endif%"></div>
                 </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                    <table class="table table-striped table-hover h6">
-                        <thead class="table-success">
-                            <tr>
-                                <th>Convenio</th>
-                                <th>Cuota</th>
-                                <th>Fecha de Corte</th>
-                                <th>Total</th>  
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($realizados as $realizado)
-                            <tr>
-                                <td><a href="/convenio/{{$realizado->Convenio->id}}"> {{$realizado->Convenio->nombre}}</a> </td>
-                                <td>{{$realizado->periodo}}</td>
-                                <td data-order="{{date("Ymd", strtotime($realizado->fecha))}}">{{date("d-m-Y", strtotime($realizado->fecha))}}</td>
-                                <td>{{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($realizado->valor)}}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /.card-body --> 
+                <span class="progress-description">
+                @if ($arriendos["pagado"]==0) 0;  @else {{ substr(($arriendos["pagado"]/$arriendos["total"])*100,0,4) }}@endif % de: {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($arriendos["total"])}}
+                Equipos: {{ $arriendos["equipos"] }}
+                </span>
             </div>
-    <!-- /.card -->
         </div>
+    </div>
 
-    <!-- Tarjeta de PAgos Por vencer -->
-
-        <div class="col w-25">
-            <div class="card card-warning">
-                <div class="card-header">
-                    <h3 class="card-title ">Pagos Por Vencer</h3>
-                    <div class="card-tools">
-                    <span class="badge badge-success">Importante</span>
-                    </div>
+    <div class="col w-25">           
+        <div class="info-box bg-orange">
+            <span class="info-box-icon"><i class="bi bi-wallet2"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Convenios Correctivos({{$correctivos["cantidad"]}})</span>
+                <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($correctivos["pagado"])}}</span>
+                <div class="progress">
+                    <div class="progress-bar" style="width: @if($correctivos["pagado"]==0) 0; @else{{  ($correctivos["pagado"]/$correctivos["total"])*100}}@endif%"></div>
                 </div>
+                <span class="progress-description">
+                @if ($correctivos["total"]==0) 0 @else {{ substr(($correctivos["pagado"]/$correctivos["total"])*100,0,4) }}% de un total de {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($correctivos["total"])}}@endif
+                </span>
+            </div>
+        </div>
+    </div>
+</div>       
+    
+<div class="row align-items-start ">
+    <div class="col w-25">
+        <canvas id="myChart"></canvas>
+    </div>
+    <div class="col w-25">
+        <canvas id="myGar"></canvas>
+    </div>
+    <div class="col w-25">
+        <canvas id="myMan"></canvas>
+    </div>
+</div>
+<div class="row">
+<!-- Tarjeta de PAgos Realizados -->
+    <div class="col w-25" >
+        <div class="card card-success">
+            <div class="card-header">
+                <h3 class="card-title ">Ultimos Pagos</h3>
+                <div class="card-tools">
+                    <!-- Buttons, labels, and many other things can be placed here! -->
+                    <!-- Here is a label for example -->
+                    <span class="badge badge-success">Importante</span>
+                </div>
+            </div>
             <!-- /.card-header -->
-                <div class="card-body h6">
-                    <table id="vencer" class="table table-striped table-hover h6 ">
-                        <thead class="table-warning">
-                            <tr>
-                                <th>Convenio</th>
-                                <th>Cuota</th>
-                                <th>Fecha de Corte</th>
-                                <th>Vencimiento</th>
-                              
-                            </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($porvencer as $realizado)
+            <div class="card-body">
+                <table class="table table-striped table-hover h6">
+                    <thead class="table-success">
+                        <tr>
+                            <th>Convenio</th>
+                            <th>Cuota</th>
+                            <th>Fecha de Corte</th>
+                            <th>Total</th>  
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($realizados as $realizado)
                         <tr>
                             <td><a href="/convenio/{{$realizado->Convenio->id}}"> {{$realizado->Convenio->nombre}}</a> </td>
                             <td>{{$realizado->periodo}}</td>
                             <td data-order="{{date("Ymd", strtotime($realizado->fecha))}}">{{date("d-m-Y", strtotime($realizado->fecha))}}</td>
-                            <td>{{$hoy->diff(new DateTime($realizado->fecha))->format('%R%a días')}}</td>
+                            <td>{{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($realizado->valor)}}</td>
                         </tr>
                         @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            <!-- /.card-body -->
+                    </tbody>
+                </table>
             </div>
-<!-- /.card -->
+            <!-- /.card-body --> 
         </div>
+<!-- /.card -->
+    </div>
+
+    <!-- Tarjeta de PAgos Por vencer -->
+    <div class="col w-25">
+        <div class="card card-warning">
+            <div class="card-header">
+                <h3 class="card-title ">Pagos Por Vencer</h3>
+                <div class="card-tools">
+                <span class="badge badge-success">Importante</span>
+                </div>
+            </div>
+        <!-- /.card-header -->
+            <div class="card-body h6">
+                <table id="vencer" class="table table-striped table-hover h6 ">
+                    <thead class="table-warning">
+                        <tr>
+                            <th>Convenio</th>
+                            <th>Cuota</th>
+                            <th>Fecha de Corte</th>
+                            <th>Vencimiento</th>
+                          
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($porvencer as $realizado)
+                    <tr>
+                        <td><a href="/convenio/{{$realizado->Convenio->id}}"> {{$realizado->Convenio->nombre}}</a> </td>
+                        <td>{{$realizado->periodo}}</td>
+                        <td data-order="{{date("Ymd", strtotime($realizado->fecha))}}">{{date("d-m-Y", strtotime($realizado->fecha))}}</td>
+                        <td>{{$hoy->diff(new DateTime($realizado->fecha))->format('%R%a días')}}</td>
+                    </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        <!-- /.card-body -->
+        </div>
+    <!-- /.card -->
+    </div>
 
     <!-- Tarjeta de PAgos Vencidos -->
 
@@ -168,45 +173,44 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-               <table id="vencido" class="table table-striped table-hover">
-                        <thead class="table-danger">
-                            <tr>
-                                <th>Convenio</th>
-                                <th>Cuota</th>
-                                <th>Fecha de Corte</th>
-                                <th>Atraso</th>
-                              
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($vencido as $realizado)
-                            <tr>
-                         <td><a href="/convenio/{{$realizado->Convenio->id}}"> {{$realizado->Convenio->nombre}}</a>   </td>
-                         <td>{{$realizado->periodo}}</td>
-                         <td data-order="{{date("Ymd", strtotime($realizado->fecha))}}">{{date("d-m-Y", strtotime($realizado->fecha))}}</td>
-                        <td>{{$hoy->diff(new DateTime($realizado->fecha))->format('%R%a días')}}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                <table id="vencido" class="table table-striped table-hover">
+                    <thead class="table-danger">
+                        <tr>
+                            <th>Convenio</th>
+                            <th>Cuota</th>
+                            <th>Fecha de Corte</th>
+                            <th>Atraso</th>
+                          
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($vencido as $realizado)
+                        <tr>
+                            <td><a href="/convenio/{{$realizado->Convenio->id}}"> {{$realizado->Convenio->nombre}}</a>   </td>
+                            <td>{{$realizado->periodo}}</td>
+                            <td data-order="{{date("Ymd", strtotime($realizado->fecha))}}">{{date("d-m-Y", strtotime($realizado->fecha))}}</td>
+                            <td>{{$hoy->diff(new DateTime($realizado->fecha))->format('%R%a días')}}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-            <!-- /.card-body -->
-            
+        <!-- /.card-body -->
         </div>
 <!-- /.card -->
     </div>
 </div>
 @endcan
+<!-- -->
 @can('licitaciones')
-<h1>aqui estaran las licitaciones</h1>
+     
 @endcan
-@can('sigfe.index')
 
- @endcan
 
    
 @stop
 @section('css')
+ <link rel="stylesheet" href="{{ asset('vendor/jquery-ui/jquery-ui/jquery-ui.min.css') }}">
 <!--BOOSTRAP ICONS-->
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
  
@@ -228,6 +232,9 @@
 @section('js')
 <!-- JQuery-->
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="{{ asset('vendor/jquery-ui/jquery-ui/jquery-ui.min.js') }}"></script>
 
 <!--DATATABLE-->
 
@@ -359,6 +366,24 @@ var myChart = new Chart(ctx, {
     
 
 });
+
+
+</script>
+<script>
+    $('#dash').autocomplete({
+            source: function (request, response){
+                $.ajax({
+                    url: "{{ route('search.dashboard') }}",    
+                    dataType: 'json',
+                    data:{
+                        term: request.term
+                    },
+                    success: function(data){
+                        response( data )
+                    }
+                });
+            }
+        });
 </script>
 
   @stop

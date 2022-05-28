@@ -9,6 +9,9 @@ use App\Models\Convenio;
 use NumberFormatter;
 use DateTime;
 use PDF2;
+use DatePeriod;
+use DateInterval;
+
 
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -49,7 +52,9 @@ class PagosController extends Controller
      */
     public function store($id)
     {
+        $convenio=Convenio::find($id);
         $periodo = Pago::where('convenio', $id)->count();
+        if($convenio->tipoconvenio=="Correctivo"){
         $pago = new Pago();
         $hoy = new DateTime();
         $fecha = $hoy->format('d-m-Y');
@@ -62,6 +67,24 @@ class PagosController extends Controller
         $pago->convenio = $id;
         $pago->save();
         return redirect()->route('convenio.show', $pago->convenio);
+    }
+    else
+        $pago = new Pago();
+        $intervalo=new DateInterval('P'.$convenio->frecuenciapago*(Pago::orderby('periodo','desc')->where('convenio',$convenio->id)->first()->perido+1).'M');
+        $fecha=new DateTime(Pago::where('convenio',$convenio->id)->orderby('periodo','desc')->first()->fecha);
+        $hoy = $fecha->add(new DateInterval('P'.$convenio->frecuenciapago*(Pago::orderby('periodo','desc')->where('convenio',$convenio->id)->first()->perido+1).'M'));
+        $fecha = $hoy->format('d-m-Y');
+        $pago->fecha = $fecha;
+        $pago->periodo = $periodo + 1;
+        $pago->memo = "ingresar";
+        $pago->estado = "Pendiente";
+        $pago->oc = "ingresar";
+        $pago->valor = "ingresar";
+        $pago->convenio = $id;
+        dd($pago);
+        $pago->save();
+        return redirect()->route('convenio.show', $pago->convenio);
+
     }
 
     /**
@@ -219,7 +242,7 @@ class PagosController extends Controller
                 foreach (Pago::where('convenio', $convenio->id)->get() as $p) {
                     if ($anexo->fechaincorporacion < $p->fecha) {
                         //calculamos los pagos que quedan
-                        $paane = $pa - $p->periodo;
+                        $paane = $pa - $p->periodo+1;
                         if ($pago->fecha > $anexo->fechaincorporacion) {
                             //sumamos el valor del equipo al total del pago (dividiendo por los pagos que quedan) 
                             $total = $total + ($anexo->valor / $paane);

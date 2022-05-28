@@ -19,7 +19,11 @@ use DateTime;
 use App\Models\User;
 use App\Models\Garantia;
 use App\Models\Planificamp;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Ssalud;
+use App\Models\CentroSalud;
+use App\Models\Sigfe;
+use App\Models\MinsalConvenio;
+use App\Models\MinsalFactura;
 
 
 class DashBoardController extends Controller
@@ -31,10 +35,93 @@ class DashBoardController extends Controller
      */
     public function index()
     {
-        //dd(Auth()->user()->roles()->first()->name);
-       return $this->DashEquiposMedicos();
 
-        
+        //dd(Auth()->user()->Dependence);
+        $user=Auth()->user();
+        //dd(!$user->Dependence);
+        //dd($user->getRoleNames()[0]);
+        if($user->getRoleNames()[0]=="Dios" ||$user->getRoleNames()[0] =="User" ||$user->getRoleNames()[0] == "Administrador" ){
+            return $this->DashEquiposMedicos();
+        }
+        else
+        if($user->getRoleNames()[0]=='InfoMinsal' && !$user->Dependence){
+          return $this->DashMinsal($user->id);
+        }
+        else
+        if($user->getRoleNames()[0]=='Minsal.SS' && $user->Dependence ){
+            return  $this->DashMinsal($user->id);  
+        }
+         if($user->getRoleNames()[0]=='minsal.ss.centro' && $user->Dependence && $user->Dependence->dependencetable_type=='App\Models\CentroSalud'){
+            return  $this->DashMinsal($user->id);  
+        }
+        else 
+            dd('no se encuentra');
+    }
+     public function DashMinsal($id){
+        $user=User::find($id);
+        $year=date('Y');
+        $datos=array();
+
+        $sigfes=Sigfe::all();
+        if($user->Dependence==null){
+            foreach($sigfes as $sigfe){
+            $datos['pago_'.$sigfe->id]=0;
+            $datos[$sigfe->id]=MinsalConvenio::where('ano',$year)
+                                ->where('sigfe',$sigfe->id)
+                                ->sum('monto_anual');
+            foreach(MinsalConvenio::where('ano',$year)
+                        ->where('sigfe',$sigfe->id)->get() as $convenio){
+                
+                 foreach(MinsalFactura::where('minsalconvenio',$convenio->id)->get() as $pago){
+                    $datos['pago_'.$sigfe->id]+=$pago->monto;
+                }
+            }
+        }
+    }
+    else{
+            
+        if($user->Dependence->dependencetable_type=='App\Models\Ssalud'){
+           $establecimiento=Ssalud::find($user->Dependence->dependencetable_id);
+           foreach($sigfes as $sigfe){
+            $datos['pago_'.$sigfe->id]=0;
+            $datos[$sigfe->id]=MinsalConvenio::where('ano',$year)
+                                ->where('dependencetable_type','App\Models\Ssalud')
+                                ->where('dependencetable_id',$establecimiento->id)
+                                ->where('sigfe',$sigfe->id)
+                                ->sum('monto_anual');
+            foreach(MinsalConvenio::where('ano',$year)
+                        ->where('dependencetable_type','App\Models\CentroSalud')
+                        ->where('dependencetable_id',$establecimiento->id)
+                        ->where('sigfe',$sigfe->id)->get() as $convenio){
+                
+                 foreach(MinsalFactura::where('minsalconvenio',$convenio->id)->get() as $pago){
+                    $datos['pago_'.$sigfe->id]+=$pago->monto;
+                }
+            }
+        }
+    }
+        if($user->Dependence->dependencetable_type=='App\Models\centrosalud'){
+            $establecimiento=CentroSalud::find($user->Dependence->dependencetable_id);
+            dd('hasta aqui');
+            foreach($sigfes as $sigfe){
+            $datos['pago_'.$sigfe->id]=0;
+            $datos[$sigfe->id]=MinsalConvenio::where('ano',$year)
+                                ->where('dependencetable_type','App\Models\CentroSalud')
+                                ->where('dependencetable_id',$establecimiento->id)
+                                ->where('sigfe',$sigfe->id)
+                                ->sum('monto_anual');
+            foreach(MinsalConvenio::where('ano',$year)
+                        ->where('dependencetable_type','App\Models\CentroSalud')
+                        ->where('dependencetable_id',$establecimiento->id)
+                        ->where('sigfe',$sigfe->id)->get() as $convenio){
+                 foreach(MinsalFactura::where('minsalconvenio',$convenio->id)->get() as $pago){
+                    $datos['pago_'.$sigfe->id]+=$pago->monto;
+                }
+            }
+        }
+    }
+}
+       return view('dashboard.minsal')->with('mp',$datos);
     }
     
     public function DashEquiposMedicos()
@@ -59,6 +146,8 @@ class DashBoardController extends Controller
                     ->where('memo','ingresar')
                     ->orderBy('fecha','ASC')
                     ->get();
+       
+
                   
         return view("dashboard.index")->with('preventivo',$preventivo)->with("arriendos",$arriendos)->with("correctivos",$correctivos)->with("data", $cantidadequipos)->with('garantias',$garantias)->with('realizados',$realizados)->with('porvencer',$porvencer)->with('hoy',$hoy)->with('vencido',$vencido)->with('mp',$mp);
     }
@@ -245,6 +334,17 @@ class DashBoardController extends Controller
         $res= [$enero,$febrero,$marzo,$abril,$mayo,$junio,$julio,$agosto,$septiembre,$octubre,$noviembre,$diciembre];
         return $res;
     }
+
+    public function EquiposMP(date $year){
+        $equipos= array();
+        $iconmp=Planificamp::whereYear('fechacorte',$year)->where('tipomp','interna')->get();
+        $equipos['interno']=$iconmp->unique('equipo')->count();
+        $econmp=Planificamp::whereYear('fechacorte',$year)->where('tipomp','convenio')->get();
+        $equipos['externo']=$conmp->unique('equipo')->count();
+        return $equipos;
+        
+
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -309,5 +409,23 @@ class DashBoardController extends Controller
     public function destroy($id)
     {
         //
+    }
+   
+    
+
+    public function search(Request $request)
+    {
+        $term = $request->get('term');
+        $querys = Equipo::where('inventario', 'LIKE', '%' . $term . '%')
+            ->orWhere('serie', 'LIKE', '%' . $term . '%')
+            ->orWhere('id', 'LIKE', '%' . $term . '%')->get();
+        $data = [];
+        foreach ($querys as $query) {
+            $data[] = [
+                'label' =>$query->id." - ". $query->inventario . ' - ' . $query->serie . ' - ' . $query->Familia->nombre . ' - ' . $query->Marca->marca,
+                'id'    =>$query->id
+            ];
+        }
+        return $data;
     }
 }

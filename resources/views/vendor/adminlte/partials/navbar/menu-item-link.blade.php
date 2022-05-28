@@ -1,5 +1,5 @@
 <li @isset($item['id']) id="{{ $item['id'] }}" @endisset class="nav-item">
-
+        
     <a class="nav-link {{ $item['class'] }}" href="{{ $item['href'] }}"
        @isset($item['target']) target="{{ $item['target'] }}" @endisset
        {!! $item['data-compiled'] ?? '' !!}>
@@ -10,7 +10,7 @@
                 isset($item['icon_color']) ? 'text-' . $item['icon_color'] : ''
             }}"></i>
         @endisset
-
+<a href="">test</a>
         {{-- Text --}}
         {{ $item['text'] }}
 

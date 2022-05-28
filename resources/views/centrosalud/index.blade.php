@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Centros de Salud')
+@section('title', 'Establecimientos de Salud')
 
 @section('content_header')
 <div>
@@ -15,7 +15,7 @@
 
 @section('content')
 @section('content_top_nav_left')
-<div class="text-center"><h3>Listado de Centros de Salud</h3></div>
+<div class="text-center"><h3>Listado de Establecimientos de Salud</h3></div>
 @endsection  
 <div class="col">
 @can('centrosalud.create')
@@ -26,7 +26,6 @@
 <table id="centrosaludstable" class="table table-striped table-hover mt-4" style="width:100%">
 	<thead>
 	<tr>
-      <th scope="col">#</th>
       <th scope="col">Centro</th>
       <th scope="col"> Servicio</th>
       @can('centrosalud.edit')<th scope="col">editar</th> @endcan
@@ -36,8 +35,7 @@
 	<tbody>
 		@foreach($centros as $centrosalud)
 		<tr>
-      <th scope="row">{{$centrosalud->id}}</th>
-      <td>{{$centrosalud->nombre}}</td>
+      <td><a href="{{ route('centrosalud.show',$centrosalud->id) }}">{{$centrosalud->nombre}}</a></td>
       <td>{{ $centrosalud->Ssalud->nombre }}</td>
       <td>
         @can('centrosalud.edit')

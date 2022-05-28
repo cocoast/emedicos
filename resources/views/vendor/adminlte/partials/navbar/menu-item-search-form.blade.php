@@ -19,6 +19,7 @@
                     placeholder="{{ $item['text'] }}"
                     aria-label="{{ $item['text'] }}">
 
+
                 {{-- Search buttons --}}
                 <div class="input-group-append">
                     <button class="btn btn-navbar" type="submit">
@@ -28,7 +29,7 @@
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-
+                     
             </div>
         </form>
     </div>

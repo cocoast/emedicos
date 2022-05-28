@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Ssalud;
+use App\Models\CentroSalud;
 
 class SsaludController extends Controller
 {
@@ -58,7 +59,8 @@ class SsaludController extends Controller
      */
     public function show($id)
     {
-        //
+         $centros=CentroSalud::where('ssalud',$id);
+         return view('centrosalud.show')->with('centros',$centros);
     }
 
     /**

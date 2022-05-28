@@ -82,7 +82,7 @@
                 <td>{{$equipo->Modelo->modelo}}</td>
                 <td>{{$equipo->fabricacion}}</td>
                 <td>{{$equipo->tipoactivo}}</td>
-                <td>{{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($equipo->valor)}}</td>
+                <td data-order="{{ $equipo->valor }}">{{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($equipo->valor)}}</td>
                 <td>{{$equipo->fecha_adquisicion}}</td>
                 <td>{{$equipo->archivador}}</td>        
                 <td width="10px">

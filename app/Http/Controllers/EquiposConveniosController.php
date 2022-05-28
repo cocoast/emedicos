@@ -83,6 +83,7 @@ class EquiposConveniosController extends Controller
                     $equipoconvenio->repuesto=$request->get('repuesto');
                     $equipoconvenio->equipo=$equipo->id;
                     $equipoconvenio->convenio=$request->get('convenio');
+                    $equipoconvenio->mp_disponible=$request->get('disponible');
                     $convenio->valor=$convenio->valor+$equipoconvenio->valor;
                     $convenio->save();
                     $equipoconvenio->save();
@@ -131,7 +132,7 @@ class EquiposConveniosController extends Controller
     public function update(Request $request, $id)
     {
         
-        //dd($equipo->id);  
+        //dd($equipo->id); 
         $equipoconvenio= EquipoConvenio::find($id);
         $equipo=Equipo::find($equipoconvenio->equipo);
         $equipoconvenio->valor=$request->get('valor');
@@ -159,6 +160,6 @@ class EquiposConveniosController extends Controller
         $equipoconvenio=EquipoConvenio::find($id);
         $convenio=Convenio::find($equipoconvenio->convenio);
         $equipoconvenio->delete();
-        return redirect('/convenio');
+         return redirect()->route('convenio.show',$equipoconvenio->convenio)->with('message', 'El Equipo  ha sido Eliminado del convenio')->with('status','alert alert-danger');
     }
 }

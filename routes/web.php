@@ -37,6 +37,10 @@ Route::get('convenios/seguimientomemos',[
     'uses'  =>'App\Http\Controllers\ConveniosController@seguimientomemos',
     'as'    =>'convenios.seguimientomemos'
     ]);
+Route::get('convenios/trazadoras',[
+    'uses'  =>'App\Http\Controllers\ConveniosController@Trazadoras',
+    'as'    =>'convenio.trazadoras'
+    ]);
 Route::get('/planifica/programa/',[
     'uses'  =>'App\Http\Controllers\PlanificaController@programa',
     'as'    =>'planifica.programa'
@@ -106,6 +110,10 @@ Route::get('minsalfactura/{id}/create',[
 Route::get('search/proveedor',[
     'uses'  =>  'App\Http\Controllers\ProveedorController@search',
     'as'    =>  'search.proveedor'
+    ]);
+Route::get('search/dashboard',[
+    'uses'  =>  'App\Http\Controllers\DashBoardController@search',
+    'as'    =>  'search.dashboard'
     ]);
 Route::get('search/marca',[
     'uses'  =>  'App\Http\Controllers\MarcaController@search',
@@ -209,4 +217,3 @@ Route::Put('convenio/{id}/darbaja',[
     'uses'  =>  'App\Http\Controllers\ConveniosController@darBaja',
     'as'    => 'convenio.debaja'
 ]);
-

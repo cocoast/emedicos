@@ -664,7 +664,10 @@ class EquipoController extends Controller
         if ($request->hasFile('documento')) {
             $file = $request->file('documento');
             $fecha = new DateTime($request->fecha);
-            $nombre = $equipo->inventario . '_' . $fecha->format('Y') . '_' . $request->archivo . '_' . $fecha->format('m') . '_' . $fecha->format('d');
+            if($equipo->inventario!='?')
+                $nombre = $equipo->inventario . '_' . $fecha->format('Y') . '_' . $request->archivo . '_' . $fecha->format('m') . '_' . $fecha->format('d');
+                else
+                    $nombre = $equipo->serie . '_' . $fecha->format('Y') . '_' . $request->archivo . '_' . $fecha->format('m') . '_' . $fecha->format('d');
             $nombre = $nombre . '.pdf';
             if ($file->guessExtension() == "pdf") {
                 $file->move($carpeta, $nombre);

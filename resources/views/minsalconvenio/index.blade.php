@@ -3,7 +3,7 @@
 @section('title', 'Convenios')
 
 @section('content_top_nav_left')
-<div class="text-center"><h3>Listado de Convenios {{ Auth()->user()->Dependence->dependencetable_type::find(Auth()->user()->Dependence->dependencetable_id)->nombre }}</h3></div>
+<div class="text-center"><h3>Listado de Convenios Año {{date('Y')}} para {{  Auth()->user()->Dependence->dependencetable_type::find(Auth()->user()->Dependence->dependencetable_id)->nombre }}</h3></div>
 @endsection
 @section('content')
 <div>

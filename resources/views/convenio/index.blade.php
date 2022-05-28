@@ -92,6 +92,9 @@
                 <a href="{{route('convenio.create')}}" target="_blank" class="btn btn-primary btn-sm"><i class="bi bi-file-plus"></i> Agregar Convenio</a>
                 @endcan
             </div>
+            <div class="col">
+                <a href="{{ route('convenio.trazadoras') }}" class="btn btn-info"> trazadoras</a>
+            </div>
             
         </div>
     </div>
@@ -148,6 +151,7 @@
       <td>{{$convenio->meses}}</td>
       <td>
         @if($convenio->frecuenciapago==1) Mensual
+        @elseif($convenio->frecuenciapago==3) Cuatrimestral
         @elseif($convenio->frecuenciapago==4) Trimestral
         @elseif($convenio->frecuenciapago==6) Semestral
         @elseif($convenio->frecuenciapago==12) Anual

@@ -221,12 +221,12 @@ class ConveniosController extends Controller
      */
     public function show($id)
     {
-      
         $convenio=Convenio::find($id);
         $equiposconvenios=EquipoConvenio::where('convenio',$convenio->id)->get();
         $pagospendientes=Pago::where('convenio',$convenio->id)->where('estado','Pendiente')->get();
         $pagosrealizados=Pago::where('convenio',$convenio->id)->where('estado','Generado')->get();
         $gasto=Pago::where('convenio',$convenio->id)->where('estado','Generado')->sum('valor');
+        $valorequipo=$equiposconvenios->sum('valor');
         $carpeta='storage/convenios/'.$convenio->id."/";
         $res = array();
         if(@dir($carpeta)){
@@ -245,7 +245,7 @@ class ConveniosController extends Controller
         else
                 $res=null;
             //dd($res);
-        return view('convenio.show')->with('convenio',$convenio)->with('equiposconvenios',$equiposconvenios)->with('pagospendientes',$pagospendientes)->with('pagosrealizados',$pagosrealizados)->with('gasto',$gasto)->with('res',$res);
+        return view('convenio.show')->with('convenio',$convenio)->with('equiposconvenios',$equiposconvenios)->with('pagospendientes',$pagospendientes)->with('pagosrealizados',$pagosrealizados)->with('gasto',$gasto)->with('res',$res)->with('valorequipo',$valorequipo);
     }
 
     /**
@@ -415,6 +415,28 @@ class ConveniosController extends Controller
             else
                 dd("no es .pdf");
         return redirect('convenio/')->with('funciono');
+
+    }
+    public function Trazadoras(){
+        $date=date('d-m-Y',strtotime('01-01-2022'));
+        $year=date('Y');
+        $datos=array();
+        
+         $datos['enero']=0;
+         $datos['febrero']=0;
+         $datos['marzo']=0;
+         $datos['primer']=0;
+        foreach(Convenio::where('tipoconvenio','Mantenimiento')->where('fechafin','>',$date)->get() as $convenio){
+            $datos['enero']+= Pago::where('convenio', $convenio->id)->whereYear('fecha',$year)->whereMonth('fecha','1')->sum('valor');
+            $datos['febrero']+= Pago::where('convenio', $convenio->id)->whereYear('fecha',$year)->whereMonth('fecha','2')->sum('valor');
+            $datos['marzo']+= Pago::where('convenio', $convenio->id)->whereYear('fecha',$year)->whereMonth('fecha','3')->sum('valor');
+
+           
+
+        
+        }
+        $datos['primer']=$datos['enero']+$datos['febrero']+$datos['marzo'];
+       return view('convenio.trazadoras')->with('datos',$datos); 
 
     }
 }

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CentroSalud;
 use App\Models\Ssalud;
+use App\Models\MinsalConvenio;
+use App\Models\Sigfe;
+use App\Models\MinsalFactura;
 
 class CentroSaludController extends Controller
 {
@@ -25,7 +28,7 @@ class CentroSaludController extends Controller
     public function index()
     {
         
-        if(Auth()->user()->Dependence==null)
+        if(!Auth()->user()->Dependence)
         {
             $centros=CentroSalud::all();
             return view('centrosalud.index')->with('centros',$centros);
@@ -74,7 +77,10 @@ class CentroSaludController extends Controller
      */
     public function show($id)
     {
-        //
+        $centro=CentroSalud::find($id);
+        $convenios=MinsalConvenio::where('dependencetable_type','App\Models\CentroSalud')->where('dependencetable_id',$centro->id)->get();
+        $datos=$this->DatosEstablecimiento($centro->id);
+        return view('centrosalud.show')->with('centro',$centro)->with('convenios',$convenios)->with('datos',$datos);
     }
 
     /**
@@ -118,5 +124,31 @@ class CentroSaludController extends Controller
         $centro=CentroSalud::find($id);
         $centro->delete();
         return redirect('/centrosalud');
+    }
+
+     public function DatosEstablecimiento($id){
+        
+        $year=date('Y');
+        $establecimiento=CentroSalud::find($id);
+        $datos=array();
+        $sigfes=Sigfe::all();
+        foreach($sigfes as $sigfe){
+            $datos['pago_'.$sigfe->id]=0;
+            $datos[$sigfe->id]=MinsalConvenio::where('ano',$year)
+                                ->where('dependencetable_type','App\Models\CentroSalud')
+                                ->where('dependencetable_id',$establecimiento->id)
+                                ->where('sigfe',$sigfe->id)
+                                ->sum('monto_anual');
+            foreach(MinsalConvenio::where('ano',$year)
+                        ->where('dependencetable_type','App\Models\CentroSalud')
+                        ->where('dependencetable_id',$establecimiento->id)
+                        ->where('sigfe',$sigfe->id)->get() as $convenio){
+                
+                 foreach(MinsalFactura::where('minsalconvenio',$convenio->id)->get() as $pago){
+                    $datos['pago_'.$sigfe->id]+=$pago->monto;
+                }
+            }
+        }
+        return $datos;
     }
 }
