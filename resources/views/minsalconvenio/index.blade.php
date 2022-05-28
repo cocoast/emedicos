@@ -7,6 +7,7 @@
 @endsection
 @section('content')
 <div>
+
 @if (session()->has('message'))
 <div class="{{session('status')}} alert-dismissible">
 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -21,7 +22,6 @@
     @endcan
 </div>
 <div class="container-fluid ">
-  
  <table id="conveniostables" class="table table-striped table-hover mt-4" style="width:100%">
 	<thead>
 	<tr>

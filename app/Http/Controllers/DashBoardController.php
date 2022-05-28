@@ -66,6 +66,7 @@ class DashBoardController extends Controller
         if($user->Dependence==null){
             foreach($sigfes as $sigfe){
             $datos['pago_'.$sigfe->id]=0;
+            $datos[$sigfe->id]=0;
             $datos[$sigfe->id]=MinsalConvenio::where('ano',$year)
                                 ->where('sigfe',$sigfe->id)
                                 ->sum('monto_anual');
@@ -102,9 +103,10 @@ class DashBoardController extends Controller
     }
         if($user->Dependence->dependencetable_type=='App\Models\centrosalud'){
             $establecimiento=CentroSalud::find($user->Dependence->dependencetable_id);
-            dd('hasta aqui');
+            //dd('hasta aqui');
             foreach($sigfes as $sigfe){
             $datos['pago_'.$sigfe->id]=0;
+            $datos[$sigfe->id]=0;
             $datos[$sigfe->id]=MinsalConvenio::where('ano',$year)
                                 ->where('dependencetable_type','App\Models\CentroSalud')
                                 ->where('dependencetable_id',$establecimiento->id)

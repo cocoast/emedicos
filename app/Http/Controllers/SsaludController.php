@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Ssalud;
 use App\Models\CentroSalud;
+use App\Models\Sigfe;
 
 class SsaludController extends Controller
 {
@@ -59,8 +60,11 @@ class SsaludController extends Controller
      */
     public function show($id)
     {
-         $centros=CentroSalud::where('ssalud',$id);
-         return view('centrosalud.show')->with('centros',$centros);
+        $servicio=Ssalud::find($id);
+        $establecimientos=CentroSalud::where('ssalud',$servicio->id)->get();
+        $datos=$this->DatosSsalud($servicio->id);
+        //dd($datos);
+        return view('ssalud.show')->with('servicio',$servicio)->with('centros',$establecimientos)->with('mp',$datos);
     }
 
     /**
@@ -113,5 +117,34 @@ class SsaludController extends Controller
         }
         return $data;
 
+    }
+    public function DatosSsalud($id){
+        
+        $year=date('Y');
+        $servicio=Ssalud::find($id);
+        $establecimientos=CentroSalud::where('ssalud',$servicio->id);
+        $datos=array();
+        $sigfes=Sigfe::all();
+           foreach($sigfes as $sigfe){
+            $datos['pago_'.$sigfe->id]=0;
+            $datos[$sigfe->id]=0;
+            foreach($establecimientos as $establecimiento){
+            $datos[$sigfe->id]=MinsalConvenio::where('ano',$year)
+                                ->where('dependencetable_type','App\Models\CentroSalud')
+                                ->where('dependencetable_id',$establecimiento->id)
+                                ->where('sigfe',$sigfe->id)
+                                ->sum('monto_anual');
+            foreach(MinsalConvenio::where('ano',$year)
+                        ->where('dependencetable_type','App\Models\CentroSalud')
+                        ->where('dependencetable_id',$establecimiento->id)
+                        ->where('sigfe',$sigfe->id)->get() as $convenio){
+                
+                 foreach(MinsalFactura::where('minsalconvenio',$convenio->id)->get() as $pago){
+                    $datos['pago_'.$sigfe->id]+=$pago->monto;
+                }
+            }
+        }
+    }
+        return $datos;
     }
 }

@@ -36,9 +36,8 @@
     </div>
     <!-- /.info-box -->
   </div>
-
   @endforeach
-
+</div>
  <div class="col">
     @can('minsal.convenio.create')
     <!-- Trigger the modal with a button -->
