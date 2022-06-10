@@ -155,7 +155,6 @@ class TrasladoController extends Controller
         $traslado->fecha = $request->get('fecha');
         $traslado->actual = $actual;
         $traslado->destino = $destino;
-        $traslado->equipo = $equipo;
         //dd($copia ."\n". $traslado);
         if ($traslado->fecha != $copia->fecha || $traslado->actual != $copia->actual || $traslado->destino != $copia->destino || $traslado->equipo != $copia->equipo) {
             if ($traslado->archivo != null) {

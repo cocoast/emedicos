@@ -7,6 +7,9 @@
 @stop
 
 @section('body')
+   <form action="/equipoconvenio/{{$equipoconvenio->id}}" method="POST">
+	@csrf
+	@method('PUT')
 <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Editar Equipos al Convenio</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -14,9 +17,7 @@
         </button>
       </div>
       <div class="modal-body">
-    <form action="/equipoconvenio/{{$equipoconvenio->id}}" method="POST">
-	@csrf
-	@method('PUT')
+ 
 
  	<div class="row align-items-start">
  		<div class="col">
@@ -25,25 +26,25 @@
 		</div>
  		<div class="col">
 			<label for="" class="form-label">Inventario del Equipo</label>
-			<input id="equipo" name="equipo" value="{{$equipoconvenio->Equipo->inventario}}" type="text" tabindex="1" class="form-control">
+			<input id="equipo" name="equipo" value="{{$equipoconvenio->Equipo->inventario}}" type="text"  class="form-control">
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Fecha de Incorporacion </label>
-			<input id="fechaincorporacion" name="fechaincorporacion" value="{{$equipoconvenio->fechaincorporacion}}" type="date" tabindex="2" class="form-control">
+			<input id="fechaincorporacion" name="fechaincorporacion" value="{{$equipoconvenio->fechaincorporacion}}" type="date"  class="form-control">
 		</div>
 		</div>
 		<div class="row">
 		<div class="col">
 			<label for="" class="form-label">Valor en el convenio</label>
-			<input id="valor" name="valor" value="{{$equipoconvenio->valor}}" type="text" tabindex="3" class="form-control">
+			<input id="valor" name="valor" value="{{$equipoconvenio->valor}}" type="text"  class="form-control">
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Mantenciones Preventivas Disponibles</label>
-			<input id="disponible" name="disponible" type="text" value="{{ $equipoconvenio->mp_disponible }}" tabindex="3" class="form-control">
+			<input id="disponible" name="disponible" type="text" value="{{ $equipoconvenio->mp_disponible }}"  class="form-control">
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Mantenimiento Preventivo</label>
-			<select class="form-control" name="mp" id="mp" tabindex="4">
+			<select class="form-control" name="mp" id="mp" >
 				<option value="{{$equipoconvenio->mp}}">{{$equipoconvenio->mp}}</option>
 				<option value="Sin">Sin Mantenciones</option>
 				<option value="1">1 Mantención</option>
@@ -58,7 +59,7 @@
 <div class="row align-items-start">
  		<div class="col">
 			<label for="" class="form-label">Mano de Obra</label>
-			<select class="form-control" name="mc" id="mc" tabindex="5">
+			<select class="form-control" name="mc" id="mc" >
 				<option value="{{$equipoconvenio->mc}}">{{$equipoconvenio->mc}}</option>
 				<option value="Sin">Sin Mano de Obra</option>
 				<option value="Full">Full Mano de Obra</option>
@@ -73,7 +74,7 @@
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Repuestos</label>
-			<select class="form-control" name="repuesto" id="repuesto" tabindex="6">
+			<select class="form-control" name="repuesto" id="repuesto" >
 				<option value="{{$equipoconvenio->repuesto}}">{{$equipoconvenio->repuesto}}</option>
 				<option value="Sin">Sin repuestos</option>
 				<option value="Parcial">Repuestos Parciales</option>
@@ -84,26 +85,18 @@
 		<div class="row">
 		<div class="col">
 			<label for="" class="form-label">Seleccione Convenio</label>
-			<input id="convenioname" name="convenioname" value="{{$equipoconvenio->Convenio->nombre}}" type="text" tabindex="7" class="form-control" readonly>
-			<input id="convenio" name="convenio" value="{{$equipoconvenio->convenio}}" type="text" tabindex="3" class="form-control" hidden>
+			<input id="convenioname" name="convenioname" value="{{$equipoconvenio->Convenio->nombre}}" type="text"  class="form-control" readonly>
+			<input id="convenio" name="convenio" value="{{$equipoconvenio->convenio}}" type="text"  class="form-control" hidden>
 			
 		</div>
 </div>
-<br>
-<div class="mb-3">
-	<div class="row align-items-start mb-3">
-		<div class="col">
-		<a href="/convenio" class="btn btn-secondary">CANCELAR</a>
-	</div>
-	<div class="col">
-		<button  class="btn btn-primary" tabindex="16">GUARDAR</button>
-	</div>
-</div>
-</form>
+
  </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button  class="btn btn-primary" ">GUARDAR</button>
       </div>
+      </form>
 @stop
 
 @section('css')

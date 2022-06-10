@@ -160,13 +160,19 @@ class PagosController extends Controller
     {
 
         if ($request->get('memo') == "ingresar") {
+            if(Auth()->user()->id==1){
+            $pagos = Pago::find($id);
+            $pagos->memo=$request->get('memo');
+            $pagos->estado=$request->get('estado');
+            $pagos->save();
+            return redirect()->back()->with('message','Pago Master Editado')->with('status','alert alert-success');
+            }
             $pagos = Pago::find($id);
             return redirect()->route('convenio.show', $pagos->convenio)->with('message', 'El Pago No fue procesado Correctamente Verifique que la informacion este completa')->with('status', 'alert alert-danger');
         } else {
             $pagos = Pago::find($id);
             $pagos->memo = $request->get('memo');
             $pagos->estado = "Generado";
-            $pagos->periodo = $request->get('periodo');
             $pagos->oc = $request->get('oc');
             $pagos->valor = $request->get('valor');
             $memo = explode("/", $pagos->memo)[0] . "-" . explode("/", $pagos->memo)[1];

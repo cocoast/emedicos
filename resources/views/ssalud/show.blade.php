@@ -15,23 +15,26 @@
 
 @section('content')
 @section('content_top_nav_left')
-<div class="text-center"><h3>Listado de Establecimientos de Salud del {{ $servicio->nombre }}</h3></div>
+<div class="text-center"><h3>Listado de Establecimientos de Salud del Servicio: {{ $servicio->nombre }}</h3></div>
 @endsection  
 <div class="row align-items-start">
   @foreach(App\Models\Sigfe::all() as $sigfe)
   <div class="col">
     <!-- Apply any bg-* class to to the info-box to color it -->
-    <div class="info-box bg-info">
-      <span class="info-box-icon"><i class="bi bi-gear-wide"></i></span>
+    <div class="info-box bg-gradient-info">
+      <span class="info-box-icon"><h4 >@if($mp['total_'.$sigfe->id]==0)0 @else {{ substr(($mp['pago_'.$sigfe->id] ?? 0)/($mp['total_'.$sigfe->id])*100,0,4) }} @endif % </h4></span>
       <div class="info-box-content">
         <span class="info-box-text">{{ $sigfe->nombre}} {{ $sigfe->codigo}}</span>
-        <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($mp['pago_'.$sigfe->id]??0)}}</span>
+        <span class="info-box-number">Devengado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($mp['pago_'.$sigfe->id]??0)}}</span>
         <!-- The progress section is optional -->
         <div class="progress">
-          <div class="progress-bar" style="width: @if($mp[$sigfe->id]==0) 0 @else{{ ($mp['pago_'.$sigfe->id] ?? 0)/($mp[$sigfe->id])*100 }}@endif%"></div>
+          <div class="progress-bar" style="width: @if($mp['total_'.$sigfe->id]==0) 0 @else{{ ($mp['pago_'.$sigfe->id] ?? 0)/($mp['total_'.$sigfe->id])*100 }}@endif%"></div>
         </div>
         <span class="progress-description">
-        @if($mp[$sigfe->id]==0)0 @else {{ substr(($mp['pago_'.$sigfe->id] ?? 0)/($mp[$sigfe->id])*100,0,4) }} @endif % de un total de {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($mp[$sigfe->id])}}
+         Presupuesto total: {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($mp['total_'.$sigfe->id])}} 
+        </span>
+        <span class="progress-description">
+        Numero de convenios: {{ $mp['convenios_'.$sigfe->id] }}
         </span>
       </div>
       <!-- /.info-box-content -->
@@ -43,7 +46,8 @@
 </div>
 <div class="col">
 @can('centrosalud.create')
-<a href="{{route('centrosalud.create') }}" class="btn btn-primary"> <i class="bi bi-file-plus"> Agregar Establecimientos de Salud</i></a>
+<!-- Trigger the modal with a button -->
+<button type="button" data-path="{{route('centrosalud.create') }}" class="btn btn-primary openBtn"><i class="bi bi-file-plus"> Agregar Establecimientos de Salud</i></button>
 @endcan
 </div>
 <div class="col">

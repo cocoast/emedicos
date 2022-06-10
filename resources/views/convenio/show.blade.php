@@ -47,7 +47,7 @@
 			<input id="fecharesolucion" value="{{$convenio->fecharesolucion}}" name="fecharesolucion" type="text" tabindex="3" class="form-control"readonly>
 		</div>
 		<div class="col">
-			<label for="" class="form-label">Valor Convenio+IVA</label>
+			<label for="" class="form-label">Valor Convenio(IVA incl.)</label>
 			<input id="valor" value="{{NumberFormatter::create( 'es_CL', NumberFormatter::DECIMAL )->format($convenio->valor)}}" name="valor" type="text" tabindex="3" class="form-control"readonly>
 		</div>
 	</div>
@@ -120,7 +120,7 @@
                 <th>Familia</th>
                 <th>Modelo</th>
                 <th>Incorporación</th>
-                <th>Valor +IVA</th>
+                <th>Valor (IVA incl.)</th>
                 <th>MP Disponibles</th>
                 <th>MP Anual</th>
                 <th>Mano Obra</th>
@@ -205,7 +205,7 @@
 	                <th>Memo</th>
 	                <th>Fecha de corte</th>
 	                <th>OC</th>
-	                <th>Valor+IVA</th>
+	                <th>Valor (IVA incl.)</th>
 	                <th>Archivo</th>
 	                @can('convenio.edit')
 	                <th>Editar</th>
@@ -254,7 +254,7 @@
                 <th>Memo</th>
                 <th>Fecha de Corte</th>
                 <th>OC</th>
-                <th>Valor+IVA</th>
+                <th>Valor (IVA incl.)</th>
                 @can('convenio.edit')
                 <th>Generar</th>
                 @endcan

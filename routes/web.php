@@ -217,3 +217,8 @@ Route::Put('convenio/{id}/darbaja',[
     'uses'  =>  'App\Http\Controllers\ConveniosController@darBaja',
     'as'    => 'convenio.debaja'
 ]);
+
+//Modulo Licitaciones 
+route::resource('estadolicitacion','App\Http\Controllers\EstadoLicitacionController');
+route::resource('categorialicitacion','App\Http\Controllers\CategoriaLicitacionController');
+route::resource('licitacion','App\Http\Controllers\LicitacionController');

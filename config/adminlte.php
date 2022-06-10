@@ -377,6 +377,7 @@ return [
                             'url'     => 'permiso/'
                             
                         ],
+
                 ],
             ],
       
@@ -387,12 +388,31 @@ return [
        
         ['header' => 'Gestion de Licitaciones'],
         [
-            'text'          => 'Licitaciones',
-            'icon_color'    => 'green',
-            'label_color'   => 'danger',
-            'label'         => 'new',
-            'can'           =>'licitaciones',
-            'url'           => 'licitaciones/',
+        'text'          => 'Licitaciones',
+        'icon'          => 'fas fa-fw fa-share',
+        'label'         => "Logística",
+        'can'           => 'licitacion.index',
+        'label_color'   => 'warning',
+        'submenu' => [
+
+                [ 
+                'text'    => 'Licitaciones',
+                'url'     => 'licitaciones/',
+                'label'     =>'Demo',
+                'label_color'=>'danger',
+                'can'     => 'licitacion.index',
+                ],       
+                [ 
+                'text'    => 'Estados de Licitacion',
+                'url'     => 'estadolicitacion/',
+                'can'     => 'estadolicitacion.index',
+                ],
+                [ 
+                'text'    => 'Categorias de Licitacion',
+                'url'     => 'categorialicitacion/',
+                'can'     => 'categorialicitacion.index',
+                ],
+            ],
         ],
         //Minsal
          ['header' => 'Gestion Minsal'],

@@ -103,7 +103,7 @@ class ConvenioMinsalController extends Controller
             $convenio->dependencetable_type=$centro->getMorphClass();
             $convenio->dependencetable_id=$centro->id;
             $convenio->save();
-            return redirect('minsalconvenio/');
+           return redirect()->back()->with('message','El Convenio ha sido creado Satisfactoriamente')->with('status','alert alert-success');
         }
         elseif($type=='App\Models\CentroSalud'){
             $convenio=new MinsalConvenio;
@@ -118,7 +118,7 @@ class ConvenioMinsalController extends Controller
             $convenio->dependencetable_type=$type;
             $convenio->dependencetable_id=$id;
             $convenio->save();
-            return redirect('minsalconvenio/');
+            return redirect()->back()->with('message','El Convenio ha sido creado Satisfactoriamente')->with('status','alert alert-success');
         }
         else
             return redirect()->back()->with('message','El usuario no esta autorizado para la creacion de Convenios')->with('status','alert alert-danger');
@@ -134,7 +134,10 @@ class ConvenioMinsalController extends Controller
      */
     public function show($id)
     {
-        //
+        $centro=CentroSalud::find($id);
+        $sigfes=Sigfe::orderBy('codigo', 'ASC')->get();
+        return view('minsalconvenio.show')->with('sigfes',$sigfes)->with('centro',$centro);
+
     }
 
     /**
@@ -171,7 +174,7 @@ class ConvenioMinsalController extends Controller
         $convenio->dependencetable_type=$type;
         $convenio->dependencetable_id=$id;
         $convenio->save();
-        return redirect('minsalconvenio/');
+        return redirect()->back()->with('message','El Convenio ha sido Editado Satisfactoriamente')->with('status','alert alert-success');
     }
 
     /**
@@ -182,7 +185,9 @@ class ConvenioMinsalController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $convenio=MinsalConvenio::find($id);
+        $convenio->delete();
+        return redirect()->back()->with('message','El Convenio ha sido Eliminado Satisfactoriamente')->with('status','alert alert-danger');
     }
     public function datosMinsal(){
         
@@ -200,43 +205,5 @@ class ConvenioMinsalController extends Controller
             }
         }
         return $datos;
-    }
-        // $sigfempnomedico=Sigfe::where('codigo','22.06.006.001')->first();
-        // $sigfemcnomedico=Sigfe::where('codigo','22.06.006.002')->first();
-        // $sigfempmedico=Sigfe::where('codigo','22.06.006.003')->first();
-        // $sigfemcmedico=Sigfe::where('codigo','22.06.006.004')->first();
-        
-        //aqui los datos de los resumen segun dependencia del usuario. 
-        // $datos['mp_no_medico']=MinsalConvenio::where('ano',$year)->where('sigfe',$sigfempnomedico->id)->sum('monto_anual');
-        // $datos['mc_no_medico']=MinsalConvenio::where('ano',$year)->where('sigfe',$sigfemcnomedico->id)->sum('monto_anual');
-        // $datos['mp_medico']=MinsalConvenio::where('ano',$year)->where('sigfe',$sigfempmedico->id)->sum('monto_anual');
-        // $datos['mc_medico']=MinsalConvenio::where('ano',$year)->where('sigfe',$sigfemcmedico->id)->sum('monto_anual');
-        // $datos['pagos_mp_no_medico']=0;
-        // $datos['pagos_mc_no_medico']=0;
-        // $datos['pagos_mp_medico']=0;
-        // $datos['pagos_mc_medico']=0;
-        // foreach(MinsalConvenio::where('ano',$year)->where('sigfe',1)->get() as $convenio){
-        //     $pagos=MinsalFactura::where('minsalconvenio',$convenio->id)->get();
-        //     foreach($pagos as $pago)
-        //         $datos['pagos_mp_no_medico']+=$pago->monto;
-        // }
-        // foreach(MinsalConvenio::where('ano',$year)->where('sigfe',2)->get() as $convenio){
-        //     $pagos=MinsalFactura::where('minsalconvenio',$convenio->id)->get();
-        //     foreach($pagos as $pago)
-        //         $datos['pagos_mc_no_medico']+=$pago->monto;
-        // }
-        // foreach(MinsalConvenio::where('ano',$year)->where('sigfe',3)->get() as $convenio){
-        //     $pagos=MinsalFactura::where('minsalconvenio',$convenio->id)->get();
-        //     foreach($pagos as $pago)
-        //         $datos['pagos_mp_medico']+=$pago->monto;
-        // }
-        //  foreach(MinsalConvenio::where('ano',$year)->where('sigfe',4)->get() as $convenio){
-        //     $pagos=MinsalFactura::where('minsalconvenio',$convenio->id)->get();
-        //     foreach($pagos as $pago)
-        //         $datos['pagos_mc_medico']+=$pago->monto;
-        // }
-        
-    
-
-    
+    }  
 }

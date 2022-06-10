@@ -7,6 +7,8 @@
 @stop
 
 @section('body')
+<form action="{{route('equipoconvenio.store')}}" method="POST">
+		@csrf
 <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Mostrar Equipo</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -14,31 +16,31 @@
         </button>
       </div>
       <div class="modal-body">
-<form action="{{route('equipoconvenio.store')}}" method="POST">
-	@csrf
+
+
  	<div class="row align-items-start">
  		<div class="col">
 			<label for="" class="form-label">Equipo</label>
-	     	<input id="equipo" name="equipo" type="text" tabindex="1"  class="form-control" required>
+	     	<input id="equipo" name="equipo" type="text"   class="form-control" required>
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Fecha de Incorporacion al Convenio</label>
-			<input id="fechaincorporacion" name="fechaincorporacion" type="date" tabindex="2" class="form-control">
+			<input id="fechaincorporacion" name="fechaincorporacion" type="date"  class="form-control" required>
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Valor del Equipo en el convenio</label>
-			<input id="valor" name="valor" type="text" tabindex="3" class="form-control">
+			<input id="valor" name="valor" type="text"  class="form-control" required>
 		</div>
 		</div>
 		<div class="row">
 		<div class="col">
 			<label for="" class="form-label">Mantenciones Preventivas Disponibles</label>
-			<input id="disponible" name="disponible" type="text" tabindex="4" class="form-control">
+			<input id="disponible" name="disponible" type="text"  class="form-control" required>
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Mantenimiento Preventivo</label>
-			<select class="form-control" name="mp" id="mp" tabindex="5">
-				<option selected>Seleccione</option>
+			<select class="form-control" name="mp" id="mp" required>
+				<option selected value="">Seleccione</option>
 				<option value="Sin">Sin Mantenciones</option>
 				<option value="1">1 Mantención</option>
 				<option value="2">2 Mantenciones</option>
@@ -52,8 +54,8 @@
 <div class="row align-items-start">
  		<div class="col">
 			<label for="" class="form-label">Mano de Obra</label>
-			<select class="form-control" name="mc" id="mc" tabindex="6">
-				<option selected>Seleccione</option>
+			<select class="form-control" name="mc" id="mc" required>
+				<option selected value="">Seleccione</option>
 				<option value="Sin">Sin Mano de Obra</option>
 				<option value="Full">Full Mano de Obra</option>
 				<option value="1">1 Mano de Obra</option>
@@ -68,8 +70,8 @@
 		</div>
 		<div class="col">
 			<label for="" class="form-label">Repuestos</label>
-			<select class="form-control" name="repuesto" id="repuesto" tabindex="7">
-				<option selected>Seleccione</option>
+			<select class="form-control" name="repuesto" id="repuesto" required>
+				<option selected value="">Seleccione</option>
 				<option value="Sin">Sin repuestos</option>
 				<option value="Parcial">Repuestos Parciales</option>
 				<option value="Full">Full Repuestos</option>
@@ -80,25 +82,16 @@
 		 <div class="col">
 			<label for="" class="form-label"> Convenio</label>
 			<input id="convenio" name="convenio"  type ="hidden" value="{{$convenios->id}}"type="text" class="form-control" readonly>
-			<input id="nombreconvenio" name="nombreconvenio" value="{{$convenios->nombre}}"type="text"  class="form-control" readonly tabindex="7">
+			<input id="nombreconvenio" name="nombreconvenio" value="{{$convenios->nombre}}"type="text"  class="form-control" readonly >
 		</div> 
 </div>
-<br>
-<div class="mb-3">
-	<div class="row align-items-start mb-3">
-		<div class="col">
-		
-	</div>
-	<div class="col">
-		<button  class="btn btn-primary" tabindex="8">GUARDAR</button>
-	</div>
 </div>
-
-</form>
- </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button  class="btn btn-primary" >GUARDAR</button>
       </div>
+
+</form>
 @stop
 
 @section('css')

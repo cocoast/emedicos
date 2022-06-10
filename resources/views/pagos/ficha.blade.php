@@ -295,7 +295,10 @@ vertical-align: middle !important;
                 <td>{{$equipoconvenio->Equipo->Familia->nombre}}</td>
                 <td>{{$equipoconvenio->Equipo->Modelo->modelo}}</td>
                 <td>{{date("d-m-Y", strtotime($equipoconvenio->fechaincorporacion))}}</td>
-                <td>{{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY_ACCOUNTING)->format($equipoconvenio->valor/(($convenio->meses / $convenio->frecuenciapago)-($pago->periodo-1)))}}</td>
+                <td>{{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY_ACCOUNTING)->format($equipoconvenio->valor/(($convenio->meses / $convenio->frecuenciapago)))}}</td>
+                <!--
+                    <td>{{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY_ACCOUNTING)->format($equipoconvenio->valor/(($convenio->meses / $convenio->frecuenciapago)-($pago->periodo-1)))}}</td>
+                -->
 
             </tr>
             @endif

@@ -1,54 +1,50 @@
 @extends('adminlte::page')
 
-@section('title', 'Servicios de Salud')
+@section('title', 'Categorias de Licitacion')
 
 @section('content_header')
+    <h1>Listado de Categorias de Licitacion</h1>
+@stop
+@section('content')
 <div>
     @if (session()->has('message'))
     <div class="{{session('status')}} alert-dismissible">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         {{ session('message') }}
     </div>
-    @endif 
-
-@stop
-
-@section('content')
-@section('content_top_nav_left')
-<div class="text-center"><h3>Listado de Servicios de Salud</h3></div>
-@endsection  
-@can('ssalud.create')
-<!-- Trigger the modal with a button -->
-<button type="button" data-path="{{route('ssalud.create') }}" class="btn btn-primary openBtn"><i class="bi bi-file-plus">Agregar</i></button>
+    @endif
+@can('categorialicitacion.create')
+ <!-- Trigger the modal with a button -->
+<button type="button" data-path="{{route('categorialicitacion.create') }}" class="btn btn-primary btn-sm openBtn">
+                    Agregar Categoria</button>
 @endcan
-
-
-<table id="ssaludstable" class="table table-striped table-hover mt-4" style="width:100%">
+ <h1>Vista Categoria</h1>
+<table id="categoriastable" class="table table-striped table-hover mt-4" style="width:100%">
 	<thead>
 	<tr>
+      <th scope="col">#</th>
       <th scope="col">Nombre</th>
-      @can('ssalud.edit')<th scope="col">editar</th> @endcan
-      @can('ssalud.destroy')<th scope="col">Eliminar</th> @endcan
+      <th scope="col">@can('categorialicitacion.edit')Editar @endcan</th>
+      <th scope="col">@can('categorialicitacion.destroy')Eliminar @endcan</th>
 	</tr>
 	</thead>
 	<tbody>
-		@foreach($servicios as $ssalud)
-		<tr>  
-      <td><a href="{{ route('ssalud.show',$ssalud->id) }}">{{$ssalud->nombre}}</a></td>
+		@foreach($categorias as $categorialicitacion)
+		<tr>
+      <th scope="row">{{$categorialicitacion->id}}</th>
+      <td>{{$categorialicitacion->nombre}}</td>
+      <td>@can('categorialicitacion.edit')
+         <!-- Trigger the modal with a button -->
+        <button type="button" data-path="{{route('categorialicitacion.edit',$categorialicitacion->id ) }}" class="btn btn-info btn-sm openBtn"><i class="bi bi-pencil"></i> Editar</button>
+      </td>
       <td>
-        @can('ssalud.edit')
-            <!-- Trigger the modal with a button -->
-        <button type="button" data-path="{{route('ssalud.edit',$ssalud->id) }}" class="btn btn-warning btn-sm openBtn"><i class="bi bi-pencil"></i></button>
-        @endcan
-    </td>
-    <td>
-        @can('ssalud.destroy')
-      	<form action="{{route('ssalud.destroy',$ssalud->id)}}" method="POST">
+      	<form action="{{route('categorialicitacion.destroy',$categorialicitacion->id)}}" method="POST">
       	@csrf
       	@method('DELETE')
-      	<button class="btn btn-danger" type="submit" onClick="javascript: return confirm('¿Estas seguro?');"><i class="bi bi-trash"></i></button>
+        <button class="btn btn-danger" type="submit" onClick="javascript: return confirm('¿Estas seguro?');"><i class="bi bi-trash"></i>Eliminar</button>
       	</form>
-      @endcan </td>
+        @endcan
+      </td>
     </tr>
     @endforeach
 	</tbody>
@@ -61,7 +57,6 @@
     <!--Aqui Va la informacion del modal -->
   </div>
 </div>
-
 @stop
 
 @section('css')
@@ -96,20 +91,18 @@
 
 
 <script type="text/javascript">
-    $(document).ready(function() {
-    $('#ssaludstable').DataTable( {
+  $(document).ready(function() {
+    $('#categoriastable').DataTable( {
         dom: 'Bfrtip',
         buttons: ['excel'],
         "lengthMenu":[[10,50,-1],[10,50,"Todos"]]
     });
 } );
-
-$('.openBtn').on('click',function(){
+  $('.openBtn').on('click',function(){
     $('.modal-content').load($(this).data('path'),function(){
         $('#myModal').modal({show:true});
         console.log($('.openBtn').data('path'));
     });
 });
-
 </script>
 @stop

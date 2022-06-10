@@ -40,9 +40,13 @@ class DashBoardController extends Controller
         $user=Auth()->user();
         //dd(!$user->Dependence);
         //dd($user->getRoleNames()[0]);
-        if($user->getRoleNames()[0]=="Dios" ||$user->getRoleNames()[0] =="User" ||$user->getRoleNames()[0] == "Administrador" ){
+        if($user->getRoleNames()[0]=="Dios" ||$user->getRoleNames()[0] =="User" ||$user->getRoleNames()[0] == "Admin" ){
             return $this->DashEquiposMedicos();
         }
+        else
+            if($user->getRoleNames()[0]=="Licitador"){
+                return $this->DashLicitaciones();
+            }
         else
         if($user->getRoleNames()[0]=='InfoMinsal' && !$user->Dependence){
           return $this->DashMinsal($user->id);
@@ -55,59 +59,77 @@ class DashBoardController extends Controller
             return  $this->DashMinsal($user->id);  
         }
         else 
-            dd('no se encuentra');
+            return $this->DashEquiposMedicos();
+    }
+
+    public function DashLicitaciones(){
+        return view("dashboard.licitacion");
     }
      public function DashMinsal($id){
         $user=User::find($id);
         $year=date('Y');
         $datos=array();
-
         $sigfes=Sigfe::all();
+
         if($user->Dependence==null){
             foreach($sigfes as $sigfe){
-            $datos['pago_'.$sigfe->id]=0;
-            $datos[$sigfe->id]=0;
-            $datos[$sigfe->id]=MinsalConvenio::where('ano',$year)
-                                ->where('sigfe',$sigfe->id)
-                                ->sum('monto_anual');
-            foreach(MinsalConvenio::where('ano',$year)
-                        ->where('sigfe',$sigfe->id)->get() as $convenio){
-                
-                 foreach(MinsalFactura::where('minsalconvenio',$convenio->id)->get() as $pago){
-                    $datos['pago_'.$sigfe->id]+=$pago->monto;
+                $datos['pago_'.$sigfe->id]=0;
+                $datos['total_'.$sigfe->id]=0;
+                $datos['convenios_'.$sigfe->id]=0;
+                $datos['total_'.$sigfe->id]=MinsalConvenio::where('ano',$year)->where('sigfe',$sigfe->id)->sum('monto_anual');
+                $datos['convenios_'.$sigfe->id]+=MinsalConvenio::where('ano',$year)->where('sigfe',$sigfe->id)->count();
+                foreach(MinsalConvenio::where('ano',$year)->where('sigfe',$sigfe->id)->get() as $convenio){
+                    foreach(MinsalFactura::where('minsalconvenio',$convenio->id)->get() as $pago){
+                        $datos['pago_'.$sigfe->id]+=$pago->monto;
+                    }
                 }
             }
         }
-    }
     else{
             
         if($user->Dependence->dependencetable_type=='App\Models\Ssalud'){
-           $establecimiento=Ssalud::find($user->Dependence->dependencetable_id);
-           foreach($sigfes as $sigfe){
-            $datos['pago_'.$sigfe->id]=0;
-            $datos[$sigfe->id]=MinsalConvenio::where('ano',$year)
-                                ->where('dependencetable_type','App\Models\Ssalud')
-                                ->where('dependencetable_id',$establecimiento->id)
-                                ->where('sigfe',$sigfe->id)
-                                ->sum('monto_anual');
-            foreach(MinsalConvenio::where('ano',$year)
-                        ->where('dependencetable_type','App\Models\CentroSalud')
-                        ->where('dependencetable_id',$establecimiento->id)
-                        ->where('sigfe',$sigfe->id)->get() as $convenio){
-                
-                 foreach(MinsalFactura::where('minsalconvenio',$convenio->id)->get() as $pago){
-                    $datos['pago_'.$sigfe->id]+=$pago->monto;
+               $establecimientos=CentroSalud::where('ssalud',$user->Dependence->dependencetable_id)->get();
+               foreach($sigfes as $sigfe){
+                $datos['pago_'.$sigfe->id]=0;
+                $datos['total_'.$sigfe->id]=0;
+                $datos['convenios_'.$sigfe->id]=0;
+                foreach($establecimientos as $establecimiento){
+                $datos['total_'.$sigfe->id]+=MinsalConvenio::where('ano',$year)
+                                    ->where('dependencetable_type','App\Models\CentroSalud')
+                                    ->where('dependencetable_id',$establecimiento->id)
+                                    ->where('sigfe',$sigfe->id)
+                                    ->sum('monto_anual');
+                $datos['convenios_'.$sigfe->id]+=MinsalConvenio::where('ano',$year)
+                                    ->where('dependencetable_type','App\Models\CentroSalud')
+                                    ->where('dependencetable_id',$establecimiento->id)
+                                    ->where('sigfe',$sigfe->id)
+                                    ->count();
+
+                foreach(MinsalConvenio::where('ano',$year)
+                            ->where('dependencetable_type','App\Models\CentroSalud')
+                            ->where('dependencetable_id',$establecimiento->id)
+                            ->where('sigfe',$sigfe->id)->get() as $convenio){
+                    
+                     foreach(MinsalFactura::where('minsalconvenio',$convenio->id)->get() as $pago){
+                        $datos['pago_'.$sigfe->id]+=$pago->monto;
+                    }
                 }
             }
         }
     }
-        if($user->Dependence->dependencetable_type=='App\Models\centrosalud'){
+        if($user->Dependence->dependencetable_type=='App\Models\CentroSalud'){
             $establecimiento=CentroSalud::find($user->Dependence->dependencetable_id);
             //dd('hasta aqui');
             foreach($sigfes as $sigfe){
             $datos['pago_'.$sigfe->id]=0;
-            $datos[$sigfe->id]=0;
-            $datos[$sigfe->id]=MinsalConvenio::where('ano',$year)
+            $datos['total_'.$sigfe->id]=0;
+            $datos['convenios_'.$sigfe->id]=0;
+            $datos['convenios_'.$sigfe->id]=MinsalConvenio::where('ano',$year)
+                                    ->where('dependencetable_type','App\Models\CentroSalud')
+                                    ->where('dependencetable_id',$establecimiento->id)
+                                    ->where('sigfe',$sigfe->id)
+                                    ->count();
+            $datos['total_'.$sigfe->id]=MinsalConvenio::where('ano',$year)
                                 ->where('dependencetable_type','App\Models\CentroSalud')
                                 ->where('dependencetable_id',$establecimiento->id)
                                 ->where('sigfe',$sigfe->id)
@@ -123,6 +145,7 @@ class DashBoardController extends Controller
         }
     }
 }
+//dd($datos);
        return view('dashboard.minsal')->with('mp',$datos);
     }
     
@@ -134,7 +157,8 @@ class DashBoardController extends Controller
         $correctivos=$this->ConveniosCorrectivos();
         $cantidadequipos=$this->EquiposMedicos();
         $garantias=$this->Garantias();
-        $hoy = new DateTime(); 
+        $hoy = new DateTime();
+        $year=date('Y'); 
         $realizados=Pago::where('memo','!=','ingresar')
                     ->orderBy('updated_at','desc')
                     ->take(5)
@@ -149,9 +173,9 @@ class DashBoardController extends Controller
                     ->orderBy('fecha','ASC')
                     ->get();
        
-
+        $mantenciones=$this->Mantenciones($year);
                   
-        return view("dashboard.index")->with('preventivo',$preventivo)->with("arriendos",$arriendos)->with("correctivos",$correctivos)->with("data", $cantidadequipos)->with('garantias',$garantias)->with('realizados',$realizados)->with('porvencer',$porvencer)->with('hoy',$hoy)->with('vencido',$vencido)->with('mp',$mp);
+        return view("dashboard.index")->with('preventivo',$preventivo)->with("arriendos",$arriendos)->with("correctivos",$correctivos)->with("data", $cantidadequipos)->with('garantias',$garantias)->with('realizados',$realizados)->with('porvencer',$porvencer)->with('hoy',$hoy)->with('vencido',$vencido)->with('mp',$mp)->with('mantenciones',json_encode($mantenciones));
     }
 
     public function ConveniosMantenimiento(){
@@ -413,7 +437,14 @@ class DashBoardController extends Controller
         //
     }
    
-    
+    public function Mantenciones($year){
+        $datos=array();
+        for($i=1;$i<13;$i++){
+            $datos[$i.'.1']=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte',$i)->count();
+            $datos[$i.'.2']=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte',$i)->whereYear('fechaprogramacion',$year)->count();
+        }
+        return $datos;
+    }
 
     public function search(Request $request)
     {

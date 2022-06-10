@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\MinsalFactura;
-use App\Models\MinsalConvenio;
+use App\Models\User;
+use App\Models\Licitacion;
+use Spatie\Permission\Models\Role;
 
-class MinsalFacturaController extends Controller
+class LicitacionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +16,10 @@ class MinsalFacturaController extends Controller
      */
     public function index()
     {
-        //
+        $user=User::find(Auth()->user()->id);
+
+        $licitaciones=Licitacion::where('licitador',$user->id)->get();
+        return view('licitacion.index')->with('licitaciones',$licitaciones);
     }
 
     /**
@@ -23,10 +27,11 @@ class MinsalFacturaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($id)
+    public function create()
     {
-        $convenio=MinsalConvenio::find($id);
-        return view ('minsalfactura.create')->with('convenio',$convenio);
+        //$licitadores =  User::with('roles')->get();
+        $licitadores=User::whereHas("roles", function($q){ $q->where("name", "Licitador"); })->get();
+        return view('licitacion.create')->with('licitadores',$licitadores);
     }
 
     /**
@@ -37,14 +42,8 @@ class MinsalFacturaController extends Controller
      */
     public function store(Request $request)
     {
-        $factura=new MinsalFactura;
-        $factura->numero=$request->get('numero');
-        $factura->fecha=$request->get('fecha');
-        $factura->monto=$request->get('monto');
-        $factura->minsalconvenio=$request->get('minsalconvenio');
-        $factura->save();
-        return redirect()->back()->with('message','Pago Ingresado Satisfactoriamente')->with('status','alert alert-success');
-
+        $user=User::find(Auth()->user()->id);
+         
     }
 
     /**
@@ -55,9 +54,7 @@ class MinsalFacturaController extends Controller
      */
     public function show($id)
     {
-        $convenio=MinsalConvenio::find($id);
-        $pagos=MinsalFactura::where('minsalconvenio',$id)->get();
-        return view('minsalfactura.show')->with('pagos',$pagos)->with('convenio',$convenio);
+        //
     }
 
     /**

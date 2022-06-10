@@ -65,7 +65,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button  class="btn btn-primary" >GUARDAR</button>
+        <button  class="btn btn-primary" onClick="javascript: return confirm('¿Bastian, Estas seguro?');">GUARDAR</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
     </div> </form>
 @stop

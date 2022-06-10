@@ -80,6 +80,12 @@
         <canvas id="myMan"></canvas>
     </div>
 </div>
+{{-- <div class="row">
+    
+    <div class="col w-25">
+        <div id="mpeemm" style="height: 370px; width: 100%;"></div>
+    </div> 
+</div>--}}
 <div class="row">
 <!-- Tarjeta de PAgos Realizados -->
     <div class="col w-25" >
@@ -230,6 +236,9 @@
 @stop
 
 @section('js')
+
+<!--Canvas JS -->
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <!-- JQuery-->
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -363,12 +372,119 @@ var myChart = new Chart(ctx, {
             hoverOffset: 3
         }]
     },
+
     
 
 });
 
 
+
 </script>
+
+{{-- <script>
+window.onload = function () {
+var mantenciones=@json($mantenciones);
+var datos=JSON.parse(mantenciones);
+console.log(datos);
+console.log(datos[1.1]);
+var chart = new CanvasJS.Chart("mpeemm", {
+    exportEnabled: true,
+    animationEnabled: true,
+    title:{
+        text: "Plan de Mantenimiento"
+    },
+    subtitles: [{
+        text: "Año 2022"
+    }], 
+    axisX: {
+        title: "Meses"
+    },
+    axisY: {
+        title: "Planificado - Ejecutado",
+       
+        includeZero: true
+    },
+    
+    toolTip: {
+        shared: true,
+        content: toolTipFormatter
+    },
+    legend: {
+        cursor: "pointer",
+        itemclick: toggleDataSeries
+    },
+    data: [{
+        type: "bar",
+        name: "Planificado",
+        showInLegend: true,      
+        yValueFormatString: "#,##0.# mantenciones",
+        dataPoints: [
+            { label: "Enero"    ,   y: datos[1.1] },
+            { label: "Febrero"  ,   y: datos[2.1] },
+            { label: "Marzo"    ,   y: datos[3.1] },
+            { label: "Abril"    ,   y: datos[4.1] },
+            { label: "Mayo"     ,   y: datos[5.1] },
+            { label: "Junio"    ,   y: datos[6.1] },
+            { label: "Julio"    ,   y: datos[7.1] },
+            { label: "Agosto"   ,   y: datos[8.1] },
+            { label: "Septiembre",  y: datos[9.1] },
+            { label: "Octubre"  ,   y: datos[10.1] },
+            { label: "Noviembre",   y: datos[11.1] },
+            { label: "Diciembre",   y: datos[12.1] },
+        ]
+    },     
+        
+    {
+        type: "bar",
+        name: "Ejecutado",
+        axisYType: "secondary",
+        showInLegend: true,
+        yValueFormatString: "#,##0.# mantenciones",
+        dataPoints: [
+            { label: "Enero"    ,   y: datos[1.2] },
+            { label: "Febrero"  ,   y: datos[2.2] },
+            { label: "Marzo"    ,   y: datos[3.2] },
+            { label: "Abril"    ,   y: datos[4.2] },
+            { label: "Mayo"     ,   y: datos[5.2] },
+            { label: "Junio"    ,   y: datos[6.2] },
+            { label: "Julio"    ,   y: datos[7.2] },
+            { label: "Agosto"   ,   y: datos[8.2] },
+            { label: "Septiembre",  y: datos[9.2] },
+            { label: "Octubre"  ,   y: datos[10.2] },
+            { label: "Noviembre",   y: datos[11.2] },
+            { label: "Diciembre",   y: datos[12.2] },
+        ]
+    }]
+});
+chart.render();
+
+function toolTipFormatter(e) {
+    var str = "";
+    var total = 0 ;
+    var str3;
+    var str2 ;
+    for (var i = 0; i < e.entries.length; i++){
+        var str1 = "<span style= \"color:"+e.entries[i].dataSeries.color + "\">" + e.entries[i].dataSeries.name + "</span>: <strong>"+  e.entries[i].dataPoint.y + "</strong> <br/>" ;
+        total = e.entries[i].dataPoint.y + total;
+        str = str.concat(str1);
+    }
+    str2 = "<strong>" + e.entries[0].dataPoint.label + "</strong> <br/>";
+    str3 = "<span style = \"color:Tomato\">Total: </span><strong>" + total + "</strong><br/>";
+    return (str2.concat(str)).concat(str3);
+}
+
+function toggleDataSeries(e) {
+    if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+        e.dataSeries.visible = false;
+    }
+    else {
+        e.dataSeries.visible = true;
+    }
+    chart.render();
+}
+
+}
+</script> --}}
 <script>
     $('#dash').autocomplete({
             source: function (request, response){

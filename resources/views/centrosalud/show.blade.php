@@ -19,33 +19,37 @@
   @foreach(App\Models\Sigfe::all() as $sigfe)
   <div class="col">
     <!-- Apply any bg-* class to to the info-box to color it -->
-    <div class="info-box bg-info">
-      <span class="info-box-icon"><i class="bi bi-gear-wide"></i></span>
+    <div class="info-box bg-gradient-info">
+      <span class="info-box-icon"><h4 >@if($mp['total_'.$sigfe->id]==0)0 @else {{ substr(($mp['pago_'.$sigfe->id] ?? 0)/($mp['total_'.$sigfe->id])*100,0,4) }} @endif % </h4></span>
       <div class="info-box-content">
         <span class="info-box-text">{{ $sigfe->nombre}} {{ $sigfe->codigo}}</span>
-        <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($datos['pago_'.$sigfe->id]??0)}}</span>
+        <span class="info-box-number">Devengado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($mp['pago_'.$sigfe->id]??0)}}</span>
         <!-- The progress section is optional -->
         <div class="progress">
-          <div class="progress-bar" style="width: @if($datos[$sigfe->id]==0)0 @else{{ ($datos['pago_'.$sigfe->id] ?? 0)/($datos[$sigfe->id])*100 }}@endif%"></div>
+          <div class="progress-bar" style="width: @if($mp['total_'.$sigfe->id]==0) 0 @else{{ ($mp['pago_'.$sigfe->id] ?? 0)/($mp['total_'.$sigfe->id])*100 }}@endif%"></div>
         </div>
         <span class="progress-description">
-        @if($datos[$sigfe->id]==0)0 @else {{ substr(($datos['pago_'.$sigfe->id] ?? 0)/($datos[$sigfe->id])*100,0,4) }} @endif % de un total de {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($datos[$sigfe->id])}}
+         Presupuesto total: {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($mp['total_'.$sigfe->id])}} 
+        </span>
+        <span class="progress-description">
+        Numero de convenios: {{ $mp['convenios_'.$sigfe->id] }}
         </span>
       </div>
       <!-- /.info-box-content -->
     </div>
     <!-- /.info-box -->
   </div>
+
   @endforeach
 </div>
  <div class="col">
+  <a href="{{route('minsalconvenio.show',$centro->id) }}">Crear</a>
     @can('minsal.convenio.create')
     <!-- Trigger the modal with a button -->
-            <button type="button" data-path="{{route('minsalconvenio.create') }}" class="btn btn-primary EquipoBtn"><i class="bi bi-file-plus">Agregar Convenio</i> </button>
+            <button type="button" data-path="{{route('minsalconvenio.show',$centro->id) }}" class="btn btn-primary EquipoBtn"><i class="bi bi-file-plus">Agregar Convenio</i> </button>
     @endcan
 </div>
 <div class="container-fluid ">
-  
  <table id="conveniostables" class="table table-striped table-hover mt-4" style="width:100%">
 	<thead>
 	<tr>

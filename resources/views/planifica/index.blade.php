@@ -25,7 +25,9 @@
     <div class="justify-content-end"> <a href="/planifica/minsal/" class="btn btn-primary"> Vista Minsal</a></div>
     <div class="justify-content-end"><a href="/planifica/listado/" class="btn btn-success flex-end"> Programación</a></div>
 </div>
-
+<div class="row">
+    <p>Los Mantenciones Planificadas para el {{ $year }} son: {{ $planificado }} y las ejecutadas son: {{ $ejecutado }}</p>
+</div>
 
 <table id="planificatable" class="table table-striped table-hover mt-4" >
     <thead>

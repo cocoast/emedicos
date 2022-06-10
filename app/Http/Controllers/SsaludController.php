@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Ssalud;
 use App\Models\CentroSalud;
 use App\Models\Sigfe;
+use App\Models\MinsalConvenio;
+use App\Models\MinsalFactura;
 
 class SsaludController extends Controller
 {
@@ -122,18 +124,25 @@ class SsaludController extends Controller
         
         $year=date('Y');
         $servicio=Ssalud::find($id);
-        $establecimientos=CentroSalud::where('ssalud',$servicio->id);
+        $establecimientos=CentroSalud::where('ssalud',$servicio->id)->get();
         $datos=array();
         $sigfes=Sigfe::all();
            foreach($sigfes as $sigfe){
             $datos['pago_'.$sigfe->id]=0;
-            $datos[$sigfe->id]=0;
+            $datos['total_'.$sigfe->id]=0;
+            $datos['convenios_'.$sigfe->id]=0;
             foreach($establecimientos as $establecimiento){
-            $datos[$sigfe->id]=MinsalConvenio::where('ano',$year)
+            $datos['total_'.$sigfe->id]+=MinsalConvenio::where('ano',$year)
                                 ->where('dependencetable_type','App\Models\CentroSalud')
                                 ->where('dependencetable_id',$establecimiento->id)
                                 ->where('sigfe',$sigfe->id)
                                 ->sum('monto_anual');
+            $datos['convenios_'.$sigfe->id]+=MinsalConvenio::where('ano',$year)
+                                ->where('dependencetable_type','App\Models\CentroSalud')
+                                ->where('dependencetable_id',$establecimiento->id)
+                                ->where('sigfe',$sigfe->id)
+                                ->count();
+
             foreach(MinsalConvenio::where('ano',$year)
                         ->where('dependencetable_type','App\Models\CentroSalud')
                         ->where('dependencetable_id',$establecimiento->id)
@@ -145,6 +154,7 @@ class SsaludController extends Controller
             }
         }
     }
+        
         return $datos;
     }
 }

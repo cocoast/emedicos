@@ -5,33 +5,7 @@
 
 @section('content_top_nav_left')<div class="text-center"> <h3>Resumen Año {{ date('Y') }}</h3></div>@endsection
 @section('content')
-<h3>Minsal Seguimiento de Gastos</h3>
-<div class="row align-items-start">
-  @foreach(App\Models\Sigfe::all() as $sigfe)
-  <div class="col">
-    <!-- Apply any bg-* class to to the info-box to color it -->
-    <div class="info-box bg-gradient-info">
-      <span class="info-box-icon"><h4 >@if($mp['total_'.$sigfe->id]==0)0 @else {{ substr(($mp['pago_'.$sigfe->id] ?? 0)/($mp['total_'.$sigfe->id])*100,0,4) }} @endif % </h4></span>
-      <div class="info-box-content">
-        <span class="info-box-text">{{ $sigfe->nombre}} {{ $sigfe->codigo}}</span>
-        <span class="info-box-number">Devengado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($mp['pago_'.$sigfe->id]??0)}}</span>
-        <!-- The progress section is optional -->
-        <div class="progress">
-          <div class="progress-bar" style="width: @if($mp['total_'.$sigfe->id]==0) 0 @else{{ ($mp['pago_'.$sigfe->id] ?? 0)/($mp['total_'.$sigfe->id])*100 }}@endif%"></div>
-        </div>
-        <span class="progress-description">
-         Presupuesto total: {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($mp['total_'.$sigfe->id])}} 
-        </span>
-        <span class="progress-description">
-        Numero de convenios: {{ $mp['convenios_'.$sigfe->id] }}
-        </span>
-      </div>
-      <!-- /.info-box-content -->
-    </div>
-    <!-- /.info-box -->
-  </div>
-  @endforeach
-</div>
+<h4>Aqui estara el bla bla cuando tenga blabla </h4>
 @endsection
 
 

@@ -48,8 +48,8 @@
                 <td>{{$traslado->Destino->nombre}}</td>
 
                 <td><!-- Trigger the modal with a button <--></-->
-                    <button type="button" data-path="{{route('equipo.show', $traslado->Equipo->id) }}" class="btn btn-primary btn-sm openBtn">
-                        {{ $traslado->Equipo->inventario }}</button>
+                    <a  href="{{route('equipo.show', $traslado->Equipo->id) }}" class="btn btn-primary btn-sm openBtn" target="_blank">
+                        {{ $traslado->Equipo->inventario }}</a>
 
                     
                 </td>

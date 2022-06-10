@@ -33,12 +33,16 @@ class PlanificaController extends Controller
         $equipos=Equipo::all();
        //$conmp=Planificamp::whereYear('fechacorte',$year)->where('tipomp','interna')->get();
         $paso=0;
+        $ejecutado=Planificamp::whereYear('fechacorte',$year)->whereYear('fechaprogramacion',$year)->count();
+        $planificado=Planificamp::whereYear('fechacorte',$year)->count();
         //$equi=$conmp->unique('equipo');
         //dd($equi);
+        $datos=$this->Ejecucion($year);
+       // dd($datos);
         
         //$planificados=Planificamp::join('bajas','bajas.equipo',"=",'planificamps.equipo')->select('planificamps.id','planificamps.fechacorte','planificamps.fechaprogramacion','planificamps.tipomp','planificamps.equipo','planificamps.proveedor')->where('bajas.equipo','!=','planificamps.equipo')->get();
        
-        return view('planifica.index')->with('year',$year)->with('equipos',$equipos)->with('paso',$paso);
+        return view('planifica.index')->with('year',$year)->with('equipos',$equipos)->with('paso',$paso)->with('planificado',$planificado)->with('ejecutado',$ejecutado);
     }
 
     /**
@@ -325,6 +329,14 @@ class PlanificaController extends Controller
         $year=date('Y');
         $equipos=Equipo::all();
         return view('planifica.minsal')->with('year',$year)->with('equipos',$equipos);
+    }
+    public function Ejecucion($year){
+        $datos=array();
+        for($i=1;$i<13;$i++){
+            $datos[$i.'-planificado']=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte',$i)->count();
+            $datos[$i.'-programado']=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte',$i)->whereYear('fechaprogramacion',$year)->count();
+        }
+        return $datos;
     }
 }
 /*foreach($equiposdatos as $dato){

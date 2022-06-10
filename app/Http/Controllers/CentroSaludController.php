@@ -27,16 +27,20 @@ class CentroSaludController extends Controller
      */
     public function index()
     {
+        $datos="";
         
         if(!Auth()->user()->Dependence)
         {
             $centros=CentroSalud::all();
+            //dd($centros);
             return view('centrosalud.index')->with('centros',$centros);
         }
             if(Auth()->user()->Dependence->dependencetable_type=='App\Models\Ssalud')
             {
+                $servicio=Ssalud::find(Auth()->user()->Dependence->dependencetable_id);
+                $datos=$this->DatosSsalud($servicio->id);
                 $centros=CentroSalud::where('ssalud',Auth()->user()->Dependence->dependencetable_id)->get();
-                return view('centrosalud.index')->with('centros',$centros);                
+                return view('ssalud.show')->with('centros',$centros)->with('mp',$datos)->with('servicio',$servicio);                
             } 
                 
     }
@@ -48,7 +52,6 @@ class CentroSaludController extends Controller
      */
     public function create()
     {
-        //dd('porque');
           return view('centrosalud.create');
     }
 
@@ -80,7 +83,7 @@ class CentroSaludController extends Controller
         $centro=CentroSalud::find($id);
         $convenios=MinsalConvenio::where('dependencetable_type','App\Models\CentroSalud')->where('dependencetable_id',$centro->id)->get();
         $datos=$this->DatosEstablecimiento($centro->id);
-        return view('centrosalud.show')->with('centro',$centro)->with('convenios',$convenios)->with('datos',$datos);
+        return view('centrosalud.show')->with('centro',$centro)->with('convenios',$convenios)->with('mp',$datos);
     }
 
     /**
@@ -134,11 +137,17 @@ class CentroSaludController extends Controller
         $sigfes=Sigfe::all();
         foreach($sigfes as $sigfe){
             $datos['pago_'.$sigfe->id]=0;
-            $datos[$sigfe->id]=MinsalConvenio::where('ano',$year)
+            $datos['total_'.$sigfe->id]=0;
+            $datos['convenios_'.$sigfe->id]=0;
+            $datos['total_'.$sigfe->id]=MinsalConvenio::where('ano',$year)
                                 ->where('dependencetable_type','App\Models\CentroSalud')
                                 ->where('dependencetable_id',$establecimiento->id)
                                 ->where('sigfe',$sigfe->id)
                                 ->sum('monto_anual');
+            $datos['convenios_'.$sigfe->id]=MinsalConvenio::where('ano',$year)
+                                ->where('dependencetable_type','App\Models\CentroSalud')
+                                ->where('dependencetable_id',$establecimiento->id)
+                                ->where('sigfe',$sigfe->id)->count();
             foreach(MinsalConvenio::where('ano',$year)
                         ->where('dependencetable_type','App\Models\CentroSalud')
                         ->where('dependencetable_id',$establecimiento->id)
@@ -149,6 +158,43 @@ class CentroSaludController extends Controller
                 }
             }
         }
+        return $datos;
+    }
+    public function DatosSsalud($id){
+        
+        $year=date('Y');
+        $servicio=Ssalud::find($id);
+        $establecimientos=CentroSalud::where('ssalud',$servicio->id)->get();
+        $datos=array();
+        $sigfes=Sigfe::all();
+           foreach($sigfes as $sigfe){
+            $datos['pago_'.$sigfe->id]=0;
+            $datos['total_'.$sigfe->id]=0;
+            $datos['convenios_'.$sigfe->id]=0;
+            foreach($establecimientos as $establecimiento){
+            $datos['total_'.$sigfe->id]+=MinsalConvenio::where('ano',$year)
+                                ->where('dependencetable_type','App\Models\CentroSalud')
+                                ->where('dependencetable_id',$establecimiento->id)
+                                ->where('sigfe',$sigfe->id)
+                                ->sum('monto_anual');
+            $datos['convenios_'.$sigfe->id]+=MinsalConvenio::where('ano',$year)
+                                ->where('dependencetable_type','App\Models\CentroSalud')
+                                ->where('dependencetable_id',$establecimiento->id)
+                                ->where('sigfe',$sigfe->id)
+                                ->count();
+
+            foreach(MinsalConvenio::where('ano',$year)
+                        ->where('dependencetable_type','App\Models\CentroSalud')
+                        ->where('dependencetable_id',$establecimiento->id)
+                        ->where('sigfe',$sigfe->id)->get() as $convenio){
+                
+                 foreach(MinsalFactura::where('minsalconvenio',$convenio->id)->get() as $pago){
+                    $datos['pago_'.$sigfe->id]+=$pago->monto;
+                }
+            }
+        }
+    }
+        
         return $datos;
     }
 }
