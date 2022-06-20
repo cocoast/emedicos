@@ -4,16 +4,16 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEstadoLicitacionesTable extends Migration
+class CreateEstadoslicitacionesTable extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
+   public function up()
     {
-        Schema::create('estado_licitaciones', function (Blueprint $table) {
+        Schema::create('estadoslicitaciones', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
             $table->timestamps();
@@ -27,6 +27,6 @@ class CreateEstadoLicitacionesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('estado_licitaciones');
+        Schema::dropIfExists('estadoslicitaciones');
     }
 }

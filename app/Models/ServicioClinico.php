@@ -22,5 +22,8 @@ class ServicioClinico extends Model
   }
   public function Establecimiento(){
         return $this->belongsTo('App\Models\Establecimiento','establecimiento','id');
-    }  
+    } 
+    public function Licitacion(){
+     return $this->hasMany('App\Models\Licitacion', 'servicio');
+  } 
 }

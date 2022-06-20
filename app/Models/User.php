@@ -77,7 +77,11 @@ class User extends Authenticatable
         return  $this->hasOne('App\Models\Dependence','user','id');
     }
     public function role()
-{
-    return $this->belongsTo(Role::class, 'roles_id');
-}
+    {
+            return $this->belongsTo(Role::class, 'roles_id');
+    }
+    public function Licitaciones()
+    {
+        return $this->hasMany('App\Models\Licitacion','licitador');
+    }
 }

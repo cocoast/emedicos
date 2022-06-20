@@ -30,19 +30,19 @@ class PlanificaController extends Controller
     public function index()
     {
         $year=date('Y');
-        $equipos=Equipo::all();
-       //$conmp=Planificamp::whereYear('fechacorte',$year)->where('tipomp','interna')->get();
-        $paso=0;
-        $ejecutado=Planificamp::whereYear('fechacorte',$year)->whereYear('fechaprogramacion',$year)->count();
-        $planificado=Planificamp::whereYear('fechacorte',$year)->count();
-        //$equi=$conmp->unique('equipo');
-        //dd($equi);
-        $datos=$this->Ejecucion($year);
-       // dd($datos);
-        
-        //$planificados=Planificamp::join('bajas','bajas.equipo',"=",'planificamps.equipo')->select('planificamps.id','planificamps.fechacorte','planificamps.fechaprogramacion','planificamps.tipomp','planificamps.equipo','planificamps.proveedor')->where('bajas.equipo','!=','planificamps.equipo')->get();
+        $equipos=Equipo::whereHas('Planificamp', function($query) use($year) {
+                 $query->whereYear('fechacorte', $year);
+                })->get();
+        $datos=array();
+        foreach($equipos as $equipo)
+            foreach($equipo->Planificamp as $mp)
+                if(date('Y',strtotime($mp->fechacorte))==$year){
+                        $datos[$equipo->id][date('m',strtotime($mp->fechacorte))]=$mp;
+                }
+                //dd($datos);      
+        return view('planifica.index')->with('year',$year)->with('equipos',$equipos)->with('datos',$datos);
        
-        return view('planifica.index')->with('year',$year)->with('equipos',$equipos)->with('paso',$paso)->with('planificado',$planificado)->with('ejecutado',$ejecutado);
+        return view('planifica.index')->with('year',$year)->with('equipos',$equipos)->with('planificado',$planificado)->with('ejecutado',$ejecutado);
     }
 
     /**
@@ -172,7 +172,8 @@ class PlanificaController extends Controller
      */
     public function show($id)
     {
-        //
+        $mp=Planificamp::find($id);
+        return view('planifica.show')->with('mp',$mp);
     }
 
     /**
@@ -197,77 +198,15 @@ class PlanificaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $programacion=date('Y-m-d',strtotime($request->get('programacion')));
-        $planifica=Planificamp::find($id);
-        $equipo=$planifica->Equipo;
-        //dd($request->get('fecha'));
-       
-        $eq = "";
-        if ($equipo->eq == "Critico")
-            $eq = "2.1";
-        if ($equipo->eq == "Relevante")
-            $eq = "2.2";
-        if ($equipo->eq == "Sin")
-            $eq = "Sin";
-        if($request->file('documento')!=null){
-            if($equipo->inventario!='?'){
-                $carpeta = $_SERVER['DOCUMENT_ROOT'] . '/storage/' . $eq . '/' . $equipo->Familia->nombre . '/' . $equipo->SubFamilia->nombre . '/' . $equipo->inventario . "/";
-            }
-            else{
-                $carpeta = $_SERVER['DOCUMENT_ROOT'] . '/storage/' . $eq . '/' . $equipo->Familia->nombre . '/' . $equipo->SubFamilia->nombre . '/' . $equipo->serie . "/";  
-            }
-        }
-        if($planifica->fechacorte!=$request->get('fecha')){
-
-            $planifica->fechacorte=$request->get('fecha');
-            $planifica->save();
-            return redirect('/planifica/listado/')->with('message', 'ha sido Editada el mes de planificacion')->with('status','alert alert-success');
-        }
-        if(date('m-Y',strtotime($planifica->fechacorte))==date('m-Y',strtotime($programacion))){
-            $planifica->fechaprogramacion=$programacion;
-            $planifica->proveedor=$request->get('responsable');    
-            if (!file_exists($carpeta))
-                mkdir($carpeta, 0777, true);
-            if ($request->hasFile('documento')) {
-                $fecha = new DateTime($programacion);
-                if($equipo->inventario!='?')
-                $nombre = $equipo->inventario . '_' . $fecha->format('Y') . '_' . $request->archivo . '_' . $fecha->format('m') . '_' . $fecha->format('d');
-                else
-                    $nombre = $equipo->serie . '_' . $fecha->format('Y') . '_' . $request->archivo . '_' . $fecha->format('m') . '_' . $fecha->format('d');
-                //Captura de archivo view create
-                $file = $request->file('documento');
-                $nombre = $nombre . '.pdf';
-                if ($file->guessExtension() == "pdf") {
-                    $file->move($carpeta, $nombre);
-                }
-            }
-            $planifica->save();
-
-            return redirect('/planifica/listado/')->with('message', 'El Equipo '.$planifica->Equipo->inventario.' ha sido Programada para el dia: '.date('d-m-Y',strtotime($planifica->fechaprogramacion)))->with('status','alert alert-success');
-        }
-        else
-             if($request->get('programacion')==null&&$planifica->proveedor!=$request->get('responsable')&&$planifica->tipomp==$request->get('tipo')){
-                 $planifica->proveedor=$request->get('responsable');
-                 $planifica->save();
-                 return redirect('/planifica/listado/')->with('message', 'El responasable del Mantenimiento ha sido modificado')->with('status','alert alert-warning');
-             }
-             else
-                 if($request->get('programacion')==null&&$planifica->proveedor!=$request->get('responsable')&&$planifica->tipomp!=$request->get('tipo')){
-                 $planifica->proveedor=$request->get('responsable');
-                 $planifica->tipomp=$request->get('tipo');
-                 $planifica->save();
-                 return redirect('/planifica/listado/')->with('message', 'Se actualizó el tipo  y el Responsable del Mantenimiento ')->with('status','alert alert-warning');
-             }
-                 else
-                    if($request->get('programacion')==null&&$planifica->tipomp!=$request->get('tipo')&&$planifica->proveedor==$request->get('responsable')){
-                     $planifica->tipomp=$request->get('tipo');
-                     $planifica->save();
-                     return redirect('/planifica/listado/')->with('message', 'Se actualizó el tipo  de Mantenimiento ')->with('status','alert alert-warning');
-                    }
-                    else
-                        return redirect('/planifica/listado/')->with('message', 'El Equipo no ha sido Programado Por no encontrarse en mes programado')->with('status','alert alert-danger');
+        $mp=Planificamp::find($id);
+        $proveedor = explode(' - ', $request->get('proveedor'))[0];
+        $mp->fechacorte=$request->get('fecha');
+        $mp->proveedor=$proveedor;
+        $mp->tipomp=$request->get('tipo');
+        $mp->save();
+        return redirect('mp/programacion')->with('message','Cambios en la Planificacion Ingresados')->with('status','alert alert-success');
     
-}
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -278,6 +217,67 @@ class PlanificaController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function PlanificaMP(Request $request,$id){
+        $mp=Planificamp::find($id);
+        $proveedor = explode(' - ', $request->get('proveedor'))[0];
+        $mp->fechacorte=$request->get('fecha');
+        $mp->proveedor=$proveedor;
+        $mp->tipomp=$request->get('tipo');
+        $mp->save();
+        return redirect('mp/programacion')->with('message','Cambios en la Planificacion Ingresados')->with('status','alert alert-success');
+    }
+
+    public function ProgramaMP(Request $request,$id){
+        $planifica=Planificamp::find($id);
+        $nombre="";
+        if($request->get('programacion')==null){
+            $planifica->fechaprogramacion=null;
+            $planifica->save();
+            return redirect('mp/programacion')->with('message','Programacion Eliminada')->with('status','alert alert-warning');   
+        }
+
+        $programacion=date('Y-m-d',strtotime($request->get('programacion')));
+        
+        $equipo=Equipo::find($planifica->equipo);
+        $planificado=date('Y-m-d',strtotime($planifica->fechacorte));
+        $sinrepro=date('Y-m-d',strtotime($planificado.'+30 days'));
+         $eq = "";
+        if ($equipo->eq == "Critico")
+            $eq = "2.1";
+        if ($equipo->eq == "Relevante")
+            $eq = "2.2";
+        if ($equipo->eq == "Sin")
+            $eq = "Sin";
+        if($programacion<$sinrepro){
+            $planifica->fechaprogramacion=$programacion;
+            if($request->hasFile('documento'){
+                if($equipo->inventario!='?'){
+                    $carpeta = $_SERVER['DOCUMENT_ROOT'] . '/storage/' . $eq . '/' . $equipo->Familia->nombre . '/' . $equipo->SubFamilia->nombre . '/' . $equipo->inventario . "/";
+                    $nombre = $equipo->inventario . '_' . $planificado->format('Y') . '_MP_' . $planificado->format('m') . '_' . $planificado->format('d');
+                }
+                else{
+                $carpeta = $_SERVER['DOCUMENT_ROOT'] . '/storage/' . $eq . '/' . $equipo->Familia->nombre . '/' . $equipo->SubFamilia->nombre . '/' . $equipo->serie . "/"; 
+                $nombre = $equipo->serie . '_' . $planificado->format('Y') . '_MP_' . $planificado->format('m') . '_' . $planificado->format('d'); 
+                }
+              
+            if (!file_exists($carpeta))
+                mkdir($carpeta, 0777, true);
+                $file = $request->file('documento');
+                $nombre = $nombre . '.pdf';
+                    if ($file->guessExtension() == "pdf") {
+                        $file->move($carpeta, $nombre);
+                    }
+                }
+            }
+            $planifica->save();
+
+            return redirect('mp/programacion')->with('message','Programacion Actualizada')->with('status','alert alert-success');
+        }
+        else
+         return redirect('mp/programacion')->with('message','no se registraron cambios')->with('status','alert alert-danger');   
+        
+
     }
     public function programa(){
         return view ('planifica.programa');
@@ -317,12 +317,9 @@ class PlanificaController extends Controller
     public function listado()
      {
         $year=date('Y');
+        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
         $planificados=Planificamp::whereYear('fechacorte',$year)->get(); 
-        
-        
-        //$planificados=Planificamp::join('bajas','bajas.equipo',"=",'planificamps.equipo')->select('planificamps.id','planificamps.fechacorte','planificamps.fechaprogramacion','planificamps.tipomp','planificamps.equipo','planificamps.proveedor')->where('bajas.equipo','!=','planificamps.equipo')->get();
-       
-        return view('planifica.listado')->with('planificados',$planificados)->with('year',$year);
+        return view('planifica.listado')->with('planificados',$planificados)->with('year',$year)->with('meses',$meses);
     }
     public function minsal()
      {
@@ -338,55 +335,96 @@ class PlanificaController extends Controller
         }
         return $datos;
     }
+    public function AddProgramacion($id){
+        $mp=Planificamp::find($id);
+        return view('planifica.programauno')->with('planifica',$mp);
+    }
+    public function Historico(Request $request){
+        $year=$request->get('year');
+        $equipos=Equipo::whereHas('Planificamp', function($query) use($year) {
+                 $query->whereYear('fechacorte', $year);
+                })->get();
+        $datos=array();
+        foreach($equipos as $equipo)
+            foreach($equipo->Planificamp as $mp)
+                if(date('Y',strtotime($mp->fechacorte))==$year){
+                        $datos[$equipo->id][date('m',strtotime($mp->fechacorte))]=$mp->tipomp;
+                }
+                //dd($datos);      
+        return view('planifica.historico')->with('year',$year)->with('equipos',$equipos)->with('datos',$datos);
+    }
 }
-/*foreach($equiposdatos as $dato){
-            if(Equipo::where('inventario',$dato)->count()==1){
-                $equipo=Equipo::where('inventario',$dato)->first();
-                if(Planificamp::where('equipo',$equipo->id)->whereMonth('fechacorte',$mes)->whereYear('fechacorte',$year)->count()==0){
-                    $planificado=new Planificamp();
-                    $planificado->equipo=$equipo->id;
-                    $planificado->fechacorte=$request->get('fecha');
-                    $planificado->tipomp=$request->get('tipo');
-                    $planificado->proveedor=$request->get('responsable');
-                    $planificado->save();
-                    $paso+=1;
-                }
-                else{
-                    $duplicados=$duplicados." ".$dato." ";
-                }
+/*
 
-            }
-            else
-            if(Equipo::where('serie',$dato)->count()==1){
-                $equipo=Equipo::where('serie',$dato)->first();
-                if(Planificamp::where('equipo',$equipo->id)->whereMonth('fechacorte',$mes)->whereYear('fechacorte',$year)->count()==0){
-                    $planificado=new Planificamp();
-                    //dd($equipo);
-                    $planificado->equipo=$equipo->id;
-                    $planificado->fechacorte=$request->get('fecha');
-                    $planificado->tipomp=$request->get('tipo');
-                    $planificado->proveedor=$request->get('responsable');
-                    $planificado->save();
-                    $paso+=1;
+ $programacion=date('Y-m-d',strtotime($request->get('programacion')));
+        $planifica=Planificamp::find($id);
+        $equipo=$planifica->Equipo;
+        //dd($request->get('fecha'));
+       
+        $eq = "";
+        if ($equipo->eq == "Critico")
+            $eq = "2.1";
+        if ($equipo->eq == "Relevante")
+            $eq = "2.2";
+        if ($equipo->eq == "Sin")
+            $eq = "Sin";
+        //Editar fecha de planificacion 
+        if($planifica->fechacorte!=$request->get('fecha')){
+            $planifica->fechacorte=$request->get('fecha');
+            $planifica->save();
+            return redirect('/planifica/listado/')->with('message', 'ha sido Editada el mes de planificacion')->with('status','alert alert-success');
+        }
+             
+        if(date('m-Y',strtotime($planifica->fechacorte))==date('m-Y',strtotime($programacion))){
+            $planifica->fechaprogramacion=$programacion;
+            $planifica->proveedor=$request->get('responsable');  
+            if($request->file('documento')!=null){
+                if($equipo->inventario!='?'){
+                    $carpeta = $_SERVER['DOCUMENT_ROOT'] . '/storage/' . $eq . '/' . $equipo->Familia->nombre . '/' . $equipo->SubFamilia->nombre . '/' . $equipo->inventario . "/";
                 }
                 else{
-                    $duplicados=$duplicados." ".$dato." ";
+                $carpeta = $_SERVER['DOCUMENT_ROOT'] . '/storage/' . $eq . '/' . $equipo->Familia->nombre . '/' . $equipo->SubFamilia->nombre . '/' . $equipo->serie . "/";  
                 }
-            }
-            else
-                 if(Equipo::where('id',$dato)->count()==1){
-                $equipo=Equipo::find($dato);
-                if(Planificamp::where('equipo',$equipo->id)->whereMonth('fechacorte',$mes)->whereYear('fechacorte',$year)->count()==0){
-                    $planificado=new Planificamp();
-                    //dd($equipo);
-                    $planificado->equipo=$equipo->id;
-                    $planificado->fechacorte=$request->get('fecha');
-                    $planificado->tipomp=$request->get('tipo');
-                    $planificado->proveedor=$request->get('responsable');
-                    $planificado->save();
-                    $paso+=1;
+              
+            if (!file_exists($carpeta))
+                mkdir($carpeta, 0777, true);
+                if ($request->hasFile('documento')) {
+                    $fecha = new DateTime($programacion);
+                    if($equipo->inventario!='?')
+                    $nombre = $equipo->inventario . '_' . $fecha->format('Y') . '_' . $request->archivo . '_' . $fecha->format('m') . '_' . $fecha->format('d');
+                    else
+                        $nombre = $equipo->serie . '_' . $fecha->format('Y') . '_' . $request->archivo . '_' . $fecha->format('m') . '_' . $fecha->format('d');
+                    //Captura de archivo view create
+                    $file = $request->file('documento');
+                    $nombre = $nombre . '.pdf';
+                    if ($file->guessExtension() == "pdf") {
+                        $file->move($carpeta, $nombre);
+                    }
                 }
-                else{
-                    $duplicados=$duplicados." ".$dato." ";
-                }
-            }*/
+             }
+            $planifica->save();
+
+            return redirect('/planifica/listado/')->with('message', 'El Equipo '.$planifica->Equipo->inventario.' ha sido Programada para el dia: '.date('d-m-Y',strtotime($planifica->fechaprogramacion)))->with('status','alert alert-success');
+        }
+        else
+             if($request->get('programacion')==null&&$planifica->proveedor!=$request->get('responsable')&&$planifica->tipomp==$request->get('tipo')){
+                 $planifica->proveedor=$request->get('responsable');
+                 $planifica->save();
+                 return redirect('/planifica/listado/')->with('message', 'El responasable del Mantenimiento ha sido modificado')->with('status','alert alert-warning');
+             }
+             else
+                 if($request->get('programacion')==null&&$planifica->proveedor!=$request->get('responsable')&&$planifica->tipomp!=$request->get('tipo')){
+                 $planifica->proveedor=$request->get('responsable');
+                 $planifica->tipomp=$request->get('tipo');
+                 $planifica->save();
+                 return redirect('/planifica/listado/')->with('message', 'Se actualizó el tipo  y el Responsable del Mantenimiento ')->with('status','alert alert-warning');
+             }
+                 else
+                    if($request->get('programacion')==null&&$planifica->tipomp!=$request->get('tipo')&&$planifica->proveedor==$request->get('responsable')){
+                     $planifica->tipomp=$request->get('tipo');
+                     $planifica->save();
+                     return redirect('/planifica/listado/')->with('message', 'Se actualizó el tipo  de Mantenimiento ')->with('status','alert alert-warning');
+                    }
+                    else
+                        return redirect('/planifica/listado/')->with('message', 'El Equipo no ha sido Programado Por no encontrarse en mes programado')->with('status','alert alert-danger');
+*/

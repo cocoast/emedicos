@@ -1,9 +1,10 @@
 @extends('adminlte::page')
 
-@section('title', 'Programacion')
+@section('title', 'Planificacion')
 
-@section('content_header')
-    <h1>Detalle de Programacion {{ $year }}</h1>
+@section('content_top_nav_left')
+
+    <h1>Planificacion de Mantenimientos {{$year }}</h1>
 @stop
 
 @section('content')
@@ -14,22 +15,32 @@
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         {{ session('message') }}
     </div>
-    @endif
-@can('modelo.create')
-<div class="d-flex justify-content-between">
-<div class="justify-content-start"><a href="/planifica/create/" class="btn btn-success">Ingresar Equipos a la Planificación</a></div>
-<div class="justify-content-start"><a href="/planifica/programa/" class="btn btn-secondary">Programar en lote</a></div>
+   @endif 
+<div class="row">
+    <form action="{{ route('mp.historico') }}" method="get" class="row g-3">
+        @csrf
+        <div class="col-auto">
+            <select name="year" id="year" class="form-control">
+            <option value="">Seleccione año</option>
+            <option value="2019"> 2019</option>
+            <option value="2020"> 2020</option>
+            <option value="2021"> 2021</option>
+            <option value="2022"> 2022</option>
+        </select>
 
-@endcan
-    <div class="justify-content-end"> <a href="/planifica/minsal/" class="btn btn-primary"> Vista Minsal</a></div>
-    <div class="justify-content-end"><a href="/planifica/" class="btn btn-success flex-end"> Carta Gantt</a></div>
+        </div>
+        <div class="col-auto">
+        <button type="submit" class="btn btn-primary"> Buscar</button>
+        </div>
+    </form>
 </div>
+
 <div class="card">
   <div class="card-header">
     <h3 class="card-title">Filtros de la Tabla</h3>
     <div class="card-tools">
       <!-- Collapse Button -->
-      <button type="button" class="btn btn-sm btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
     </div>
     <!-- /.card-tools -->
   </div>
@@ -38,61 +49,72 @@
     <!-- Aqui va la info-->
   </div>
   <!-- /.card-body -->
-</div>  
+</div>
 <!-- /.card -->
-
-<div class="table-responsive">
-    <table id="planificatable" class="table table-striped table-hover mt-4" style="width:100%">
-    	<thead>
-    	<tr>
-          <th scope="col">ID Equipo</th>
+<table id="planificatable" class="table table-hover table-bordered" >
+    <thead>
+        <tr>
+          <th scope="col">EQ</th>
           <th scope="col">Servicio</th>
           <th scope="col">Inventario</th>
           <th scope="col">Serie</th>
           <th scope="col">Marca</th>
           <th scope="col">Modelo</th>
-          <th scope="col">Fecha Planificada</th>
-          <th scope="col">Fecha Programada</th>
-          <th scope="col">Responsable</th>
-          <th scope="col">Tipo de MP</th>
-          <th scope="col">Semana Programada</th>
-          <th scope="col">@can('modelo.edit')FUNCIONES @endcan</th>
-    	</tr>
-    	</thead>
-    	<tbody>
-    		@foreach($planificados as $mp)
-    		    <tr>
-                    <td>{{$mp->Equipo->id}}@can('convenio.edit') <a class="btn btn-warning" href="/planifica/{{$mp->id}}/edit "><i class="bi bi-pencil"></i></a> @endcan</td>
-                    <td>{{ $mp->Equipo->ServicioClinico->nombre }}</td>
-                    <td><a href="{{route('equipo.show', $mp->Equipo->id) }}" class="btn btn-primary" target="_blank">{{$mp->Equipo->inventario}}</a></td>
-                    <td><a href="{{route('equipo.show', $mp->Equipo->id) }}" class="btn btn-primary"  target="_blank"> {{ $mp->Equipo->serie }}</a></td>
-                    <td>{{ $mp->Equipo->Marca->marca }}</td>
-                    <td>{{ $mp->Equipo->Modelo->modelo }}</td>
-                    <td data-order="{{date("n", strtotime($mp->fechacorte))-1  }}">{{ $meses[date("n", strtotime($mp->fechacorte))-1] }}</td>
-                    <td>@if($mp->fechaprogramacion!=""){{ date("d-m-Y", strtotime($mp->fechaprogramacion)) }}@endif</td>
-                    <td>{{ $mp->Proveedor->nombre }}</td>
-                    <td>{{ $mp->tipomp }}</td>
-                    <td>@if($mp->fechaprogramacion!=""){{ strftime("%W", strtotime($mp->fechaprogramacion)) }}@endif</td>
-                    <td>
-                    @can('modelo.edit')
-                    <button class="btn btn-secondary openBtn" data-path="{{ route('mp.programacion.add',$mp->id) }}">Programar</button>
-
-                    @endcan</td>
-                  
-                </tr>
-            @endforeach
-    	</tbody>
-    </table>
-</div>
+          <th scope="col">Familia</th>
+          <th scope="col">SubFamilia</th>
+          <th class="table-bordered">Ene</th>
+          <th class="table-bordered">Feb</th>
+          <th class="table-bordered">Mar</th>
+          <th class="table-bordered">Abr</th>
+          <th class="table-bordered">May</th>
+          <th class="table-bordered">Jun</th>
+          <th class="table-bordered">Jul</th>
+          <th class="table-bordered">Ago</th>
+          <th class="table-bordered">Sep</th>
+          <th class="table-bordered">Oct</th>
+          <th class="table-bordered">Nov</th>
+          <th class="table-bordered">Dic</th> 
+        </tr>
+    </thead>
+    <tbody>
+       @foreach($equipos as $equipo)
+        <tr>
+            <td>{{ $equipo->eq }}</td>
+            <td> {{ $equipo->ServicioClinico->nombre }}</td>
+            <td> {{ $equipo->inventario}}</td>
+            <td> {{ $equipo->serie }}</td>
+            <td> {{ $equipo->Marca->marca}}</td>
+            <td> {{ $equipo->Modelo->modelo}}</td>
+            <td>{{ $equipo->Familia->nombre }}</td>
+            <td>{{ $equipo->SubFamilia->nombre }}</td>
+            <td>{{ $datos[$equipo->id]["01"] ??""  }}</td>
+            <td>{{ $datos[$equipo->id]["02"] ??""  }}</td>
+            <td>{{ $datos[$equipo->id]["03"] ??""  }}</td>
+            <td>{{ $datos[$equipo->id]["04"] ??""  }}</td>
+            <td>{{ $datos[$equipo->id]["05"] ??""  }}</td>
+            <td>{{ $datos[$equipo->id]["06"] ??""  }}</td>
+            <td>{{ $datos[$equipo->id]["07"] ??""  }}</td>
+            <td>{{ $datos[$equipo->id]["08"] ??""  }}</td>
+            <td>{{ $datos[$equipo->id]["09"] ??""  }}</td>
+            <td>{{ $datos[$equipo->id]["10"] ??""  }}</td>
+            <td>{{ $datos[$equipo->id]["11"] ??""  }}</td>
+            <td>{{ $datos[$equipo->id]["12"] ??""  }}</td>
+                        
+        </tr>
+        
+       
+        @endforeach
+    </tbody>
+</table>
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-        <!--Aqui Va la informacion del modal -->
-        </div>
-    </div>
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      
+  </div>
 </div>
 @stop
+
 @section('css')
 <!--BOOSTRAP ICONS-->
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
@@ -129,7 +151,6 @@
   $(document).ready(function() {
     let table = $('#planificatable').DataTable({
          dom: 'Bfrtip',
-         order: [[6, 'asc']],
         buttons: ['excel'],  
         responsive: true,
         searchPanes:{

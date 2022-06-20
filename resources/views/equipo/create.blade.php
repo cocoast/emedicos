@@ -171,6 +171,8 @@
 				<option value="1">Mensual (cada 1 mes)</option>
 			</select>
 				</div>
+			</div>
+			
 				<div class="col">
 	     			<label for="" class="form-label">Mantenciones Anuales</label>
 	     			<input type="text" name="mpa" id="mpa" tabindex="25" class="form-control" placeholder="cantidad de MP durante 1 año ejemplo 1">

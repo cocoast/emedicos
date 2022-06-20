@@ -263,12 +263,6 @@ return [
                 'can'        => ['convenio.index'],
             ],
             [
-                'text'       => 'Planificacion MP',
-                'icon_color' => 'red',
-                'url'        => 'planifica/',
-                'can'        => 'planifica.index',
-            ],    
-            [
                 'text'          => 'Garantias',
                 'icon_color'    => 'blue',
                 'url'           => 'garantia/   ',
@@ -308,6 +302,32 @@ return [
                 'label_color'   => 'danger',
                 'label'         => 'new',
                 'can'        => 'traslado.index',
+            ],
+            //Mantenimiento Preventivo
+             [
+                'text'          => 'Mantenimiento Preventivo',
+
+                'icon_color' => 'red',
+                'can'           => 'planifica.index',                
+                'submenu' => [       
+                        [ 
+                            'text'    => 'Planificacion',
+                            'url'     => 'planifica/',
+                            'can'     => 'planifica.index',
+                        ],
+                        [ 
+                            'text'    => 'Programación',
+                            'url'     => '/mp/programacion/',
+                            'can'     => 'planifica.edit',
+                            
+                        ],
+                        [ 
+                            'text'    => 'Ejecucion',
+                            'url'     => '/principal/create/',
+                            'can'     => 'planifica.edit',
+                            
+                        ],
+                ],
             ],
             //crud
              
@@ -397,9 +417,7 @@ return [
 
                 [ 
                 'text'    => 'Licitaciones',
-                'url'     => 'licitaciones/',
-                'label'     =>'Demo',
-                'label_color'=>'danger',
+                'url'     => 'licitacion/',
                 'can'     => 'licitacion.index',
                 ],       
                 [ 

@@ -408,6 +408,93 @@ class EquipoController extends Controller
         return view('equipo.show')->with('equipo', $equipo)->with('res', $res)->with('ec', $ec)->with('convenio', $convenio)->with('garantia', $garantia)->with('year', $year);
     }
 
+    public function Mostrar($id)
+    {
+
+        $equipo = Equipo::find($id);
+
+        $convenio;
+        $ec;
+        $garantia = null;
+        $eq = "";
+        if ($equipo->eq == "Critico")
+            $eq = "2.1";
+        if ($equipo->eq == "Relevante")
+            $eq = "2.2";
+        if ($equipo->eq == "Sin")
+            $eq = "Sin";
+        $fecha = new DateTime();
+        $fecha = $fecha->format('d-m-Y');
+        $year = date('Y', strtotime($fecha));
+        if (Garantia::where('equipo', $equipo->id)->count() > 0)
+            $garantia = Garantia::where('equipo', $equipo->id)->first();
+        if (EquipoConvenio::where('equipo', $equipo->id)->count() > 0) {
+            $ecs = EquipoConvenio::where('equipo', $equipo->id)->get();
+
+            foreach ($ecs as $econ) {
+                $ffin = $econ->Convenio->fechafin;
+                //dd(strtotime($ffin)>strtotime($fecha));
+                if (strtotime($ffin) > strtotime($fecha)) {
+                    $convenio = Convenio::find($econ->convenio);
+                    $ec = $econ;
+                    //dd($ec);
+                    break;
+                } else {
+                    $ec = "Sin Convenio";
+                    $convenio = "Sin Convenio";
+                }
+            }
+        } else {
+            $ec = "Sin Convenio";
+            $convenio = "Sin Convenio";
+        }
+        //si tiene inventario toma ruta con 2 o 2A
+        if ($equipo->inventario!='?') {
+            $directorio = 'storage/' . $eq . '/' . $equipo->Familia->nombre . '/' . $equipo->SubFamilia->nombre . '/' . $equipo->inventario;
+            //dd($equipo);
+
+        } else
+            //de lo contrario toma la ruta por serie
+            $directorio = 'storage/' . $eq . '/' . $equipo->Familia->nombre . '/' . $equipo->SubFamilia->nombre . '/' . $equipo->serie;
+        // Array en el que obtendremos los resultados
+        $res = array();
+        // Agregamos la barra invertida al final en caso de que no exista
+        if (substr($directorio, -1) != "/")
+            $directorio .= "/";
+        //dd($directorio) ;
+        // Creamos un puntero al directorio y obtenemos el listado de archivos     
+        //dd(@dir($directorio));
+        if (@dir($directorio)) {
+            $dir = @dir($directorio);
+            while (($archivo = $dir->read()) !== false) {
+                // Obviamos los archivos ocultos
+                if ($archivo[0] == ".") continue;
+
+                if (is_dir($directorio . $archivo)) {
+                    $res[] = array(
+                        "Nombre" => $directorio . $archivo . "/",
+                        "Tamaño" => 0,
+                        "Modificado" => filemtime($directorio . $archivo)
+                    );
+                } else if (is_readable($directorio . $archivo)) {
+                    $res[] = array(
+                        "Nombre" => $directorio . $archivo,
+                        "Tamaño" => filesize($directorio . $archivo),
+                        "Modificado" => filemtime($directorio . $archivo)
+                    );
+                }
+            }
+            $dir->close();
+            $res = array_reverse($res);
+
+            //dd($data);
+        } else
+            $res = null;
+
+        //enviar a vista para mostrar los datos
+        return view('equipo.show2')->with('equipo', $equipo)->with('res', $res)->with('ec', $ec)->with('convenio', $convenio)->with('garantia', $garantia)->with('year', $year);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

@@ -24,6 +24,7 @@ use App\Models\CentroSalud;
 use App\Models\Sigfe;
 use App\Models\MinsalConvenio;
 use App\Models\MinsalFactura;
+use App\Models\Licitacion;
 
 
 class DashBoardController extends Controller
@@ -63,7 +64,8 @@ class DashBoardController extends Controller
     }
 
     public function DashLicitaciones(){
-        return view("dashboard.licitacion");
+        $licitaciones=Licitacion::all();
+        return view("licitacion.index")->with('licitaciones',$licitaciones);
     }
      public function DashMinsal($id){
         $user=User::find($id);
@@ -152,6 +154,7 @@ class DashBoardController extends Controller
     public function DashEquiposMedicos()
     {
         $mp=$this->PlanMP();
+        //dd($this->CumplimientoMP());
         $preventivo=$this->ConveniosMantenimiento();
         $arriendos=$this->ConveniosArriendo();
         $correctivos=$this->ConveniosCorrectivos();
@@ -292,21 +295,24 @@ class DashBoardController extends Controller
         $fecha=new DateTime();
         $year=$fecha->format('Y');
         $hoy=date('Y-m-d');
-        $correc=Convenio::where('tipoconvenio','Correctivo')->where('fechafin','>',$hoy)->count();
+        $correc=Convenio::where('tipoconvenio','Correctivo')->whereYear('fechafin','>',$year)->count();
         $tcorrec=0;
         $tvalor=0;
-        $correctivos=Convenio::where('tipoconvenio','Correctivo')->where('fechafin','>',$hoy)->get();
+        $correctivos=Convenio::where('tipoconvenio','Correctivo')->whereYear('fechafin','>',$year)->get();
          foreach($correctivos as $correctivo){
             //dd($correctivo);
             $pagos=Pago::where('convenio',$correctivo->id)->where('estado','Generado')->get();
             $tvalor+=$correctivo->valor;
-            foreach($pagos as $pago)
-                if(is_numeric($pago->valor)){
-                    $valor=$pago->valor;
+         
+                foreach($pagos as $pago){
+                    if(is_numeric($pago->valor)){
+                        $valor=$pago->valor;
+                    }
+                    else
+                        $valor=0;
+                    //dd($valor);
+                    $tcorrec+=$valor;
                 }
-                else
-                    $valor=0;
-                $tcorrec=$tcorrec+$valor;
             }
         $arr="";
         $arr=   [
@@ -361,16 +367,33 @@ class DashBoardController extends Controller
         return $res;
     }
 
-    public function EquiposMP(date $year){
+    public function EquiposMP(){
         $equipos= array();
+        $year=date('Y');
         $iconmp=Planificamp::whereYear('fechacorte',$year)->where('tipomp','interna')->get();
         $equipos['interno']=$iconmp->unique('equipo')->count();
-        $econmp=Planificamp::whereYear('fechacorte',$year)->where('tipomp','convenio')->get();
-        $equipos['externo']=$conmp->unique('equipo')->count();
+        $econmp=Planificamp::whereYear('fechacorte',$year)->where('tipomp','!=','interna')->get();
+        $equipos['externo']=$econmp->unique('equipo')->count();
+        //dd($equipos);
         return $equipos;
         
 
     }
+    public function CumplimientoMP(){
+        $meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+        $year=date('Y');
+        $mp=array();
+        $i=1;
+        foreach($meses as $mes){
+            $mp[$mes]['interno_planificado']=Planificamp::whereYear('fechacorte',$year)->where('tipomp','interna')->whereMonth('fechacorte',$i)->count();
+            $mp[$mes]['externo_planificado']=Planificamp::whereYear('fechacorte',$year)->where('tipomp','!=','interna')->whereMonth('fechacorte',$i)->count();
+            $mp[$mes]['interno_ejecutado']=Planificamp::whereYear('fechacorte',$year)->where('tipomp','interna')->whereMonth('fechacorte',$i)->where('fechaprogramacion','!=','null')->count();
+            $mp[$mes]['externo_ejecutado']=Planificamp::whereYear('fechacorte',$year)->where('tipomp','!=','interna')->whereMonth('fechacorte',$i)->where('fechaprogramacion','!=','null')->count();
+            $i++;
+        }
+         return $mp;
+    }
+   
     /**
      * Show the form for creating a new resource.
      *
@@ -378,7 +401,14 @@ class DashBoardController extends Controller
      */
     public function create()
     {
-        //
+        $mes=date('m');
+        $year=date('Y');
+        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+        $ejecucion=$this->CumplimientoMP();
+        $mpsubidas=Planificamp::orderby('updated_at','Desc')->where('fechaprogramacion','!=','null')->take(50)->get();
+        $mpporvencer=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte','>',$mes)->take(50)->orderby('fechacorte','ASC')->get();
+        $mpvencida=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte','<',$mes)->where('fechaprogramacion',null)->take(50)->orderby('fechacorte','ASC')->get();
+        return view ('dashboard.ejecucionmp')->with('ejecucion',$ejecucion)->with('subidas',$mpsubidas)->with('porvencer',$mpporvencer)->with('vencido',$mpvencida)->with('meses',$meses);
     }
 
     /**
@@ -400,7 +430,7 @@ class DashBoardController extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**

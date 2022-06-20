@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class EstadoLicitacion extends Model
+class EstadoLicitacion extends Pivot
 {
     use HasFactory;
-
-    protected $table="estado_licitaciones";
+    protected $table='estado_licitacion';
+    
 }

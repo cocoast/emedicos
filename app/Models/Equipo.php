@@ -42,9 +42,11 @@ class Equipo extends Model
         return $this->belongsTo('App\Models\Baja','id','equipo');
      }
      public function PlanificaMP(){
-        return  $this->hasMany('App\Models\Planificamp','equipo');
+        return  $this->hasMany('App\Models\Planificamp','equipo')->orderBy('fechacorte','ASC');
      }
      public function Traslados(){
         return  $this->hasMany('App\Models\Traslado','equipo','id');
-     }   
+     } 
+
+
 }

@@ -110,7 +110,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
     $('#realizados').DataTable( {
-         "order": [[ 7, "asc" ]],
+         "order": [[ 8, "asc" ]],
         dom: 'Bfrtip',
         buttons: ['excel','pdf'],
         "lengthMenu":[[20,50,-1],[20,50,"Todos"]],

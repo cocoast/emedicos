@@ -23,14 +23,13 @@ class CreateLicitacionesTable extends Migration
             $table->string('fecha_solicitud_compra')->nullable();
             $table->string('file_solicitud_compra')->nullable();
             $table->integer('presupuesto');
-            $table->integer('vigencia');
-            $table->integer('licitador');
+            $table->integer('vigencia')->nullable();
+            $table->foreignId('licitador')->constrained('users')->onDelete('cascade');
             $table->string('resolucion_base')->nullable();
             $table->string('fecha_resolucion_base')->nullable();
             $table->string('resolucion_licitacion')->nullable();
             $table->string('fecha_resolucion_licitacion')->nullable();
             $table->foreignId('categoria')->constrained('categorias_licitaciones')->onDelete('cascade');
-            $table->integer('estado_actual');
             $table->timestamps();
         });
     }

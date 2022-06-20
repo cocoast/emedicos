@@ -29,6 +29,48 @@ Route::get('licitaciones/demo', function () {
 });
 Route::get('home','App\Http\Controllers\DashBoardController@index');
 
+
+
+Route::get('/equipo/rtls/{id}',[
+    'uses'  =>'App\Http\Controllers\EquipoController@rtls',
+    'as'    =>'equipo.rtls'
+    ]);
+
+/*CRUD */
+route::resource('marca','App\Http\Controllers\MarcaController');
+route::resource('modelo','App\Http\Controllers\ModeloController');
+route::resource('familia','App\Http\Controllers\FamiliaController');
+route::resource('subfamilia','App\Http\Controllers\SubFamiliaController');
+route::resource('clase','App\Http\Controllers\ClaseController');
+route::resource('subclase','App\Http\Controllers\SubClaseController');
+route::resource('proveedor','App\Http\Controllers\ProveedorController');
+route::resource('servicioclinico','App\Http\Controllers\ServicioClinicoController');
+
+/* EQUIPO*/
+route::resource('equipo','App\Http\Controllers\EquipoController');
+route::resource('garantia','App\Http\Controllers\GarantiaController');
+route::resource('baja','App\Http\Controllers\BajaController');
+
+Route::get('equipo/{id}/acta',[
+        'uses'  =>  'App\Http\Controllers\EquipoController@acta',
+        'as'    =>  'equipo.pdf'
+        ]);
+Route::Post('/equipo/archivo',[
+    'uses'  =>'App\Http\Controllers\EquipoController@Archivo',
+    'as'    =>'equipo.archivo'
+    ]);
+Route::get('equipo/{id}/subir',[
+        'uses'  =>  'App\Http\Controllers\EquipoController@Subir',
+        'as'    =>  'equipo.subir'
+        ]);
+Route::get('equipo/{id}/mostrar',[
+        'uses'  =>  'App\Http\Controllers\EquipoController@Mostrar',
+        'as'    =>  'equipo.mostrar'
+        ]);
+
+/*CONVENIO*/
+route::resource('convenio','App\Http\Controllers\ConveniosController');
+route::resource('equipoconvenio','App\Http\Controllers\EquiposConveniosController', ['except' => ['create']]);
 Route::get('convenios/seguimiento',[
     'uses'  =>'App\Http\Controllers\ConveniosController@Seguimiento',
     'as'    =>'convenios.seguimiento'
@@ -41,61 +83,30 @@ Route::get('convenios/trazadoras',[
     'uses'  =>'App\Http\Controllers\ConveniosController@Trazadoras',
     'as'    =>'convenio.trazadoras'
     ]);
-Route::get('/planifica/programa/',[
-    'uses'  =>'App\Http\Controllers\PlanificaController@programa',
-    'as'    =>'planifica.programa'
+Route::get('convenio/{id}/subir',[
+        'uses'  =>  'App\Http\Controllers\ConveniosController@Subir',
+        'as'    =>  'convenio.subir'
+        ]);
+Route::Post('/convenio/{id}/archivo',[
+    'uses'  =>'App\Http\Controllers\ConveniosController@Archivo',
+    'as'    =>'convenio.file'
     ]);
-Route::Post('/planifica/programacion',[
-    'uses'  =>'App\Http\Controllers\PlanificaController@programacion',
-    'as'    =>'planifica.programacion'
-    ]);
-Route::get('/planifica/listado/',[
-    'uses'  =>'App\Http\Controllers\PlanificaController@listado',
-    'as'    =>'planifica.listado'
-    ]);
-Route::get('/planifica/minsal/',[
-    'uses'  =>'App\Http\Controllers\PlanificaController@minsal',
-    'as'    =>'planifica.minsal'
-    ]);
-Route::get('/equipo/rtls/{id}',[
-    'uses'  =>'App\Http\Controllers\EquipoController@rtls',
-    'as'    =>'equipo.rtls'
-    ]);
-
-route::resource('marca','App\Http\Controllers\MarcaController');
-route::resource('modelo','App\Http\Controllers\ModeloController');
-route::resource('familia','App\Http\Controllers\FamiliaController');
-route::resource('subfamilia','App\Http\Controllers\SubFamiliaController');
-route::resource('clase','App\Http\Controllers\ClaseController');
-route::resource('subclase','App\Http\Controllers\SubClaseController');
-route::resource('proveedor','App\Http\Controllers\ProveedorController');
-route::resource('servicioclinico','App\Http\Controllers\ServicioClinicoController');
-route::resource('equipo','App\Http\Controllers\EquipoController');
-route::resource('convenio','App\Http\Controllers\ConveniosController');
-route::resource('equipoconvenio','App\Http\Controllers\EquiposConveniosController', ['except' => ['create']]);
-route::resource('pagos','App\Http\Controllers\PagosController', ['except' => ['create']]);
-route::resource('user','App\Http\Controllers\UserController');
-route::resource('role','App\Http\Controllers\RoleController');
-route::resource('garantia','App\Http\Controllers\GarantiaController');
-route::resource('baja','App\Http\Controllers\BajaController');
-route::resource('principal','App\Http\Controllers\DashBoardController');
-route::resource('planifica','App\Http\Controllers\PlanificaController');
-route::resource('sc','App\Http\Controllers\SolicitudCompraController');
-route::resource('producto','App\Http\Controllers\ProductoController');
-route::resource('traslado','App\Http\Controllers\TrasladoController');
-route::resource('establecimiento','App\Http\Controllers\EstablecimientoController');
-route::resource('permiso','App\Http\Controllers\PermissionControler');
-route::resource('ssalud','App\Http\Controllers\SsaludController');
-route::resource('centrosalud','App\Http\Controllers\CentroSaludController');
-route::resource('sigfe','App\Http\Controllers\SigfeController');
-route::resource('minsalconvenio','App\Http\Controllers\ConvenioMinsalController');
-route::resource('minsalfactura','App\Http\Controllers\MinsalFacturaController', ['except' => ['create']]);
-
+//Crear Equipo en Convenio
 Route::get('equipoconvenio/{id}/create',[
         'uses'  =>  'App\Http\Controllers\EquiposConveniosController@create',
         'as'    =>  'equipoconvenio.create'
         ]);
+Route::get('convenio/{id}/baja',[
+    'uses'  =>  'App\Http\Controllers\ConveniosController@baja',
+    'as'    => 'convenio.baja'
+]);
+Route::Put('convenio/{id}/darbaja',[
+    'uses'  =>  'App\Http\Controllers\ConveniosController@darBaja',
+    'as'    => 'convenio.debaja'
+]);
+
 //PAGOS
+route::resource('pagos','App\Http\Controllers\PagosController', ['except' => ['create']]);
 Route::get('pagos/{id}/create',[
         'uses'  =>  'App\Http\Controllers\PagosController@store',
         'as'    =>  'pagos.create'
@@ -106,7 +117,72 @@ Route::get('minsalfactura/{id}/create',[
         'as'    =>  'minsalfactura.create'
         ]);
 
-// Buscadores 
+Route::get('pagos/{id}/ficha',[
+        'uses'  =>  'App\Http\Controllers\PagosController@Ficha',
+        'as'    =>  'pagos.ficha'
+        ]);
+Route::get('pagos/{id}/pdf',[
+        'uses'  =>  'App\Http\Controllers\PagosController@createPDF',
+        'as'    =>  'pagos.pdf'
+        ]);
+ 
+/*MANTENIMIENTO PREVENTIVO*/
+Route::resource('planifica','App\Http\Controllers\PlanificaController');
+// Programar MP 
+route::post('mp/{id}/programa',[
+    'uses'  =>  'App\Http\Controllers\PlanificaController@ProgramaMP',
+    'as'    =>'mp.programamp'
+]);
+//Programar en Lote
+Route::get('/planifica/programa/',[
+    'uses'  =>'App\Http\Controllers\PlanificaController@programa',
+    'as'    =>'planifica.programa'
+    ]);
+//Editar Planificacion
+route::post('mp/{id}/planifica',[
+    'uses'  =>  'App\Http\Controllers\PlanificaController@PlanificaMP',
+    'as'    =>'mp.planificamp'
+]);
+Route::Post('/planifica/programacion',[
+    'uses'  =>'App\Http\Controllers\PlanificaController@programacion',
+    'as'    =>'planifica.programacion'
+    ]);
+//vista Programacion
+Route::get('mp/programacion',[
+    'uses'  =>  'App\Http\Controllers\PlanificaController@listado',
+    'as'    =>  'mp.programacion'
+]);
+//Agregar Programacion 
+Route::get('mp/{id}/programacion/',[
+    'uses'  =>  'App\Http\Controllers\PlanificaController@AddProgramacion',
+    'as'    =>  'mp.programacion.add'
+]);
+//vista Minsal
+Route::get('/planifica/minsal/',[
+    'uses'  =>'App\Http\Controllers\PlanificaController@minsal',
+    'as'    =>'planifica.minsal'
+    ]);
+Route::get('mp/historico',[
+    'uses'  =>  'App\Http\Controllers\PlanificaController@Historico',
+    'as'    => 'mp.historico'
+]);
+
+/*TRASLADO*/
+route::resource('traslado','App\Http\Controllers\TrasladoController');
+Route::get('traslado/{id}/pdf',[
+        'uses'  =>  'App\Http\Controllers\TrasladoController@createPDF',
+        'as'    =>  'traslado.pdf'
+        ]);
+Route::get('traslado/{id}/subir',[
+        'uses'  =>  'App\Http\Controllers\TrasladoController@Subir',
+        'as'    =>  'traslado.subir'
+        ]);
+Route::Post('/traslado/archivo',[
+    'uses'  =>'App\Http\Controllers\TrasladoController@Archivo',
+    'as'    =>'traslado.archivo'
+    ]);
+
+/*BUSCADORES*/
 Route::get('search/proveedor',[
     'uses'  =>  'App\Http\Controllers\ProveedorController@search',
     'as'    =>  'search.proveedor'
@@ -149,54 +225,11 @@ Route::get('search/ssalud',[
     ]);
 
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
-Route::get('servicio-tecnico',function(){
-    return view('servicio-tecnico.index');
-});
-Route::get('traslado/{id}/pdf',[
-        'uses'  =>  'App\Http\Controllers\TrasladoController@createPDF',
-        'as'    =>  'traslado.pdf'
-        ]);
-Route::get('traslado/{id}/subir',[
-        'uses'  =>  'App\Http\Controllers\TrasladoController@Subir',
-        'as'    =>  'traslado.subir'
-        ]);
-Route::Post('/traslado/archivo',[
-    'uses'  =>'App\Http\Controllers\TrasladoController@Archivo',
-    'as'    =>'traslado.archivo'
-    ]);
-Route::get('convenio/{id}/subir',[
-        'uses'  =>  'App\Http\Controllers\ConveniosController@Subir',
-        'as'    =>  'convenio.subir'
-        ]);
-Route::Post('/convenio/{id}/archivo',[
-    'uses'  =>'App\Http\Controllers\ConveniosController@Archivo',
-    'as'    =>'convenio.file'
-    ]);
-Route::get('pagos/{id}/ficha',[
-        'uses'  =>  'App\Http\Controllers\PagosController@Ficha',
-        'as'    =>  'pagos.ficha'
-        ]);
-Route::get('pagos/{id}/pdf',[
-        'uses'  =>  'App\Http\Controllers\PagosController@createPDF',
-        'as'    =>  'pagos.pdf'
-        ]);
-
-Route::Post('/equipo/archivo',[
-    'uses'  =>'App\Http\Controllers\EquipoController@Archivo',
-    'as'    =>'equipo.archivo'
-    ]);
-Route::get('equipo/{id}/subir',[
-        'uses'  =>  'App\Http\Controllers\EquipoController@Subir',
-        'as'    =>  'equipo.subir'
-        ]);
-
-Route::get('equipo/{id}/acta',[
-        'uses'  =>  'App\Http\Controllers\EquipoController@acta',
-        'as'    =>  'equipo.pdf'
-        ]);
+/* ROLES PERMISOS Y DEPENDENCIAS*/
+route::resource('user','App\Http\Controllers\UserController');
+route::resource('role','App\Http\Controllers\RoleController');
+route::resource('permiso','App\Http\Controllers\PermissionControler');
+route::resource('principal','App\Http\Controllers\DashBoardController');
 Route::delete('user/delete/{id}',[
     'uses'  =>'App\Http\Controllers\UserController@delete',
     'as'    =>'user.delete'
@@ -209,16 +242,34 @@ Route::Post('/user/{id}/dependencia',[
     'uses'  =>'App\Http\Controllers\UserController@Dependencia',
     'as'    =>'user.checkdependencia'
 ]);
-Route::get('convenio/{id}/baja',[
-    'uses'  =>  'App\Http\Controllers\ConveniosController@baja',
-    'as'    => 'convenio.baja'
-]);
-Route::Put('convenio/{id}/darbaja',[
-    'uses'  =>  'App\Http\Controllers\ConveniosController@darBaja',
-    'as'    => 'convenio.debaja'
-]);
 
-//Modulo Licitaciones 
+
+/*OTROS MODULOS NO IMPLEMENTADOS*/
+route::resource('sc','App\Http\Controllers\SolicitudCompraController');
+route::resource('producto','App\Http\Controllers\ProductoController');
+route::resource('establecimiento','App\Http\Controllers\EstablecimientoController');
+
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
+Route::get('servicio-tecnico',function(){
+    return view('servicio-tecnico.index');
+});
+
+
+
+/*MODULO MINSAL*/
+route::resource('ssalud','App\Http\Controllers\SsaludController');
+route::resource('centrosalud','App\Http\Controllers\CentroSaludController');
+route::resource('sigfe','App\Http\Controllers\SigfeController');
+route::resource('minsalconvenio','App\Http\Controllers\ConvenioMinsalController');
+route::resource('minsalfactura','App\Http\Controllers\MinsalFacturaController', ['except' => ['create']]);
+
+
+
+
+/*MODULO LOGISTICA*/ 
 route::resource('estadolicitacion','App\Http\Controllers\EstadoLicitacionController');
 route::resource('categorialicitacion','App\Http\Controllers\CategoriaLicitacionController');
 route::resource('licitacion','App\Http\Controllers\LicitacionController');

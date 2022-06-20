@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\EstadoLicitacion;
+use App\Models\EstadosLicitacion;
 
 class EstadoLicitacionController extends Controller
 {
@@ -22,7 +22,7 @@ class EstadoLicitacionController extends Controller
     }
     public function index()
     {
-     $estados=EstadoLicitacion::all();
+     $estados=EstadosLicitacion::all();
      //dd($estados);
      return view ('estadolicitacion.index')->with('estados',$estados);
     }
@@ -46,9 +46,9 @@ class EstadoLicitacionController extends Controller
     public function store(Request $request)
     {
         
-        if(EstadoLicitacion::where('nombre',$request->get('nombre'))->count()==0)
+        if(EstadosLicitacion::where('nombre',$request->get('nombre'))->count()==0)
         {
-            $estado=new EstadoLicitacion;
+            $estado=new EstadosLicitacion;
             $estado->nombre=$request->get('nombre');
             $estado->save();
             return redirect()->back()->with('message','Estado Creado')->with('status','alert alert-success');
@@ -76,7 +76,7 @@ class EstadoLicitacionController extends Controller
      */
     public function edit($id)
     {
-        $estado=EstadoLicitacion::find($id);
+        $estado=EstadosLicitacion::find($id);
         return view('estadolicitacion.edit')->with('estado',$estado);
     }
 
@@ -89,8 +89,8 @@ class EstadoLicitacionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $estado=EstadoLicitacion::find($id);
-        if(EstadoLicitacion::where('nombre',$request->get('nombre'))->count()==0)
+        $estado=EstadosLicitacion::find($id);
+        if(EstadosLicitacion::where('nombre',$request->get('nombre'))->count()==0)
         {
             $estado->nombre=$request->get('nombre');
             $estado->save();
@@ -108,7 +108,7 @@ class EstadoLicitacionController extends Controller
      */
     public function destroy($id)
     {
-        $estado=EstadoLicitacion::find($id);
+        $estado=EstadosLicitacion::find($id);
         $estado->delete();
         return redirect()->back()->with('message','Estado Eliminado')->with('status','alert alert-danger');      
     }

@@ -95,7 +95,7 @@
 
     {{-- Custom Scripts --}}
     @yield('adminlte_js')
-  @livewireScripts
+ 
 </body>
 
 </html>

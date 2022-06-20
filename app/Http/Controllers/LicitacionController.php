@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Licitacion;
+use App\Models\ServicioClinico;
 use Spatie\Permission\Models\Role;
+use App\Models\CategoriaLicitacion;
+use App\Models\EstadosLicitacion;
+use App\Models\EstadoLicitacion;
 
 class LicitacionController extends Controller
 {
@@ -17,8 +21,13 @@ class LicitacionController extends Controller
     public function index()
     {
         $user=User::find(Auth()->user()->id);
-
-        $licitaciones=Licitacion::where('licitador',$user->id)->get();
+        $licitaciones=Licitacion::all();
+        $licitacion=Licitacion::find(18);
+        //dd($licitacion->Estados->last()->nombre);
+        //$estado=EstadoLicitacion::all();
+        //dd($estado);
+        //$licitaciones=Licitacion::where('licitador',$user->id)->get();
+        //dd($licitaciones);
         return view('licitacion.index')->with('licitaciones',$licitaciones);
     }
 
@@ -28,10 +37,11 @@ class LicitacionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
+    {   //acceso para la creacion de licitaciones inicio en MJ 
         //$licitadores =  User::with('roles')->get();
+        $categorias=CategoriaLicitacion::all();
         $licitadores=User::whereHas("roles", function($q){ $q->where("name", "Licitador"); })->get();
-        return view('licitacion.create')->with('licitadores',$licitadores);
+        return view('licitacion.create')->with('licitadores',$licitadores)->with('categorias',$categorias);
     }
 
     /**
@@ -42,9 +52,49 @@ class LicitacionController extends Controller
      */
     public function store(Request $request)
     {
-        $user=User::find(Auth()->user()->id);
-         
+        $year=date('Y');
+        $hoy=date('d-m-Y');
+        $estado=EstadosLicitacion::where('nombre','Asignada')->first();
+        $licitacion=new Licitacion;
+        $servicio=ServicioClinico::find(explode(' - ', $request->get('servicio')) [0]);
+        $licitacion->licitador=$request->get('licitador');
+        $licitacion->servicio=$servicio->id;
+        $licitacion->presupuesto=$request->get('presupuesto');
+        $licitacion->categoria=$request->get('categoria');
+        $licitacion->solicitud_compra=$request->get('solicitud');
+        $licitacion->fecha_solicitud_compra=$request->get('fecha');
+        $licitacion->nombre=$licitacion->Servicio->nombre.' - '.$licitacion->solicitud_compra;
+        $estadoactual= new EstadoLicitacion;
+
+        if($request->hasFile('documento')){
+            $carpeta = $_SERVER['DOCUMENT_ROOT'] . '/storage/ModuloLicitacion/' . $year.'/'.$licitacion->solicitud_compra.' - '.$licitacion->Servicio->nombre.'/'; 
+            $direccion='/storage/ModuloLicitacion/' . $year.'/'.$licitacion->solicitud_compra.' - '.$licitacion->Servicio->nombre.'/';
+            if(!file_exists($carpeta)){
+                mkdir($carpeta, 0777, true);
+            }
+            
+            $file = $request->file('documento');
+            $nombre = 'Solicitud de Compra N°'.$licitacion->solicitud_compra. '.pdf';
+            if ($file->guessExtension() == "pdf") {
+                //dd($licitacion);
+                $file->move($carpeta, $nombre);
+                $licitacion->file_solicitud_compra=$direccion.'/'.$nombre;
+                $licitacion->save();
+                $estadoactual->licitacion=$licitacion->id;
+                $estadoactual->estado=$estado->id;
+                $estadoactual->comentario="Asignada a ".$licitacion->Licitador->name." el ".$hoy ;
+                //dd($estadoactual);
+                $estadoactual->save();
+                return redirect()->back()->with('message','Licitacion Generada')->with('status','alert alert-success');
+                }
+                else{
+                    return redirect()->back()->with('message','Tipo de Archivo no Compativo Compruebe .pdf')->with('status','alert alert-danger');
+                }
+            }
+            else
+                return redirect()->back()->with('message','No se Adjunto ningún Documento')->with('status','alert alert-danger');
     }
+     
 
     /**
      * Display the specified resource.
@@ -54,7 +104,8 @@ class LicitacionController extends Controller
      */
     public function show($id)
     {
-        //
+        $licitacion=Licitacion::find($id);
+        return view ('licitacion.show')->with('licitacion',$licitacion);
     }
 
     /**
@@ -88,6 +139,8 @@ class LicitacionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $licitacion=Licitacion::find($id);
+        $licitacion->delete();
+        return redirect()->back()->with('message','Se ha eliminado la licitacion')->with('status','alert alert-danger');
     }
 }

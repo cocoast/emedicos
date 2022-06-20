@@ -2,30 +2,28 @@
 
 @section('title', 'Licitaciones')
 
-@section('content_header')
-<div class="text-center">
-    <div class="col ">
-        <h2>Listado Licitaciones de {{ Auth::user()->name }}</h2>
-    </div>
-</div>
-<!-- Trigger the modal with a button -->
-<button type="button" data-path="{{route('licitacion.create') }}" class="btn btn-primary openBtn"><i class="bi bi-file-plus"></i> Generar</button>
+@section('content_top_nav_left')
+<h2>Listado Licitaciones</h2>
+
 @stop
 @section('content')
  
+<div class="container">
+<!-- Trigger the modal with a button -->
+<button type="button" data-path="{{route('licitacion.create') }}" class="btn btn-primary openBtn"><i class="bi bi-file-plus"></i> Generar</button>
+</div>
 
 <div class="container-fluid ">
-  
  <table id="licitaciontable" class="table table-striped table-hover mt-4" style="width:100%">
 	<thead>
 	<tr>
         <th>ID</th>
         <th scope="col">Estado</th>
+        <th scope="col">Licitador</th>
         <th scope="col">Nombre</th>
         <th scope="col">ID Mercado Publico</th>
         <th scope="col">Servicio Demandante</th>
         <th scope="col">Presupuesto</th>
-        <th scope="col">Vigencia</th>
         <th scope="col">Categoria</th>
         @can('licitacion.edit')<th scope="col">Edit</th>@endcan
         @can('licitacion.destroy')<th scope="col">Del</th>@endcan
@@ -34,26 +32,27 @@
 	<tbody>
 		@foreach($licitaciones as $licitacion)
         <tr>
-      <th></th>
-      <th scope="row">{{$licitacion->id}}</th>
+      <td scope="row"><a href="licitacion/{{ $licitacion->id }}">{{$licitacion->id}}</a></td>
+      <td>{{ $licitacion->Estados->last()->nombre }}</td>
+      <td>{{ $licitacion->Licitador->name }}</td>
       <td>{{ $licitacion->nombre }}</td>
       <td>{{ $licitacion->id_mercadopublico }}</td>
-      <td>{{ $licitacion->ServicioClinico->nombre }}</td>
-      <td>{{ $licitacion->presupuesto }}</td>
-      <td>{{ $licitacion->vigencia }}</td>
+      <td>{{ $licitacion->Servicio->nombre }}</td>
+      <td>{{ NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($licitacion->presupuesto) }}</td>
       <td>{{ $licitacion->Categoria->nombre }}</td>
-      <td>@can('estadolicitacion.edit')
+      @can('licitacion.edit')<td>
          <!-- Trigger the modal with a button -->
-        <button type="button" data-path="{{route('lciitacion.edit',$licitacion->id ) }}" class="btn btn-info btn-sm openBtn"><i class="bi bi-pencil"></i> Editar</button>
+        <button type="button" data-path="{{route('licitacion.edit',$licitacion->id ) }}" class="btn btn-info btn-sm openBtn"><i class="bi bi-pencil"></i> Editar</button>
       </td>
-      <td>
+      @endcan
+       @can('licitacion.destroy')<td>
         <form action="{{route('licitacion.destroy',$licitacion->id)}}" method="POST">
         @csrf
         @method('DELETE')
         <button class="btn btn-danger" type="submit" onClick="javascript: return confirm('¿Estas seguro?');"><i class="bi bi-trash"></i>Eliminar</button>
         </form>
-        @endcan
       </td>
+      @endcan
     </tr>
     @endforeach
 	</tbody>

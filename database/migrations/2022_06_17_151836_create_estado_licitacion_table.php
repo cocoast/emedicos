@@ -16,7 +16,7 @@ class CreateEstadoLicitacionTable extends Migration
         Schema::create('estado_licitacion', function (Blueprint $table) {
             $table->id();
             $table->foreignId('licitacion')->constrained('licitaciones')->onDelete('cascade');
-            $table->foreignId('estado')->constrained('estado_licitaciones')->onDelete('cascade');
+            $table->foreignId('estado')->constrained('estadoslicitaciones')->onDelete('cascade');
             $table->string('comentario');
             $table->timestamps();
         });

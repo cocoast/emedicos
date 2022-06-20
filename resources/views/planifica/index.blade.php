@@ -2,8 +2,8 @@
 
 @section('title', 'Planificacion')
 
-@section('content_header')
-    <h1>Carta Gantt de Mantenimientos Planificados {{$year }}</h1>
+@section('content_top_nav_left')
+    <h1>Mantenimientos Planificados {{$year }}</h1>
 @stop
 
 @section('content')
@@ -14,121 +14,106 @@
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         {{ session('message') }}
     </div>
-    @endif
+   @endif 
 
-@can('modelo.create')
+<br>
 <div class="d-flex justify-content-between">
-<div class="justify-content-start"><a href="/planifica/create/" class="btn btn-success">Ingresar Equipos a la Planificación</a></div>
-<div class="justify-content-start"><a href="/planifica/programa/" class="btn btn-secondary">Programar en lote</a></div>
+    <div class="row">
+    <form action="{{ route('mp.historico') }}" method="get" class="row g-3">
+        @csrf
+        <div class="col-auto">
+            <select name="year" id="year" class="form-control">
+            <option value="">Seleccione año</option>
+            <option value="2019"> 2019</option>
+            <option value="2020"> 2020</option>
+            <option value="2021"> 2021</option>
+            <option value="2022"> 2022</option>
+        </select>
 
-@endcan
-    <div class="justify-content-end"> <a href="/planifica/minsal/" class="btn btn-primary"> Vista Minsal</a></div>
-    <div class="justify-content-end"><a href="/planifica/listado/" class="btn btn-success flex-end"> Programación</a></div>
+        </div>
+        <div class="col-auto">
+        <button type="submit" class="btn btn-sm btn-primary"> Buscar</button>
+        </div>
+    </form>
 </div>
-<div class="row">
-    <p>Los Mantenciones Planificadas para el {{ $year }} son: {{ $planificado }} y las ejecutadas son: {{ $ejecutado }}</p>
+    @can('modelo.create')
+        <div class="justify-content-start"><a href="/planifica/create/" class="btn btn-sm btn-success">Ingresar Equipos a la Planificación</a></div>
+        <div class="justify-content-start"><a href="/planifica/programa/" class="btn btn-sm btn-secondary">Programar en lote</a></div>
+    @endcan
+    <div class="justify-content-end"> <a href="/planifica/minsal/" class="btn btn-sm btn-primary"> Vista Minsal</a></div>
+    <div class="justify-content-end"><a href="{{ route('mp.programacion') }}" class="btn btn-sm btn-success flex-end"> Programación</a></div>
 </div>
-
-<table id="planificatable" class="table table-striped table-hover mt-4" >
+<br>
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Filtros de la Tabla</h3>
+    <div class="card-tools">
+      <!-- Collapse Button <--></-->            
+      <button type="button" class="btn btn-sm btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body" id="searchpanes">
+    <!-- Aqui va la info-->
+  </div>
+  <!-- /.card-body -->
+</div>  
+<!-- /.card -->
+<div class="table-responsive-sm">
+<table id="planificatable" class="table table-hover table-bordered" >
     <thead>
         <tr>
-          
+          <th scope="col">EQ</th>
           <th scope="col">Servicio</th>
           <th scope="col">Inventario</th>
-          <th scope="col">Serie</th>
+          <th scope="col" style="width:20px;max-width: 25px;">Serie</th>
           <th scope="col">Marca</th>
-          <th scope="col">Modelo</th>
-          <th class="table-bordered">Enero</th>
-          <th class="table-bordered">Febrero</th>
-          <th class="table-bordered">Marzo</th>
-          <th class="table-bordered">Abril</th>
-          <th class="table-bordered">Mayo</th>
-          <th class="table-bordered">Junio</th>
-          <th class="table-bordered">Julio</th>
-          <th class="table-bordered">Agosto</th>
-          <th class="table-bordered">Septiembre</th>
-          <th class="table-bordered">Octubre</th>
-          <th class="table-bordered">Noviembre</th>
-          <th class="table-bordered">Diciembre</th> 
+          <th scope="col" >Modelo</th>
+          <th scope="col">SubFamilia</th>
+          <th class="table-bordered">Ene</th>
+          <th class="table-bordered">Feb</th>
+          <th class="table-bordered">Mar</th>
+          <th class="table-bordered">Abr</th>
+          <th class="table-bordered">May</th>
+          <th class="table-bordered">Jun</th>
+          <th class="table-bordered">Jul</th>
+          <th class="table-bordered">Ago</th>
+          <th class="table-bordered">Sep</th>
+          <th class="table-bordered">Oct</th>
+          <th class="table-bordered">Nov</th>
+          <th class="table-bordered">Dic</th> 
         </tr>
     </thead>
     <tbody>
-        @foreach($equipos as $equipo)
-        @if (App\Models\Planificamp::whereYear('fechacorte',$year)->where('equipo',$equipo->id)->count()>0)
-        <tr>    
-            
-            <td><!-- Trigger the modal with a button -->
-                    <button type="button" data-path="{{route('servicioclinico.show', $equipo->ServicioClinico->id) }}" class="btn btn-success btn-sm openBtn">{{$equipo->ServicioClinico->nombre}}</button>
-           <td> <a href="{{route('equipo.show', $equipo->id) }}" class="btn btn-primary btn-sm" target="_blank">{{ $equipo->inventario }}</a></td>
-                <td><a href="{{route('equipo.show', $equipo->id) }}" class="btn btn-primary btn-sm" target="_blank">{{ $equipo->serie }}</td>
-            <td>{{ $equipo->Marca->marca }}</td>
-            <td>{{ $equipo->Modelo->modelo }}</td>
+       @foreach($equipos as $equipo)
+        <tr>
+            <td>{{ $equipo->eq }}</td>
+            <td> <button type="button" data-path="{{ route('servicioclinico.show',$equipo->ServicioClinico->id) }}" class="btn btn-sm btn-info openBtn">{{ $equipo->ServicioClinico->nombre }}</button></td>
+            <td><button type="button" data-path="{{ route('equipo.mostrar',$equipo->id) }}" class="btn btn-sm btn-info openBtn"> {{ $equipo->inventario}}</button></td>
+            <td> {{ $equipo->serie }}</td>
+            <td> {{ $equipo->Marca->marca}}</td>
+            <td> {{ $equipo->Modelo->modelo}}</td>
+            <td>{{ $equipo->SubFamilia->nombre }}</td>
+            <td>@if(@$datos[$equipo->id]["01"]) <button type="button" data-path="{{ route('planifica.show',$datos[$equipo->id]["01"]->id) }}"  @if($datos[$equipo->id]["01"]->fechaprogramacion!=null)class="btn btn-sm  btn-success openBtn" @else class="btn btn-sm  btn-info openBtn" @endif > {{ $datos[$equipo->id]["01"]->tipomp }}</button>@endif</td>
+            <td>@if(@$datos[$equipo->id]["02"]) <button type="button" data-path="{{ route('planifica.show',$datos[$equipo->id]["02"]->id) }}"  @if($datos[$equipo->id]["02"]->fechaprogramacion!=null)class="btn btn-sm  btn-success openBtn" @else class="btn btn-sm  btn-info openBtn" @endif > {{ $datos[$equipo->id]["02"]->tipomp }}</button>@endif</td>
+            <td>@if(@$datos[$equipo->id]["03"]) <button type="button" data-path="{{ route('planifica.show',$datos[$equipo->id]["03"]->id) }}"  @if($datos[$equipo->id]["03"]->fechaprogramacion!=null)class="btn btn-sm  btn-success openBtn" @else class="btn btn-sm  btn-info openBtn" @endif > {{ $datos[$equipo->id]["03"]->tipomp }}</button>@endif</td>
+            <td>@if(@$datos[$equipo->id]["04"]) <button type="button" data-path="{{ route('planifica.show',$datos[$equipo->id]["04"]->id) }}" @if($datos[$equipo->id]["04"]->fechaprogramacion!=null)class="btn btn-sm  btn-success openBtn" @else class="btn btn-sm  btn-info openBtn" @endif > {{ $datos[$equipo->id]["04"]->tipomp }}</button>@endif</td>
+            <td>@if(@$datos[$equipo->id]["05"]) <button type="button" data-path="{{ route('planifica.show',$datos[$equipo->id]["05"]->id) }}"  @if($datos[$equipo->id]["05"]->fechaprogramacion!=null)class="btn btn-sm  btn-success openBtn" @else class="btn btn-sm  btn-info openBtn" @endif > {{ $datos[$equipo->id]["05"]->tipomp }}</button>@endif</td>
+            <td>@if(@$datos[$equipo->id]["06"]) <button type="button" data-path="{{ route('planifica.show',$datos[$equipo->id]["06"]->id) }}"  @if($datos[$equipo->id]["06"]->fechaprogramacion!=null)class="btn btn-sm  btn-success openBtn" @else class="btn btn-sm  btn-info openBtn" @endif > {{ $datos[$equipo->id]["06"]->tipomp }}</button>@endif</td>
+            <td>@if(@$datos[$equipo->id]["07"]) <button type="button" data-path="{{ route('planifica.show',$datos[$equipo->id]["07"]->id) }}"  @if($datos[$equipo->id]["07"]->fechaprogramacion!=null)class="btn btn-sm  btn-success openBtn" @else class="btn btn-sm  btn-info openBtn" @endif > {{ $datos[$equipo->id]["07"]->tipomp }}</button>@endif</td>
+            <td>@if(@$datos[$equipo->id]["08"]) <button type="button" data-path="{{ route('planifica.show',$datos[$equipo->id]["08"]->id) }}"  @if($datos[$equipo->id]["08"]->fechaprogramacion!=null)class="btn btn-sm  btn-success openBtn" @else class="btn btn-sm  btn-info openBtn" @endif > {{ $datos[$equipo->id]["08"]->tipomp }}</button>@endif</td>
+            <td>@if(@$datos[$equipo->id]["09"]) <button type="button" data-path="{{ route('planifica.show',$datos[$equipo->id]["09"]->id) }}"  @if($datos[$equipo->id]["09"]->fechaprogramacion!=null)class="btn btn-sm  btn-success openBtn" @else class="btn btn-sm  btn-info openBtn" @endif > {{ $datos[$equipo->id]["09"]->tipomp }}</button>@endif</td>
+            <td>@if(@$datos[$equipo->id]["10"]) <button type="button" data-path="{{ route('planifica.show',$datos[$equipo->id]["10"]->id) }}"  @if($datos[$equipo->id]["10"]->fechaprogramacion!=null)class="btn btn-sm  btn-success openBtn" @else class="btn btn-sm  btn-info openBtn" @endif > {{ $datos[$equipo->id]["10"]->tipomp }}</button>@endif</td>
+            <td>@if(@$datos[$equipo->id]["11"]) <button type="button" data-path="{{ route('planifica.show',$datos[$equipo->id]["11"]->id) }}"  @if($datos[$equipo->id]["11"]->fechaprogramacion!=null)class="btn btn-sm  btn-success openBtn" @else class="btn btn-sm  btn-info openBtn" @endif > {{ $datos[$equipo->id]["11"]->tipomp }}</button>@endif</td>
+            <td>@if(@$datos[$equipo->id]["12"]) <button type="button" data-path="{{ route('planifica.show',$datos[$equipo->id]["12"]->id) }}"  @if($datos[$equipo->id]["12"]->fechaprogramacion!=null)class="btn btn-sm  btn-success openBtn" @else class="btn btn-sm  btn-info openBtn" @endif > {{ $datos[$equipo->id]["12"]->tipomp }}</button>@endif</td>            
+        </tr>
         
-           <td class="table-bordered"> 
-            @foreach (App\Models\Planificamp::whereYear('fechacorte',$year)->where('equipo',$equipo->id)->orderby('fechacorte','ASC')->get() as $mp)
-            @if(date("m", strtotime($mp->fechacorte))==1 )     @if($mp->tipomp=="Convenio" ||$mp->tipomp=="Compra de Servicio"||$mp->tipomp=="Garantia") Externa @else {{ $mp->tipomp }} @endif @if($mp->fechaprogramacion!=""){{ date("d-m-Y", strtotime($mp->fechaprogramacion)) }}@endif @endif
-            @endforeach
-            </td>
-             <td class="table-bordered"> 
-            @foreach (App\Models\Planificamp::whereYear('fechacorte',$year)->where('equipo',$equipo->id)->orderby('fechacorte','ASC')->get() as $mp)
-            @if(date("m", strtotime($mp->fechacorte))==2 )  @if($mp->fechaprogramacion!=""){{ date("d-m-Y", strtotime($mp->fechaprogramacion)) }}@endif   @if($mp->tipomp=="Convenio" ||$mp->tipomp=="Compra de Servicio"||$mp->tipomp=="Garantia") Externa @else {{ $mp->tipomp }} @endif  @endif
-            @endforeach
-            </td>
-             <td class="table-bordered"> 
-            @foreach (App\Models\Planificamp::whereYear('fechacorte',$year)->where('equipo',$equipo->id)->orderby('fechacorte','ASC')->get() as $mp)
-            @if(date("m", strtotime($mp->fechacorte))==3 )   @if($mp->fechaprogramacion!=""){{ date("d-m-Y", strtotime($mp->fechaprogramacion)) }}@endif  @if($mp->tipomp=="Convenio" ||$mp->tipomp=="Compra de Servicio"||$mp->tipomp=="Garantia") Externa @else {{ $mp->tipomp }} @endif  @endif
-            @endforeach
-            </td>
-             <td class="table-bordered"> 
-            @foreach (App\Models\Planificamp::whereYear('fechacorte',$year)->where('equipo',$equipo->id)->orderby('fechacorte','ASC')->get() as $mp)
-            @if(date("m", strtotime($mp->fechacorte))==4 )   @if($mp->fechaprogramacion!=""){{ date("d-m-Y", strtotime($mp->fechaprogramacion)) }}@endif  @if($mp->tipomp=="Convenio" ||$mp->tipomp=="Compra de Servicio"||$mp->tipomp=="Garantia") Externa @else {{ $mp->tipomp }} @endif  @endif
-            @endforeach
-            </td>
-             <td class="table-bordered"> 
-            @foreach (App\Models\Planificamp::whereYear('fechacorte',$year)->where('equipo',$equipo->id)->orderby('fechacorte','ASC')->get() as $mp)
-            @if(date("m", strtotime($mp->fechacorte))==5 )   @if($mp->fechaprogramacion!=""){{ date("d-m-Y", strtotime($mp->fechaprogramacion)) }}@endif  @if($mp->tipomp=="Convenio" ||$mp->tipomp=="Compra de Servicio"||$mp->tipomp=="Garantia") Externa @else {{ $mp->tipomp }} @endif  @endif
-            @endforeach
-            </td>
-             <td class="table-bordered"> 
-            @foreach (App\Models\Planificamp::whereYear('fechacorte',$year)->where('equipo',$equipo->id)->orderby('fechacorte','ASC')->get() as $mp)
-            @if(date("m", strtotime($mp->fechacorte))==6 )  @if($mp->fechaprogramacion!=""){{ date("d-m-Y", strtotime($mp->fechaprogramacion)) }}@endif   @if($mp->tipomp=="Convenio" ||$mp->tipomp=="Compra de Servicio"||$mp->tipomp=="Garantia") Externa @else {{ $mp->tipomp }} @endif  @endif
-            @endforeach
-            </td>
-             <td class="table-bordered"> 
-            @foreach (App\Models\Planificamp::whereYear('fechacorte',$year)->where('equipo',$equipo->id)->orderby('fechacorte','ASC')->get() as $mp)
-            @if(date("m", strtotime($mp->fechacorte))==7 ) @if($mp->fechaprogramacion!=""){{ date("d-m-Y", strtotime($mp->fechaprogramacion)) }}@endif    @if($mp->tipomp=="Convenio" ||$mp->tipomp=="Compra de Servicio"||$mp->tipomp=="Garantia") Externa @else {{ $mp->tipomp }} @endif  @endif
-            @endforeach
-            </td>
-             <td class="table-bordered"> 
-            @foreach (App\Models\Planificamp::whereYear('fechacorte',$year)->where('equipo',$equipo->id)->orderby('fechacorte','ASC')->get() as $mp)
-            @if(date("m", strtotime($mp->fechacorte))==8 )  @if($mp->fechaprogramacion!=""){{ date("d-m-Y", strtotime($mp->fechaprogramacion)) }}@endif   @if($mp->tipomp=="Convenio" ||$mp->tipomp=="Compra de Servicio"||$mp->tipomp=="Garantia") Externa @else {{ $mp->tipomp }} @endif  @endif
-            @endforeach
-            </td>
-             <td class="table-bordered"> 
-            @foreach (App\Models\Planificamp::whereYear('fechacorte',$year)->where('equipo',$equipo->id)->orderby('fechacorte','ASC')->get() as $mp)
-            @if(date("m", strtotime($mp->fechacorte))==9 )  @if($mp->fechaprogramacion!=""){{ date("d-m-Y", strtotime($mp->fechaprogramacion)) }}@endif   @if($mp->tipomp=="Convenio" ||$mp->tipomp=="Compra de Servicio"||$mp->tipomp=="Garantia") Externa @else {{ $mp->tipomp }} @endif  @endif
-            @endforeach
-            </td>
-             <td class="table-bordered"> 
-            @foreach (App\Models\Planificamp::whereYear('fechacorte',$year)->where('equipo',$equipo->id)->orderby('fechacorte','ASC')->get() as $mp)
-            @if(date("m", strtotime($mp->fechacorte))==10 )   @if($mp->fechaprogramacion!=""){{ date("d-m-Y", strtotime($mp->fechaprogramacion)) }}@endif    @if($mp->tipomp=="Convenio" ||$mp->tipomp=="Compra de Servicio"||$mp->tipomp=="Garantia") Externa @else {{ $mp->tipomp }} @endif  @endif
-            @endforeach
-            </td>
-             <td class="table-bordered"> 
-            @foreach (App\Models\Planificamp::whereYear('fechacorte',$year)->where('equipo',$equipo->id)->orderby('fechacorte','ASC')->get() as $mp)
-            @if(date("m", strtotime($mp->fechacorte))==11 )  @if($mp->fechaprogramacion!=""){{ date("d-m-Y", strtotime($mp->fechaprogramacion)) }}@endif   @if($mp->tipomp=="Convenio" ||$mp->tipomp=="Compra de Servicio"||$mp->tipomp=="Garantia") Externa @else {{ $mp->tipomp }} @endif  @endif
-            @endforeach
-            </td>
-             <td class="table-bordered"> 
-            @foreach (App\Models\Planificamp::whereYear('fechacorte',$year)->where('equipo',$equipo->id)->orderby('fechacorte','ASC')->get() as $mp)
-            @if(date("m", strtotime($mp->fechacorte))==12 )  @if($mp->fechaprogramacion!=""){{ date("d-m-Y", strtotime($mp->fechaprogramacion)) }}@endif   @if($mp->tipomp=="Convenio" ||$mp->tipomp=="Compra de Servicio"||$mp->tipomp=="Garantia") Externa @else {{ $mp->tipomp }} @endif  @endif
-            @endforeach
-            </td>
-        </tr>   
-        @endif
+       
         @endforeach
     </tbody>
 </table>
+</div>
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl" role="document">
@@ -171,23 +156,22 @@
 
 
 <script type="text/javascript">
-  $('#planificatable').DataTable( {
-     buttons: [
-        'excel'
-    ],
-    responsive: true,
-    searchPanes:{
-        layout: 'columns-5',
-        initCollapsed: true,
-        cascadePanes: true,
-    },
-    dom: 'PBfprtip', 
-    "columnDefs": [            
-            {
-                "targets": [  ],
-                "visible": false
-            }],
-    pageLength: 20
+  $(document).ready(function() {
+    let table = $('#planificatable').DataTable({
+         dom: 'Bfrtip',
+        buttons: ['excel'],  
+        responsive: true,
+        searchPanes:{
+            layout: 'columns-5',
+            initCollapsed: true,
+            cascadePanes: true,
+        },  
+          pageLength: 25,
+    });
+     
+    new $.fn.dataTable.SearchPanes(table, {});  
+    table.searchPanes.container().prependTo("#searchpanes");
+    table.searchPanes.resizePanes();
 });
    
 $('.openBtn').on('click',function(){
