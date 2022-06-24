@@ -33,11 +33,13 @@
       </div>
     </div>
   </div>
+
+
     @foreach ($licitacion->Estados as $estado)
     
   <!-- Timeline time label -->
   <div class="time-label">
-    <span class="bg-green">{{ date('d-m-Y',strtotime($estado->created_at)) }}</span>
+    <span class="bg-green">{{ date('d-m-Y',strtotime($estado->pivot->created_at)) }} </span>
   </div>
   <div>
   <!-- Before each timeline item corresponds to one icon on the left scale -->

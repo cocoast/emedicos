@@ -20,5 +20,8 @@ class Traslado extends Model
   }
     public function Destino(){
      return $this->belongsTo('App\Models\ServicioClinico', 'destino');
-  }  
+  } 
+   public function Periferico(){
+     return $this->hasMany('App\Models\TrasladoPeriferico');
+  } 
 }

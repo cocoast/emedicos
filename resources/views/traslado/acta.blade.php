@@ -128,7 +128,7 @@ width: 50%;
 </table>
 
 
-<p style="text-align: left;"><b>4. Accesorios del Equipo: </b> <br> </p>
+<p style="text-align: left;"><b>4. Perifericos del Equipo: </b> <br> </p>
 
 
 <table class="table table-striped text-justify">
@@ -141,16 +141,30 @@ width: 50%;
         <th><b>Serie: </b></th>
     </thead>
     <tbody>
-
-        @for ($i = 0; $i < 5; $i++) <tr>
-            <td width="30px" style="text-align: center">0{{$i+1}}</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+        @if($perifericos->count()>0)
+            @foreach ($perifericos as $periferico)
+                <tr>
+                    <td width="30px" style="text-align: center">{{ $i }}</td>
+                    <td>{{ $periferico->nombre }}</td>
+                    <td>{{ $periferico->marca }}</td>
+                    <td>{{ $periferico->modelo }}</td>
+                    <td>{{ $periferico->serie }}</td>
+                </tr>
+                @php
+                    $i++;
+                @endphp
+            @endforeach
+        @else
+            @for ($i = 0; $i < 5; $i++) 
+            <tr>
+                <td width="30px" style="text-align: center">0{{$i+1}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
-            @endfor
-
+                @endfor
+        @endif
     </tbody>
 </table>
 

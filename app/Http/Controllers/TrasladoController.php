@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Traslado;
 use App\Models\ServicioClinico;
 use App\Models\Equipo;
+use App\Models\TrasladoPeriferico;
 use PDF2;
 use Dompdf\Dompdf;
 use DateTime;
@@ -48,6 +49,7 @@ class TrasladoController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request->get('perifericos')[0]);
         $equipo = explode(' - ', $request->get('equipo'))[0];
         $actual = explode(' - ', $request->get('actual'))[0];
         $destino = explode(' - ', $request->get('destino'))[0];
@@ -59,6 +61,18 @@ class TrasladoController extends Controller
         $traslado->destino = $destino;
         $traslado->equipo = $equipo;
         $traslado->save();
+        if(count($request->get('perifericos'))>0){
+           for($i=0;$i<count($request->get('perifericos'));$i++){
+            $periferico=new TrasladoPeriferico;
+            $periferico->nombre=$request->get('perifericos')[$i];
+            $periferico->marca=$request->get('marcas')[$i];
+            $periferico->modelo=$request->get('modelos')[$i];
+            $periferico->serie=$request->get('series')[$i];
+            $periferico->traslado=$traslado->id;
+            $periferico->save();
+           }
+        }
+        
         return redirect('/traslado')->with('message', 'Acta Creada Satisfactoriamente')->with("status", 'alert alert-success');
     }
 
@@ -120,7 +134,9 @@ class TrasladoController extends Controller
     public function show($id)
     {
         $traslado = Traslado::find($id);
-        $pdf = PDF2::loadView('traslado.acta', compact('traslado'));
+        $perifericos=TrasladoPeriferico::where('traslado',$traslado->id)->get();
+        $i=1;
+        $pdf = PDF2::loadView('traslado.acta', compact('traslado','perifericos','i'));
         return $pdf->inline("AT N°:{$traslado->numero} - {$traslado->Equipo->Familia->nombre} - N° Inv: {$traslado->Equipo->inventario}.pdf");
     }
 

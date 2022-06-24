@@ -236,9 +236,7 @@ class PlanificaController extends Controller
             $planifica->save();
             return redirect('mp/programacion')->with('message','Programacion Eliminada')->with('status','alert alert-warning');   
         }
-
         $programacion=date('Y-m-d',strtotime($request->get('programacion')));
-        
         $equipo=Equipo::find($planifica->equipo);
         $planificado=date('Y-m-d',strtotime($planifica->fechacorte));
         $sinrepro=date('Y-m-d',strtotime($planificado.'+30 days'));
@@ -251,7 +249,7 @@ class PlanificaController extends Controller
             $eq = "Sin";
         if($programacion<$sinrepro){
             $planifica->fechaprogramacion=$programacion;
-            if($request->hasFile('documento'){
+            if($request->hasFile('documento')){
                 if($equipo->inventario!='?'){
                     $carpeta = $_SERVER['DOCUMENT_ROOT'] . '/storage/' . $eq . '/' . $equipo->Familia->nombre . '/' . $equipo->SubFamilia->nombre . '/' . $equipo->inventario . "/";
                     $nombre = $equipo->inventario . '_' . $planificado->format('Y') . '_MP_' . $planificado->format('m') . '_' . $planificado->format('d');
@@ -269,11 +267,9 @@ class PlanificaController extends Controller
                         $file->move($carpeta, $nombre);
                     }
                 }
+                $planifica->save();
+                return redirect('mp/programacion')->with('message','Programacion Actualizada')->with('status','alert alert-success');
             }
-            $planifica->save();
-
-            return redirect('mp/programacion')->with('message','Programacion Actualizada')->with('status','alert alert-success');
-        }
         else
          return redirect('mp/programacion')->with('message','no se registraron cambios')->with('status','alert alert-danger');   
         

@@ -20,7 +20,7 @@ class LicitacionController extends Controller
      */
     public function index()
     {
-        $user=User::find(Auth()->user()->id);
+      
         $licitaciones=Licitacion::all();
         $licitacion=Licitacion::find(18);
         //dd($licitacion->Estados->last()->nombre);
@@ -142,5 +142,45 @@ class LicitacionController extends Controller
         $licitacion=Licitacion::find($id);
         $licitacion->delete();
         return redirect()->back()->with('message','Se ha eliminado la licitacion')->with('status','alert alert-danger');
+    }
+    public function Estados($id){
+        $licitacion=Licitacion::find($id);
+        $estados=EstadosLicitacion::where('nombre','!=','Asignada')->get();
+        //dd($estados);
+        //$licitacion->Estados->last()->nombre 
+        return view('licitacion.estado')->with('licitacion',$licitacion)->with('estados',$estados);
+
+    }
+    public function ChangeEstado($id,Request $request){
+        $estado=EstadosLicitacion::find($request->get('estado'));
+        $licitacion=Licitacion::find($id);
+        $estadoactual= new EstadoLicitacion;
+        if($estado->nombre!="Publicada"){
+            $estadoactual->licitacion=$licitacion->id;
+            $estadoactual->estado=$estado->id;
+            $estadoactual->comentario=$request->get('comentario');
+            $estadoactual->save();
+            return redirect()->back()->with('message','Estado actualizado')->with('status','alert alert-success');
+        }
+        else{
+            $licitacion->id_mercadopublico=$request->get('idmp');
+            $licitacion->url_mercadopublico=$request->get('linkmp');
+            $licitacion->save();
+            $estadoactual->licitacion=$licitacion->id;
+            $estadoactual->estado=$estado->id;
+            $estadoactual->comentario=$request->get('comentario');
+            $estadoactual->save();
+            return redirect()->back()->with('message','Estado actualizado')->with('status','alert alert-success');
+               
+        }
+       
+
+    }
+
+    public function Licitador()
+    {
+        $user=User::find(Auth()->user()->id);
+        $licitaciones=Licitacion::where('licitador',$user->id)->get();
+        return view('licitacion.licitador')->with('licitaciones',$licitaciones);
     }
 }

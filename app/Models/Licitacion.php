@@ -23,5 +23,5 @@ class Licitacion extends Model
     {
         return $this->belongsToMany('App\Models\EstadosLicitacion','estado_licitacion','licitacion','estado')->withPivot('comentario','created_at','updated_at');
     }
-
+    
 }

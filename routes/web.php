@@ -14,22 +14,16 @@ use Illuminate\Support\Facades\Mail;
 | contains the "web" middleware group. Now create something great!
 */
 Auth::routes();
+
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
 Route::get('/', function () {
     return view('auth.login');
 });
 
-//Route::get('/home', function () {
- //   return view('home');
-//});
-Route::get('licitaciones/', function () {
-    return view('licitaciones.index');
-});
-Route::get('licitaciones/demo', function () {
-    return view('licitaciones.demo');
-});
 Route::get('home','App\Http\Controllers\DashBoardController@index');
-
-
 
 Route::get('/equipo/rtls/{id}',[
     'uses'  =>'App\Http\Controllers\EquipoController@rtls',
@@ -96,6 +90,7 @@ Route::get('equipoconvenio/{id}/create',[
         'uses'  =>  'App\Http\Controllers\EquiposConveniosController@create',
         'as'    =>  'equipoconvenio.create'
         ]);
+//Dar de Baja un convenio
 Route::get('convenio/{id}/baja',[
     'uses'  =>  'App\Http\Controllers\ConveniosController@baja',
     'as'    => 'convenio.baja'
@@ -129,7 +124,7 @@ Route::get('pagos/{id}/pdf',[
 /*MANTENIMIENTO PREVENTIVO*/
 Route::resource('planifica','App\Http\Controllers\PlanificaController');
 // Programar MP 
-route::post('mp/{id}/programa',[
+route::Post('mp/{id}/programa',[
     'uses'  =>  'App\Http\Controllers\PlanificaController@ProgramaMP',
     'as'    =>'mp.programamp'
 ]);
@@ -139,7 +134,7 @@ Route::get('/planifica/programa/',[
     'as'    =>'planifica.programa'
     ]);
 //Editar Planificacion
-route::post('mp/{id}/planifica',[
+route::Post('mp/{id}/planifica',[
     'uses'  =>  'App\Http\Controllers\PlanificaController@PlanificaMP',
     'as'    =>'mp.planificamp'
 ]);
@@ -248,11 +243,6 @@ Route::Post('/user/{id}/dependencia',[
 route::resource('sc','App\Http\Controllers\SolicitudCompraController');
 route::resource('producto','App\Http\Controllers\ProductoController');
 route::resource('establecimiento','App\Http\Controllers\EstablecimientoController');
-
-
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
 Route::get('servicio-tecnico',function(){
     return view('servicio-tecnico.index');
 });
@@ -270,6 +260,22 @@ route::resource('minsalfactura','App\Http\Controllers\MinsalFacturaController', 
 
 
 /*MODULO LOGISTICA*/ 
+
+Route::get('licitacion/{id}/estado',[
+    'uses'  =>  'App\Http\Controllers\LicitacionController@Estados',
+    'as'    =>  'licitacion.estados'
+    ]);
+Route::Post('/licitacion/{id}/cambioestado',[
+    'uses'  =>'App\Http\Controllers\LicitacionController@ChangeEstado',
+    'as'    =>'licitacion.cambio.estado'
+]);
+Route::get('licitacion/licitador/',[
+    'uses'  =>  'App\Http\Controllers\LicitacionController@Licitador',
+    'as'    =>  'licitacion.licitador'
+    ]);
 route::resource('estadolicitacion','App\Http\Controllers\EstadoLicitacionController');
 route::resource('categorialicitacion','App\Http\Controllers\CategoriaLicitacionController');
 route::resource('licitacion','App\Http\Controllers\LicitacionController');
+
+
+

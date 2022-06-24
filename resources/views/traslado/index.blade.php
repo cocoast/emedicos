@@ -16,7 +16,7 @@
     @endif  
 </div>
 @can('equipo.create')
-<a href="{{route('traslado.create') }}" class="btn btn-primary"> Generar Traslado</a>
+<button data-path="{{route('traslado.create') }}" type="button" class="btn btn-primary openBtn"> Generar Traslado</button>
 @endcan
 <div class="container-fluid">
     <table id="trasladostable" class="table table-striped table-hover mt-4" style="width:100%">
@@ -90,17 +90,6 @@
         </div>
       </div>
     </div>
-
-
-
-
-
-
-
-
-
-
-
 
 @stop
 

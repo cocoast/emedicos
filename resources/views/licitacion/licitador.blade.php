@@ -16,10 +16,6 @@
    @endif 
 </div>
 
-<div class="container">
-<!-- Trigger the modal with a button -->
-<button type="button" data-path="{{route('licitacion.create') }}" class="btn btn-primary openBtn"><i class="bi bi-file-plus"></i> Generar</button>
-</div>
 <div class="card">
   <div class="card-header">
     <h3 class="card-title">Filtros de la Tabla</h3>
@@ -49,8 +45,6 @@
         <th scope="col">Presupuesto</th>
         <th scope="col">Categoria</th>
         <th scope="col">Cambio Estado</th>
-        @can('licitacion.edit')<th scope="col">Edit</th>@endcan
-        @can('licitacion.destroy')<th scope="col">Del</th>@endcan
 	</tr>
 	</thead>
 	<tbody>
@@ -60,27 +54,13 @@
       <td>{{ $licitacion->Estados->last()->nombre }}</td>
       <td>{{ $licitacion->Licitador->name }}</td>
       <td>{{ $licitacion->nombre }}</td>
-      <td><a href="{{ $licitacion->url_mercadopublico }}" target="_blank">{{ $licitacion->id_mercadopublico }}</a></td>
+      <td>{{ $licitacion->id_mercadopublico }}</td>
       <td>{{ $licitacion->Servicio->nombre }}</td>
       <td>{{ NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($licitacion->presupuesto) }}</td>
       <td>{{ $licitacion->Categoria->nombre }}</td>
       <td>
             <!-- Trigger the modal with a button -->
         <button type="button" data-path="{{route('licitacion.estados',$licitacion->id) }}" class="btn btn-info btn-sm openBtn">Actualizar Estado</button>
-      </td>
-      @can('licitacion.edit')<td>
-         <!-- Trigger the modal with a button -->
-        <button type="button" data-path="{{route('licitacion.edit',$licitacion->id ) }}" class="btn btn-info btn-sm openBtn"><i class="bi bi-pencil"></i> Editar</button>
-      </td>
-      @endcan
-       @can('licitacion.destroy')<td>
-        <form action="{{route('licitacion.destroy',$licitacion->id)}}" method="POST">
-        @csrf
-        @method('DELETE')
-        <button class="btn btn-danger" type="submit" onClick="javascript: return confirm('¿Estas seguro?');"><i class="bi bi-trash"></i>Eliminar</button>
-        </form>
-      </td>
-      @endcan
     </tr>
     @endforeach
 	</tbody>
