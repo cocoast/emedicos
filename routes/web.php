@@ -99,6 +99,7 @@ Route::Put('convenio/{id}/darbaja',[
     'uses'  =>  'App\Http\Controllers\ConveniosController@darBaja',
     'as'    => 'convenio.debaja'
 ]);
+//
 
 //PAGOS
 route::resource('pagos','App\Http\Controllers\PagosController', ['except' => ['create']]);
@@ -221,14 +222,6 @@ Route::get('search/ssalud',[
 
 
 /* ROLES PERMISOS Y DEPENDENCIAS*/
-route::resource('user','App\Http\Controllers\UserController');
-route::resource('role','App\Http\Controllers\RoleController');
-route::resource('permiso','App\Http\Controllers\PermissionControler');
-route::resource('principal','App\Http\Controllers\DashBoardController');
-Route::delete('user/delete/{id}',[
-    'uses'  =>'App\Http\Controllers\UserController@delete',
-    'as'    =>'user.delete'
-]);
 Route::get('/user/{id}/dependencia',[
     'uses'  =>'App\Http\Controllers\UserController@GoDependencia',
     'as'    =>'user.dependencia'
@@ -237,6 +230,15 @@ Route::Post('/user/{id}/dependencia',[
     'uses'  =>'App\Http\Controllers\UserController@Dependencia',
     'as'    =>'user.checkdependencia'
 ]);
+route::resource('user','App\Http\Controllers\UserController');
+route::resource('role','App\Http\Controllers\RoleController');
+route::resource('permiso','App\Http\Controllers\PermissionControler');
+route::resource('principal','App\Http\Controllers\DashBoardController');
+Route::delete('user/delete/{id}',[
+    'uses'  =>'App\Http\Controllers\UserController@delete',
+    'as'    =>'user.delete'
+]);
+
 
 
 /*OTROS MODULOS NO IMPLEMENTADOS*/

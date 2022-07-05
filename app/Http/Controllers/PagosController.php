@@ -57,7 +57,7 @@ class PagosController extends Controller
         if($convenio->tipoconvenio=="Correctivo"){
         $pago = new Pago();
         $hoy = new DateTime();
-        $fecha = $hoy->format('d-m-Y');
+        $fecha = $hoy;
         $pago->fecha = $fecha;
         $pago->periodo = $periodo + 1;
         $pago->memo = "ingresar";

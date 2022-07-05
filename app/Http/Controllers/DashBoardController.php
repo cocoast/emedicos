@@ -25,10 +25,12 @@ use App\Models\Sigfe;
 use App\Models\MinsalConvenio;
 use App\Models\MinsalFactura;
 use App\Models\Licitacion;
+use App\Traits\TraitsConvenio;
 
 
 class DashBoardController extends Controller
 {
+    use TraitsConvenio;
     /**
      * Display a listing of the resource.
      *
@@ -46,7 +48,9 @@ class DashBoardController extends Controller
         }
         else
             if($user->getRoleNames()[0]=="Licitador"){
-                return $this->DashLicitaciones();
+                $user=User::find(Auth()->user()->id);
+                $licitaciones=Licitacion::where('licitador',$user->id)->get();
+                return view('licitacion.licitador')->with('licitaciones',$licitaciones);
             }
         else
         if($user->getRoleNames()[0]=='InfoMinsal' && !$user->Dependence){
@@ -176,153 +180,12 @@ class DashBoardController extends Controller
                     ->orderBy('fecha','ASC')
                     ->get();
        
-        $mantenciones=$this->Mantenciones($year);
+    
                   
-        return view("dashboard.index")->with('preventivo',$preventivo)->with("arriendos",$arriendos)->with("correctivos",$correctivos)->with("data", $cantidadequipos)->with('garantias',$garantias)->with('realizados',$realizados)->with('porvencer',$porvencer)->with('hoy',$hoy)->with('vencido',$vencido)->with('mp',$mp)->with('mantenciones',json_encode($mantenciones));
+        return view("dashboard.index")->with('preventivo',$preventivo)->with("arriendos",$arriendos)->with("correctivos",$correctivos)->with("data", $cantidadequipos)->with('garantias',$garantias)->with('realizados',$realizados)->with('porvencer',$porvencer)->with('hoy',$hoy)->with('vencido',$vencido)->with('mp',$mp);
     }
 
-    public function ConveniosMantenimiento(){
-        $fecha=new DateTime();
-        $year=$fecha->format('Y');
-        $preventivos=Convenio::where('tipoconvenio','Mantenimiento')->get();
-        $conmantt=Convenio::where('tipoconvenio','Mantenimiento')->where('fechafin','>',$fecha)->count();
-        $totalanual=0;
-        $totalpagado=0;
-        $totalsaldo=0;
-        $equipos=0;
-         foreach($preventivos as $preventivo){
-            $equipos+=EquipoConvenio::where('convenio',$preventivo->id)->count();
-            $pagos=Pago::where('convenio','=',$preventivo->id)->where('fecha','LIKE',$year.'%')->get();
-            //dd($pagos);
-            foreach($pagos as $pago){
-                if($pago->valor!="ingresar"){
-                $totalanual=$totalanual+$pago->valor;
-                $totalpagado=$totalpagado+$pago->valor;
-                }
-            else{
-                $pa=$preventivo->meses/$preventivo->frecuenciapago;
-                $couta=EquipoConvenio::where('convenio',$pago->convenio)->sum('valor')/$pa;
-                //dd($couta);
-                $totalanual=$totalanual+$couta;
-                $totalsaldo=$totalsaldo+$couta;
-                }
-            }
-        }
-        $arr="";
-        $arr=   [
-            "total"    =>  $totalanual,
-            "pagado"   =>  $totalpagado,
-            "cantidad" =>  $conmantt,
-            "equipos"  =>  $equipos
-             ];
-        return $arr;
-}
-    public function ConveniosArriendo(){
-        $fecha=new DateTime();
-        $year=$fecha->format('Y');
-        
-        $arriendos=Convenio::where('tipoconvenio','Arriendo')->get();
-        $donacion=Convenio::where('tipoconvenio','Arriendo con Donacion')->get();
-        $arrtotal=Convenio::where('tipoconvenio','Arriendo')->where('fechafin','>',$fecha)->count()+Convenio::where('tipoconvenio','Arriendo con Donacion')->where('fechafin','>',$fecha)->count();
-        $arrdon=Convenio::where('tipoconvenio','Arriendo con Donacion')->where('fechafin','>',$fecha)->count();
-        $arrcount=Convenio::where('tipoconvenio','Arriendo')->where('fechafin','>',$fecha)->count();
-        $totalanualarriendo=0;
-        $totalpagadoarriendo=0;
-        $totalsaldoarriendo=0;
-        $totalanualdonacion=0;
-        $totalpagadodonacion=0;
-        $totalsaldodonacion=0;
-         $equipos=0;
-        foreach($donacion as $don){
-             $equipos+=EquipoConvenio::where('convenio',$don->id)->count();
-            $pagos=Pago::where('convenio','=',$don->id)->where('fecha','LIKE',$year.'%')->get();
-            foreach($pagos as $pago){
-                if($pago->valor!="ingresar"){
-                $totalanualdonacion=(int)$totalanualdonacion+(int)$pago->valor;
-                $totalpagadodonacion=(int)$totalpagadodonacion+(int)$pago->valor;
-                }
-            else{
-                $pa=$don->meses/$don->frecuenciapago;
-                $couta=EquipoConvenio::where('convenio',$pago->convenio)->sum('valor')/$pa;
-                //dd($couta);
-                $totalanualdonacion=$totalanualdonacion+$couta;
-                $totalsaldodonacion=$totalsaldodonacion+$couta;
-                }
-            }
-        }
-         foreach($arriendos as $preventivo){
-             $equipos+=EquipoConvenio::where('convenio',$preventivo->id)->count();
-            $pagos=Pago::where('convenio','=',$preventivo->id)->where('fecha','LIKE',$year.'%')->get();
-            //dd($pagos);
-            foreach($pagos as $pago){
-                if($pago->valor!="ingresar"){
-                $totalanualarriendo=$totalanualarriendo+$pago->valor;
-                $totalpagadoarriendo=$totalpagadoarriendo+$pago->valor;
-                }
-            else{
-                $pa=$preventivo->meses/$preventivo->frecuenciapago;
-                $couta=EquipoConvenio::where('convenio',$pago->convenio)->sum('valor')/$pa;
-                //dd($couta);
-                $totalanualarriendo=$totalanualarriendo+$couta;
-                $totalsaldoarriendo=$totalsaldoarriendo+$couta;
-                }
-            }
-        }
-            $totalanual=$totalanualarriendo+$totalanualdonacion;
-            $totalpagado=$totalpagadoarriendo+$totalpagadodonacion;
-            $totalsaldo=$totalsaldoarriendo+$totalsaldodonacion;
-
-        $arr="";
-        $arr=   [
-            "total"        =>  $totalanual,
-            "pagado"       =>  $totalpagado,
-            "saldo"        =>  $totalsaldo,
-            "equipos"      =>  $equipos,
-            "cantidad"     =>  $arrtotal,
-            "tarriendo"    =>  $totalanualarriendo,
-            "parriendo"    =>  $totalpagadoarriendo,
-            "sarriendo"    =>  $totalsaldoarriendo,
-            "cantarrie"    =>  $arrcount,
-            "tdonacion"    =>  $totalanualdonacion,
-            "pdonacion"    =>  $totalpagadodonacion,
-            "sdonacion"    =>  $totalpagadodonacion,
-            "cantdon"      =>  $arrdon 
-                ];
-        return $arr;
-    }
-
-    public function ConveniosCorrectivos(){
-        $fecha=new DateTime();
-        $year=$fecha->format('Y');
-        $hoy=date('Y-m-d');
-        $correc=Convenio::where('tipoconvenio','Correctivo')->whereYear('fechafin','>',$year)->count();
-        $tcorrec=0;
-        $tvalor=0;
-        $correctivos=Convenio::where('tipoconvenio','Correctivo')->whereYear('fechafin','>',$year)->get();
-         foreach($correctivos as $correctivo){
-            //dd($correctivo);
-            $pagos=Pago::where('convenio',$correctivo->id)->where('estado','Generado')->get();
-            $tvalor+=$correctivo->valor;
-         
-                foreach($pagos as $pago){
-                    if(is_numeric($pago->valor)){
-                        $valor=$pago->valor;
-                    }
-                    else
-                        $valor=0;
-                    //dd($valor);
-                    $tcorrec+=$valor;
-                }
-            }
-        $arr="";
-        $arr=   [
-            "pagado"       =>  $tcorrec,
-            "total"         =>  $tvalor,
-            "cantidad"     =>  $correc
-                ];
-        return $arr;
-
-    }
+    
 
     public function EquiposMedicos(){
         $critico=Equipo::where("eq","Critico")->count();
@@ -330,11 +193,6 @@ class DashBoardController extends Controller
         $sineq=Equipo::where("eq","Sin")->count();
         $total=$critico+$relevante+$sineq;
         $arr=[$critico,$relevante,$sineq];
-        /*$arr=[
-            array('name'  =>  'critico'   ,   'y' =>  $critico),
-            array('name'  =>  'relevante' ,   'y' =>  $relevante),
-            array('name'  =>  'sineq'     ,   'y' =>  $sineq)
-        ];*/
         return $arr;
     }
     public function Garantias(){
@@ -389,6 +247,8 @@ class DashBoardController extends Controller
             $mp[$mes]['externo_planificado']=Planificamp::whereYear('fechacorte',$year)->where('tipomp','!=','interna')->whereMonth('fechacorte',$i)->count();
             $mp[$mes]['interno_ejecutado']=Planificamp::whereYear('fechacorte',$year)->where('tipomp','interna')->whereMonth('fechacorte',$i)->where('fechaprogramacion','!=','null')->count();
             $mp[$mes]['externo_ejecutado']=Planificamp::whereYear('fechacorte',$year)->where('tipomp','!=','interna')->whereMonth('fechacorte',$i)->where('fechaprogramacion','!=','null')->count();
+            $mp[$mes]['2.1']=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte',$i)->join('equipos','equipos.id','=','planificamps.equipo')->where('equipos.eq','=','Critico')->count();
+            $mp[$mes]['2.2']=Planificamp::whereYear('fechacorte',$year)->whereMonth('fechacorte',$i)->join('equipos','equipos.id','=','planificamps.equipo')->where('equipos.eq','=','Relevante')->count();
             $i++;
         }
          return $mp;

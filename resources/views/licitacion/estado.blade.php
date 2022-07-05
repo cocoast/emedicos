@@ -31,7 +31,7 @@
 			<small id="presupuestoHelp" class="form-text text-muted">Ingrese Comentario</small>
 		</div>
 	</div>
-	<div class="row" >
+	<div class="row" id="datos" >
 		<div class="col" id="idmp">
 			
 		</div>
@@ -61,6 +61,10 @@
   		estado=document.getElementById('estado').value;
   		
   		if(estado=="3"){
+  			var div = document.getElementById('idmp');
+			while (div.firstChild) {
+    		div.removeChild(div.firstChild);
+			}
   			const idmp=document.createElement("input");
   			const lidmp=document.createElement("label");
   			const linkmp=document.createElement("input");
@@ -71,18 +75,43 @@
   			idmp.setAttribute('type',"text");
   			idmp.setAttribute('class',"form-control");
   			idmp.setAttribute('name',"idmp");
+  			idmp.required=true;
 
   			llinkmp.setAttribute('class','form-label');
   			llinkmp.textContent="Ingrese Link de Mercado Publico";
   			linkmp.setAttribute('type',"text");
   			linkmp.setAttribute('class',"form-control");
   			linkmp.setAttribute('name',"linkmp");
+  			linkmp.required=true;
   			
   			document.getElementById("idmp").appendChild(lidmp);
   			document.getElementById("idmp").appendChild(idmp);
 
   			document.getElementById("linkmp").appendChild(llinkmp);
   			document.getElementById("linkmp").appendChild(linkmp);
+  		}
+  		if(estado=="2"){
+  			var div = document.getElementById('idmp');
+			while (div.firstChild) {
+    		div.removeChild(div.firstChild);
+			}
+			var div = document.getElementById('linkmp');
+			while (div.firstChild) {
+    		div.removeChild(div.firstChild);
+			}
+  			const name=document.createElement("input");
+  			const lname=document.createElement("label");
+  			
+
+  			lname.setAttribute('class','form-label');
+  			lname.textContent="Nombre de la Licitación";
+  			name.setAttribute('type',"text");
+  			name.setAttribute('class',"form-control");
+  			name.setAttribute('name',"nombre");
+  			name.required=true;
+  			
+  			document.getElementById("idmp").appendChild(lname);
+  			document.getElementById("idmp").appendChild(name);
   		}
 
   	}

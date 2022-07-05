@@ -6,101 +6,92 @@
 @section('content_top_nav_left')
 <div class="text-center"><h3>Listado de Convenios</h3></div>
 @endsection
-<div class="d-flex justify-content-center">
-    <div class="col">
-        <div class="card text-white bg-primary mb-3">
-            <div class="card-body">
-                <p> <strong> Presupuesto Anual Total:</strong> {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format(($totalanualpreventivo+$totalanualarriendo))}}</p>
+<div class="row align-items-start">
+   <div class="col w-25">
+        <div class="info-box bg-red">
+          <span class="info-box-icon"><i class="bi bi-wallet2"></i></span>
+          <div class="info-box-content">
+            <span class="info-box-text">Convenios de Mantenimiento Activos ({{$preventivos["cantidad"]}})</span>
+            <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($preventivos["pagado"])}}</span>
+            <div class="progress">
+                <div class="progress-bar" style="width: @if($preventivos["pagado"]==0) 0; @else{{  ($preventivos["pagado"]/$preventivos["total"])*100}}@endif%"></div>
             </div>
-        </div>        
-    </div>
-    
-    <div class="col">
-        <div class="card text-white bg-primary mb-3">
-            <div class="card-body">
-                <p><strong>Presupuesto Anual Total Ejecutado:</strong> {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format(($totalpagado+$totalpagadoarriendo+$tcorrec))}}</p>
-            </div>
-        </div>       
-    </div>
-</div>
-   <div class="row align-items-start">
-    <div class="col">
-               <!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-red">
-  <span class="info-box-icon"><i class="bi bi-gear-wide"></i></span>
-  <div class="info-box-content">
-    <span class="info-box-text">Convenios de Mantenimiento ({{$conmantt}})</span>
-    <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($totalpagado)}}</span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class="progress-bar" style="width: @if($totalanualpreventivo==0)0 @else{{ ($totalpagado/$totalanualpreventivo)*100 }}@endif%"></div>
-    </div>
-    <span class="progress-description">
-     @if($totalanualpreventivo==0)0 @else {{ substr(($totalpagado/$totalanualpreventivo)*100,0,4) }} @endif % de un total de {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($totalanualpreventivo)}}
-    </span>
-  </div>
-  <!-- /.info-box-content -->
-</div>
-<!-- /.info-box -->
-</div>
-<div class="col">
-                   <!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-green">
-  <span class="info-box-icon"><i class="bi bi-wallet2"></i></span>
-  <div class="info-box-content">
-    <span class="info-box-text">Convenios de Arriendo ({{$arr}})</span>
-    <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($totalpagadoarriendo)}}</span>
-    <!-- The progress section is optional -->
-    <div class="progress">
-      <div class ="progress-bar" style="width: @if($totalanualarriendo==0) 0 @else {{ ($totalpagadoarriendo/$totalanualarriendo)*100 }} @endif %"></div>
-    </div>
-    <span class="progress-description">
-     @if($totalanualarriendo==0) 0 @else {{ substr(($totalpagadoarriendo/$totalanualarriendo)*100,0,4) }} @endif% de un total de {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($totalanualarriendo)}}
-    </span>
-  </div>
-  <!-- /.info-box-content -->
-</div>
-<!-- /.info-box -->
-</div>
-<div class="col">
-                   <!-- Apply any bg-* class to to the info-box to color it -->
-<div class="info-box bg-orange">
-  <span class="info-box-icon"><i class="bi bi-plug"></i></span>
-  <div class="info-box-content">
-    <span class="info-box-text">Convenios  Correctivo ({{$correc}})</span>
-    <span class="info-box-number">Utilizado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($tcorrec)}}</span>
-    <span class="progress-description">
-     
-    </span>
-  </div>
-  <!-- /.info-box-content -->
-</div>
-<!-- /.info-box -->
-</div>
+            <span class="progress-description">
+              @if($preventivos["total"]==0) 0 @else {{ substr((  $preventivos["pagado"]/$preventivos["total"])*100,0,4) }} @endif% de: {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($preventivos["total"])}}
+             Equipos: {{ $preventivos["equipos"] }}
+            </span>
+          </div>
+        </div>
     </div>
 
-   <div class="container-fluid">
+    <div class="col w-25">
+        <div class="info-box bg-green">
+            <span class="info-box-icon"><i class="bi bi-wallet2"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Convenios de Arriendo({{$arriendos["cantidad"]}})</span>
+                <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($arriendos["pagado"])}}</span>
+                <div class="progress">
+                  <div class="progress-bar" style="width: @if($arriendos["pagado"]==0) 0; @else{{  ($arriendos["pagado"]/$arriendos["total"])*100}}@endif%"></div>
+                </div>
+                <span class="progress-description">
+                @if ($arriendos["pagado"]==0) 0;  @else {{ substr(($arriendos["pagado"]/$arriendos["total"])*100,0,4) }}@endif % de: {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($arriendos["total"])}}
+                Equipos: {{ $arriendos["equipos"] }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col w-25">           
+        <div class="info-box bg-orange">
+            <span class="info-box-icon"><i class="bi bi-wallet2"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Convenios Correctivos({{$correctivos["cantidad"]}})</span>
+                <span class="info-box-number">Pagado {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($correctivos["pagado"])}}</span>
+                <div class="progress">
+                    <div class="progress-bar" style="width: @if($correctivos["pagado"]==0) 0; @else{{  ($correctivos["pagado"]/$correctivos["total"])*100}}@endif%"></div>
+                </div>
+                <span class="progress-description">
+                @if ($correctivos["total"]==0) 0 @else {{ substr(($correctivos["pagado"]/$correctivos["total"])*100,0,4) }}% de un total de {{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY )->format($correctivos["total"])}}@endif
+                </span>
+            </div>
+        </div>
+    </div>
+</div>       
+@stop
+@section('content')
+ <div class="container-fluid">
         <div class="row">
             <div class="col">
-                <a href="{{route('convenios.seguimiento')}}" target="_blank" class="btn btn-warning btn-sm" ><i class="bi bi-eyeglasses"></i> Seguimiento de OC </a>
+                <a href="{{route('convenios.seguimiento')}}" target="_blank" class="btn btn-warning " ><i class="bi bi-eyeglasses"></i> Seguimiento de OC </a>
             </div>
             <div class="col">
-                <a href="{{route('convenios.seguimientomemos')}}" target="_blank" class="btn btn-warning btn-sm" ><i class="bi bi-eyeglasses"></i> Seguimiento de Memos </a>
+                <a href="{{route('convenios.seguimientomemos')}}" target="_blank" class="btn btn-warning " ><i class="bi bi-eyeglasses"></i> Seguimiento de Memos </a>
             </div>
             <div class="col">
                 @can('convenio.create')
-                <a href="{{route('convenio.create')}}" target="_blank" class="btn btn-primary btn-sm"><i class="bi bi-file-plus"></i> Agregar Convenio</a>
+                <a href="{{route('convenio.create')}}" target="_blank" class="btn btn-primary"><i class="bi bi-file-plus"></i> Agregar Convenio</a>
                 @endcan
             </div>
             <div class="col">
-                <a href="{{ route('convenio.trazadoras') }}" class="btn btn-info"> trazadoras</a>
+                <form action="{{ route('convenio.trazadoras') }}" method="get" class="row g-3">
+                    @csrf
+                    <div class="col-auto">
+                        <label for="select" class="form-label"> Trazadoras</label>
+                    <select name="year" id="year" class="form-control">
+                        <option value="">Seleccione año</option>
+                        <option value="2019"> 2019</option>
+                        <option value="2020"> 2020</option>
+                        <option value="2021"> 2021</option>
+                        <option value="2022"> 2022</option>
+                    </select>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-sm btn-primary"> Buscar</button>
+                    </div>
+                </form>
             </div>
-            
         </div>
     </div>
-@stop
-@section('content')
- 
 
 <div class="container-fluid ">
   
@@ -109,19 +100,20 @@
 	<tr>
       <th scope="col">Estado</th>
       <th scope="col">ID</th>
-      <th scope="col">NOMBRE</th>
-      <th scope="col">LICITACION</th>
-      <th scope="col">SOLICITUD</th>
-      <th scope="col">RESOLUCION</th>
-      <th scope="col">FECHA RESOLUCION</th>
-      <th scope="col">INICIO</th>
-      <th scope="col">FIN</th>
-      <th scope="col">MESES</th>
-      <th scope="col">FRECUENCIA</th>
-      <th scope="col">VALOR</th>
-      <th scope="col">TIPO </th>
-      <th scope="col">PROVEEDOR</th>
-      <th>Cantidad</th>
+      <th scope="col">Nombre</th>
+      <th scope="col">Licitación</th>
+      <th scope="col">Solicitud</th>
+      <th scope="col">Resolución</th>
+      <th scope="col">Fecha Resolución</th>
+      <th scope="col">Año Vencimiento</th>
+      <th scope="col">Inicio</th>
+      <th scope="col">Fin</th>
+      <th scope="col">Meses</th>
+      <th scope="col">Frecuencia</th>
+      <th scope="col">Valor</th>
+      <th scope="col">Tipo </th>
+      <th scope="col">Proveedor</th>
+      <th>Equipos</th>
       @can('convenio.show')<th scope="col">Ver</th>@endcan
       @can('convenio.edit')<th scope="col">Editar</th>@endcan
       @can('convenio.destroy')<th scope="col">Eliminar</th>@endcan
@@ -146,6 +138,7 @@
       <td>{{$convenio->solicitud}}</td>
       <td>{{$convenio->resolucion}}</td>
       <td>{{$convenio->fecharesolucion}}</td>
+      <td>{{ date('Y',strtotime($convenio->fechafin)) }}</td>
       <td data-order="{{date("Ymd", strtotime($convenio->fechaincio))}}">{{date("d-m-Y", strtotime($convenio->fechaincio))}}</td>
       <td data-order="{{date("Ymd", strtotime($convenio->fechafin))}}">{{date("d-m-Y", strtotime($convenio->fechafin))}}</td>
       <td>{{$convenio->meses}}</td>
@@ -240,7 +233,7 @@
     dom: 'PBfprtip', 
     "columnDefs": [            
             {
-                "targets": [ 0,1,4,5,6   ],
+                "targets": [ 0,1,4,5,6,7  ],
                 "visible": false
             }],
     pageLength: 20,

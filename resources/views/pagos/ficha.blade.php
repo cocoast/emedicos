@@ -294,11 +294,26 @@ vertical-align: middle !important;
                 <td>{{ $equipoconvenio->Equipo->serie }}</td>
                 <td>{{$equipoconvenio->Equipo->Familia->nombre}}</td>
                 <td>{{$equipoconvenio->Equipo->Modelo->modelo}}</td>
+                    @if (strtotime($equipoconvenio->fechaincorporacion)!=strtotime($convenio->fechaincio))
+                 <td>{{date("d-m-Y", strtotime($equipoconvenio->fechaincorporacion))}}</td>   
+                 <td>@php
+                $fin=date('Y-m-d',strtotime($convenio->fechafin));
+                $inicio=date('Y-m-d',strtotime($equipoconvenio->fechaincorporacion));
+                $time1=DateTime::createFromFormat('Y-m-d',$fin);
+                $time2=DateTime::createFromFormat('Y-m-d',$inicio);
+                $delta=$time1->diff($time2); 
+                $deltameses=$delta->format("%m");  
+                $deltaano=$delta->format("%y")*12;
+                $delta=$deltameses+$deltaano; 
+                $periodos=ceil($delta/$convenio->frecuenciapago);
+
+                 @endphp
+                {{ NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY_ACCOUNTING)->format($equipoconvenio->valor/$periodos) }}
+                 </td>   
+                 @else 
                 <td>{{date("d-m-Y", strtotime($equipoconvenio->fechaincorporacion))}}</td>
                 <td>{{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY_ACCOUNTING)->format($equipoconvenio->valor/(($convenio->meses / $convenio->frecuenciapago)))}}</td>
-                <!--
-                    <td>{{NumberFormatter::create( 'es_CL', NumberFormatter::CURRENCY_ACCOUNTING)->format($equipoconvenio->valor/(($convenio->meses / $convenio->frecuenciapago)-($pago->periodo-1)))}}</td>
-                -->
+               @endif
 
             </tr>
             @endif

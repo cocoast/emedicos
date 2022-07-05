@@ -19,7 +19,7 @@
 		<input id="nombre" name="nombre" type="text" value="{{$user->email}}" readonly class="form-control">
 	</div>
 	<div class="col">
-			<label for="" class="form-label">Rol</label>
+			<label for="" class="form-label">Dependencia</label>
 			<select class="form-control" name="dependencia" id="dependencia" required >
 				<option selected disabled>Servicios de Salud</option>
 				@foreach($servicios as $servicio)

@@ -114,6 +114,36 @@
                 <th>{{ $ejecucion['noviembre']['externo_planificado']+$ejecucion['noviembre']['interno_planificado'] }}</th>
                 <th>{{ $ejecucion['diciembre']['externo_planificado']+$ejecucion['diciembre']['interno_planificado'] }}</th>
             </tr>
+             <tr class="table-success">
+                <th >Total Planificado Criticos</th>
+                <th>{{ $ejecucion['enero']['2.1'] }}</th>
+                <th>{{ $ejecucion['febrero']['2.1'] }}</th>
+                <th>{{ $ejecucion['marzo']['2.1'] }}</th>
+                <th>{{ $ejecucion['abril']['2.1'] }}</th>
+                <th>{{ $ejecucion['mayo']['2.1'] }}</th>
+                <th>{{ $ejecucion['junio']['2.1'] }}</th>
+                <th>{{ $ejecucion['julio']['2.1']}}</th>
+                <th>{{ $ejecucion['agosto']['2.1'] }}</th>
+                <th>{{ $ejecucion['septiembre']['2.1'] }}</th>
+                <th>{{ $ejecucion['octubre']['2.1']}}</th>
+                <th>{{ $ejecucion['noviembre']['2.1']}}</th>
+                <th>{{ $ejecucion['diciembre']['2.1'] }}</th>
+            </tr>
+            <tr class="table-success">
+                <th >Total Planificado Relevantes</th>
+                <th>{{ $ejecucion['enero']['2.2'] }}</th>
+                <th>{{ $ejecucion['febrero']['2.2'] }}</th>
+                <th>{{ $ejecucion['marzo']['2.2'] }}</th>
+                <th>{{ $ejecucion['abril']['2.2'] }}</th>
+                <th>{{ $ejecucion['mayo']['2.2'] }}</th>
+                <th>{{ $ejecucion['junio']['2.2'] }}</th>
+                <th>{{ $ejecucion['julio']['2.2']}}</th>
+                <th>{{ $ejecucion['agosto']['2.2'] }}</th>
+                <th>{{ $ejecucion['septiembre']['2.2'] }}</th>
+                <th>{{ $ejecucion['octubre']['2.2']}}</th>
+                <th>{{ $ejecucion['noviembre']['2.2']}}</th>
+                <th>{{ $ejecucion['diciembre']['2.2'] }}</th>
+            </tr>
              <tr>
                 <th>% Cumplimiento</th>
                 <th>{{substr((($ejecucion['enero']['externo_ejecutado']+$ejecucion['enero']['interno_ejecutado'])/ ($ejecucion['enero']['externo_planificado']+$ejecucion['enero']['interno_planificado']))*100,0,4)  }}%</th>

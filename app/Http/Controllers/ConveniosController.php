@@ -10,9 +10,10 @@ use App\Models\Pago;
 use DateTime;
 use DatePeriod;
 use DateInterval;
-
+use App\Traits\TraitsConvenio;
 class ConveniosController extends Controller
 {
+    use TraitsConvenio;
     public function __construct(){
         $this->middleware('can:convenio.index')->only('index');
         $this->middleware('can:convenio.edit')->only('edit','update');
@@ -30,96 +31,13 @@ class ConveniosController extends Controller
         $hoy=date('Y-m-d');
         $fecha=new DateTime();
         $year=$fecha->format('Y');
-        $preventivos=Convenio::where('tipoconvenio','Mantenimiento')->where('fechafin','>',$hoy)->get();
-        $arriendos=Convenio::where('tipoconvenio','Arriendo')->where('fechafin','>',$hoy)->get();
-        $donacion=Convenio::where('tipoconvenio','Arriendo con Donacion')->where('fechafin','>',$hoy)->get();
-        //dd($donacion);
-        $conmantt=Convenio::where('tipoconvenio','Mantenimiento')->where('fechafin','>',$hoy)->count();
-        $arr=   Convenio::where('tipoconvenio','Arriendo')->where('fechafin','>',$hoy)->count()+
-                Convenio::where('tipoconvenio','Arriendo con Donacion')->where('fechafin','>',$hoy)->count();
-        $correc=Convenio::where('tipoconvenio','Correctivo')->where('fechafin','>',$hoy)->count();
-        $totalanualpreventivo=0;
-        $totalpagado=0;
-        $totalsaldo=0;
-        $totalanualarriendo=0;
-        $totalpagadoarriendo=0;
-        $totalsaldoarriendo=0;
-        $totalanualdonacion=0;
-        $totalpagadodonacion=0;
-        $totalsaldodonacion=0;
-        $tcorrec=0;
-        $correctivos=Convenio::where('tipoconvenio','Correctivo')->where('fechafin','>',$hoy)->get();
-         foreach($correctivos as $correctivo){
-            //dd($correctivo);
-            $pagos=Pago::where('convenio',$correctivo->id)->where('fecha','LIKE','%'.$year)->where('estado','Generado')->get();
-            //dd($pagos);
-            foreach($pagos as $pago)
-                if(is_numeric($pago->valor)){
-                    $valor=$pago->valor;
-                }
-                else
-                    $valor=0;
-                $tcorrec=$tcorrec+$valor;
-            }
-            //dd($tcorrec);   
-        foreach($preventivos as $preventivo){
-            $pagos=Pago::where('convenio','=',$preventivo->id)->where('fecha','LIKE',$year.'%')->get();
-            //dd($pagos);
-            foreach($pagos as $pago){
-                if($pago->valor!="ingresar"){
-                $totalanualpreventivo=$totalanualpreventivo+$pago->valor;
-                $totalpagado=$totalpagado+$pago->valor;
-                }
-            else{
-                $pa=$preventivo->meses/$preventivo->frecuenciapago;
-                $couta=EquipoConvenio::where('convenio',$pago->convenio)->sum('valor')/$pa;
-                //dd($couta);
-                $totalanualpreventivo=$totalanualpreventivo+$couta;
-                $totalsaldo=$totalsaldo+$couta;
-                }
-            }
-        }
-        foreach($donacion as $don){
-            $pagos=Pago::where('convenio','=',$don->id)->where('fecha','LIKE',$year.'%')->get();
-            foreach($pagos as $pago){
-                if($pago->valor!="ingresar"){
-                $totalanualdonacion=(int)$totalanualdonacion+(int)$pago->valor;
-                $totalpagadodonacion=(int)$totalpagadodonacion+(int)$pago->valor;
-                }
-            else{
-                $pa=$don->meses/$don->frecuenciapago;
-                $couta=EquipoConvenio::where('convenio',$pago->convenio)->sum('valor')/$pa;
-                //dd($couta);
-                $totalanualdonacion=$totalanualdonacion+$couta;
-                $totalsaldodonacion=$totalsaldodonacion+$couta;
-                }
-            }
-        }
-         foreach($arriendos as $preventivo){
-            $pagos=Pago::where('convenio','=',$preventivo->id)->where('fecha','LIKE',$year.'%')->get();
-            //dd($pagos);
-            foreach($pagos as $pago){
-                if($pago->valor!="ingresar"){
-                $totalanualarriendo=$totalanualarriendo+$pago->valor;
-                $totalpagadoarriendo=$totalpagadoarriendo+$pago->valor;
-                }
-            else{
-                $pa=$preventivo->meses/$preventivo->frecuenciapago;
-                $couta=EquipoConvenio::where('convenio',$pago->convenio)->sum('valor')/$pa;
-                //dd($couta);
-                $totalanualarriendo=$totalanualarriendo+$couta;
-                $totalsaldoarriendo=$totalsaldoarriendo+$couta;
-                }
-            }
-        }
-         
-            
-            $convenios=Convenio::all();
-            $totalanualarriendo=$totalanualarriendo+$totalanualdonacion;
-            $totalpagadoarriendo=$totalpagadoarriendo+$totalpagadodonacion;
-            $totalsaldoarriendo=$totalsaldoarriendo+$totalsaldodonacion;
-            //dd($totalsaldodonacion);
-        return view('convenio.index')->with('convenios',$convenios)->with('totalanualpreventivo',$totalanualpreventivo)->with('totalpagado',$totalpagado)->with('totalsaldo',$totalsaldo)->with('conmantt',$conmantt)->with('arr',$arr)->with('correc',$correc)->with('totalanualarriendo',$totalanualarriendo)->with('totalpagadoarriendo',$totalpagadoarriendo)->with('totalsaldoarriendo',$totalsaldoarriendo)->with('tcorrec',$tcorrec)->with('hoy',$hoy);
+        $preventivos=$this->ConveniosMantenimiento();
+        $arriendos=$this->ConveniosArriendo();
+        $correctivos=$this->ConveniosCorrectivos();
+        $convenios=Convenio::all();
+
+        //dd($correctivos);
+        return view('convenio.index')->with('convenios',$convenios)->with('preventivos',$preventivos)->with('arriendos',$arriendos)->with('correctivos',$correctivos)->with('hoy',date('d-m-Y'));
                                                     
     }
 
@@ -226,6 +144,7 @@ class ConveniosController extends Controller
         $pagospendientes=Pago::where('convenio',$convenio->id)->where('estado','Pendiente')->get();
         $pagosrealizados=Pago::where('convenio',$convenio->id)->where('estado','Generado')->get();
         $gasto=Pago::where('convenio',$convenio->id)->where('estado','Generado')->sum('valor');
+        //dd($gasto);
         $valorequipo=$equiposconvenios->sum('valor');
         $carpeta='storage/convenios/'.$convenio->id."/";
         $res = array();
@@ -417,26 +336,21 @@ class ConveniosController extends Controller
         return redirect('convenio/')->with('funciono');
 
     }
-    public function Trazadoras(){
-        $date=date('d-m-Y',strtotime('01-01-2022'));
-        $year=date('Y');
-        $datos=array();
-        
-         $datos['enero']=0;
-         $datos['febrero']=0;
-         $datos['marzo']=0;
-         $datos['primer']=0;
-        foreach(Convenio::where('tipoconvenio','Mantenimiento')->where('fechafin','>',$date)->get() as $convenio){
-            $datos['enero']+= Pago::where('convenio', $convenio->id)->whereYear('fecha',$year)->whereMonth('fecha','1')->sum('valor');
-            $datos['febrero']+= Pago::where('convenio', $convenio->id)->whereYear('fecha',$year)->whereMonth('fecha','2')->sum('valor');
-            $datos['marzo']+= Pago::where('convenio', $convenio->id)->whereYear('fecha',$year)->whereMonth('fecha','3')->sum('valor');
-
-           
-
-        
-        }
-        $datos['primer']=$datos['enero']+$datos['febrero']+$datos['marzo'];
-       return view('convenio.trazadoras')->with('datos',$datos); 
-
+    public function Trazadoras(Request $request){
+        $year=$request->get('year');
+        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+        $preventivo=$this->GastoPreventivoMensual($year);
+        $correctivo=$this->GastoCorrectivoMensual($year);
+        $arriendo=$this->GastoArriendoMensual($year);
+        $donacion=$this->GastoDonacionMensual($year);
+        $pagos=$this->DesgloceGasto($year);
+        $convenios=Convenio::whereYear('fechaincio','<=',$year)->whereYear('fechafin','>=',$year)->get();
+        $total=0;
+        $mp=0;
+        $mc=0;
+        $arr=0;
+        $don=0;
+        return view('convenio.trazadoras')->with('preventivo',$preventivo)->with('correctivo',$correctivo)->with('donacion',$donacion)->with('arriendo',$arriendo)->with('meses',$meses)->with('total',$total)->with('mp',$mp)->with('mc',$mc)->with('arr',$arr)->with('don',$don)->with('year',$year)->with('convenios',$convenios)->with('pagos',$pagos);
     }
+
 }
