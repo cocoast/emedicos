@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\ServicioClinico;
+use App\Models\Ssalud;
+use App\Models\CentroSalud;
 class ServicioClinico extends Model
 {
     use HasFactory;
@@ -26,4 +28,17 @@ class ServicioClinico extends Model
     public function Licitacion(){
      return $this->hasMany('App\Models\Licitacion', 'servicio');
   } 
+  // relacion Polimorfica
+    public function Unidad(){
+        return $this->morphTo('dependentable');
+    }
+  //relacion uno es a muchos polimorfica para usuario
+    public function dependence(){
+        return $this->morphMany('App\Models\Dependence','Dependencetable','dependencetable_type','dependencetable_id','id');
+    }
+   public function Unidades()
+    {
+        return $this->hasManyThrough(ServicioClinico::class,ServicioClinico::class,'id','dependencetable_id');
+    }
+
 }

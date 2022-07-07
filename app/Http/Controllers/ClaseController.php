@@ -21,6 +21,7 @@ class ClaseController extends Controller
     public function index()
     {
         $clases=Clase::all();
+        dd($clases)
         return view('clase.index')->with('clases',$clases);
     }
 

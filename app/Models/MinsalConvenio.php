@@ -14,7 +14,7 @@ class MinsalConvenio extends Model
         return $this->belongsTo('App\Models\Sigfe','sigfe');
     }
    
-    //relacion uno es a muchos polimorfica
+    //relacion uno es a muchos polimorfica para usuarios
     public function dependencetable(){
         return $this->morphTo();
     }

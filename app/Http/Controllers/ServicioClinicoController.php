@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ServicioClinico;
+use App\Models\Ssalud;
+use App\Models\CentroSalud;
 
 class ServicioClinicoController extends Controller
 {
@@ -21,7 +23,21 @@ class ServicioClinicoController extends Controller
      */
     public function index()
     {
-        $servicioclinicos=ServicioClinico::all();
+        $user=Auth()->user();
+        if($user->Dependence->dependencetable_type=='App\Models\CentroSalud')
+        {
+            $establecimiento=CentroSalud::find($user->Dependence->dependencetable_id);
+            $unidadesEstablecimientos=ServicioClinico::where('dependentable_type','App\Models\CentroSalud')->where('dependentable_id',$user->Dependence->dependencetable_id)->get();
+            dd($unidadesEstablecimientos);
+            $aux="";
+            $total=array();
+            foreach($unidadesEstablecimientos as $unidad)
+                $total[$unidad->id]=$unidad;
+                $aux=ServicioClinico::where('dependentable_type','App\Models\ServicioClinico')->where('dependentable_id',$unidad->id)->get();
+                
+
+        }
+        $servicioclinicos=ServicioClinico::where('dependentable_type',$user->Dependence->dependencetable_type)->where('dependentable_id',$user->Dependence->dependencetable_id)->get();
         return view('servicioclinico.index')->with('servicioclinicos',$servicioclinicos);
     }
 
@@ -32,7 +48,9 @@ class ServicioClinicoController extends Controller
      */
     public function create()
     {
-        return view('servicioclinico.create');
+        $servicios=Ssalud::all();
+        $centros=CentroSalud::all();
+        return view('servicioclinico.create')->with('centros',$centros)->with('servicios',$servicios);
     }
 
     /**
@@ -43,6 +61,8 @@ class ServicioClinicoController extends Controller
      */
     public function store(Request $request)
     {
+        $user=Auth()->user();
+        $dependencia=$user->Dependence;
         $servicioclinico= new ServicioClinico();
         $servicioclinico->nombre=$request->get('nombre');
         $servicioclinico->ubicacion=$request->get('ubicacion');
@@ -50,6 +70,8 @@ class ServicioClinicoController extends Controller
         $servicioclinico->responsable=$request->get('responsable');
         $servicioclinico->cr=$request->get('cr');
         $servicioclinico->anexo=$request->get('anexo');
+        $servicioclinico->dependentable_id=$dependencia->dependencetable_id;
+        $servicioclinico->dependentable_type=$dependencia->dependencetable_type;
         $servicioclinico->save();
          return redirect ('/servicioclinico');
     }

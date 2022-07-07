@@ -22,7 +22,7 @@ class CreatePagosTable extends Migration
             $table->string('oc',50);
             $table->string('valor',20);
             $table->string('link',255);
-            $table->foreignId('convenio')->constrained('convenios')->openal_device_close(device)te('cascade');
+            $table->foreignId('convenio')->constrained('convenios')->onDelete('cascade');
             $table->timestamps();
         });
     }

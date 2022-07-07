@@ -36,7 +36,7 @@
     <th scope="row">{{$user->id}}</th>
         <td>{{$user->name}}</td>
         <td>{{$user->email}}</td>
-        <td><a class="btn btn-info" href="{{ route('user.dependencia',$user->id) }}">@if($user->Dependence){{ $user->Dependence->dependencetable_type::find($user->Dependence->dependencetable_id)->nombre }}@endif</a></td>
+        <td><a class="btn btn-info" href="{{ route('user.dependencia',$user->id) }}">{{ $user->Dependence->Dependencetable->nombre }}</a></td>
         <td><a class="btn btn-info" href="/user/{{$user->id}}/edit ">Roles</a></td>
         <td>@can('user.delete')
             <form action="{{route('user.delete',$user->id)}}" method="POST">

@@ -13,11 +13,16 @@ class Ssalud extends Model
     public function CentroSalud(){
         return $this->hasMany('App\Models\CentroSalud', 'ssalud');
     }
+   //relacion uno es a muchos polimorfica para usuario
     public function dependence(){
-        return $this->morphMany('App\Models\Dependence','dependencetable');
+        return $this->morphMany('App\Models\Dependence','Dependencetable','dependencetable_type','dependencetable_id','id');
     }
-    //relacion 1 a muchos polimorfica
+    //relacion muchos a 1 polimorfica
     public function ConveniosMinsal(){
         return $this->morphMany('App\Models\ConveniosMinsal','dependencetable');
+    }
+   //relacion 1 a muchos polimorfica Servicio Clinico
+    public function Unidad(){
+        return $this->morphMany('App\Models\ServicioClinico','Unidad','dependentable_type','dependentable_id','id');
     }
 }

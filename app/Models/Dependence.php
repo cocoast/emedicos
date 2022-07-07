@@ -10,8 +10,8 @@ class Dependence extends Model
     use HasFactory;
     protected $table='dependences';
     
-    public function dependencetable(){
-        return $this->morphTo();
+    public function Dependencetable(){
+        return $this->morphTo('dependencetable');
     }
 
       public function User(){

@@ -19,9 +19,9 @@ class UserSeeder extends Seeder
     public function run()
     {
         $user=new User;
-        $user->name="The One Above All";
-        $user->email="toaa@coo.sys";
-        $user->password=Hash::make("password");
+        $user->name="Jorge Astudillo";
+        $user->email="jastudillo@ssdr.gob.cl";
+        $user->password=Hash::make("17218726");
         $user->save();
         $rol=Role::where('name','Dios')->first();
         $user->assignRole($rol->id);

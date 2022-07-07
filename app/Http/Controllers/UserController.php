@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Dependence;
 use App\Models\Ssalud;
 use App\Models\CentroSalud;
+use App\Models\ServicioClinico;
 
 
 class UserController extends Controller
@@ -29,6 +30,7 @@ class UserController extends Controller
      */
     public function index()
     {
+       
         $users=User::all();
          return view('user.index')->with('users',$users);
     }
@@ -140,16 +142,31 @@ class UserController extends Controller
 
         $servicios=Ssalud::all();
         $centros=CentroSalud::all();
-        return view('user.dependencia')->with('user',$user)->with('centros',$centros)->with('servicios',$servicios);
+        $unidades=ServicioClinico::all();
+        return view('user.dependencia')->with('user',$user)->with('centros',$centros)->with('servicios',$servicios)->with('unidades',$unidades);
     }
     public function Dependencia(Request $request, $id){
         $user=User::find($id);
 
         $servicio="";
         $centro="";
+        $unidad="";
         if(explode('-',$request->get('dependencia'))[0]=='servicio'){
             $ide=explode('-',$request->get('dependencia'))[1];
             $servicio=Ssalud::find($ide);
+            if(!$user->Dependence)
+                $dependencia=new Dependence;
+                else
+                    $dependencia=Dependence::find($user->Dependence->id);
+            $dependencia->user=$user->id;
+            $dependencia->dependencetable_id=$servicio->id;
+            $dependencia->dependencetable_type=$servicio->getMorphClass();
+            $dependencia->save();
+            return redirect ('/user');
+        }
+         if(explode('-',$request->get('dependencia'))[0]=='unidad'){
+            $ide=explode('-',$request->get('dependencia'))[1];
+            $servicio=ServicioClinico::find($ide);
             if(!$user->Dependence)
                 $dependencia=new Dependence;
                 else

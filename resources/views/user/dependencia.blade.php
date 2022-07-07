@@ -18,16 +18,22 @@
 		<label for="" class="form-label">Correo del Usuario</label>
 		<input id="nombre" name="nombre" type="text" value="{{$user->email}}" readonly class="form-control">
 	</div>
-	<div class="col">
+	<div class="mb-3">
+		<small>{{ $user->Dependence->Dependencetable->nombre }}</small>
 			<label for="" class="form-label">Dependencia</label>
 			<select class="form-control" name="dependencia" id="dependencia" required >
-				<option selected disabled>Servicios de Salud</option>
+				<option selected value=""> Seleccione</option>
+				<option  disabled>Servicios de Salud</option>
 				@foreach($servicios as $servicio)
 				<option value="{{'servicio- '.$servicio->id}}">{{$servicio->nombre}} </option>
 				@endforeach
-				<option selected disabled>Centros de Salud</option>
+				<option  disabled>Centros de Salud</option>
 				@foreach($centros as $centro)
 				<option value="{{'centro-'.$centro->id}}">{{$centro->nombre}} </option>
+				@endforeach
+				<option  disabled>Unidades de Salud</option>
+				@foreach($unidades as $unidad)
+				<option value="{{'unidad-'.$unidad->id}}">{{$unidad->nombre}} </option>
 				@endforeach
 			</select>
 		</div>

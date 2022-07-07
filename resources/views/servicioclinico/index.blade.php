@@ -30,6 +30,7 @@
       <th scope="col">CORREO DEL RESPONSABLE</th>
       <th scope="col">CR</th>
       <th scope="col">Anexo</th>
+      <th scope="col"> Dependencia</th>
       <th scope="col">@can('servicioclinico.edit') FUNCIONES @endcan</th>
 	</tr>
 	</thead>
@@ -43,6 +44,7 @@
       <td>{{$servicioclinico->email_responsable}}</td>
       <td>{{ $servicioclinico->cr }}</td>
       <td>{{ $servicioclinico->anexo }}</td>
+      <td>{{ $servicioclinico->Unidad->nombre }}</td>
       <td>
         @can('servicioclinico.edit') 
       	<form action="{{route('servicioclinico.destroy',$servicioclinico->id)}}" method="POST">

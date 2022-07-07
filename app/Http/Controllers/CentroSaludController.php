@@ -42,6 +42,9 @@ class CentroSaludController extends Controller
                 $centros=CentroSalud::where('ssalud',Auth()->user()->Dependence->dependencetable_id)->get();
                 return view('ssalud.show')->with('centros',$centros)->with('mp',$datos)->with('servicio',$servicio);                
             } 
+            if(Auth()->user()->Dependence->dependencetable_type=='App\Models\CentroSalud'){
+               return  $this->show(Auth()->user()->Dependence->dependencetable_id);
+            }
                 
     }
 
