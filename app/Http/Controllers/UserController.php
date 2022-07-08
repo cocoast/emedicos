@@ -30,9 +30,9 @@ class UserController extends Controller
      */
     public function index()
     {
-       
-        $users=User::all();
-         return view('user.index')->with('users',$users);
+
+       $users=User::all();
+       return view('user.index')->with('users',$users);
     }
 
     /**
@@ -42,8 +42,11 @@ class UserController extends Controller
      */
     public function create()
     {
+
      $roles=Role::all();
-     return view ('user.create')->with('roles',$roles);
+     $servicios=Ssalud::all();
+     $establecimientos=CentroSalud::all();
+     return view ('user.create')->with('roles',$roles)->with('servicios',$servicios)->with('establecimientos',$establecimientos);
     }
 
     /**
@@ -143,6 +146,7 @@ class UserController extends Controller
         $servicios=Ssalud::all();
         $centros=CentroSalud::all();
         $unidades=ServicioClinico::all();
+       
         return view('user.dependencia')->with('user',$user)->with('centros',$centros)->with('servicios',$servicios)->with('unidades',$unidades);
     }
     public function Dependencia(Request $request, $id){

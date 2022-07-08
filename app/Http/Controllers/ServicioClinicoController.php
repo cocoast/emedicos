@@ -24,20 +24,8 @@ class ServicioClinicoController extends Controller
     public function index()
     {
         $user=Auth()->user();
-        if($user->Dependence->dependencetable_type=='App\Models\CentroSalud')
-        {
-            $establecimiento=CentroSalud::find($user->Dependence->dependencetable_id);
-            $unidadesEstablecimientos=ServicioClinico::where('dependentable_type','App\Models\CentroSalud')->where('dependentable_id',$user->Dependence->dependencetable_id)->get();
-            dd($unidadesEstablecimientos);
-            $aux="";
-            $total=array();
-            foreach($unidadesEstablecimientos as $unidad)
-                $total[$unidad->id]=$unidad;
-                $aux=ServicioClinico::where('dependentable_type','App\Models\ServicioClinico')->where('dependentable_id',$unidad->id)->get();
-                
-
-        }
-        $servicioclinicos=ServicioClinico::where('dependentable_type',$user->Dependence->dependencetable_type)->where('dependentable_id',$user->Dependence->dependencetable_id)->get();
+        dd($user->Dependence);
+        $servicioclinicos=ServicioClinico::all();
         return view('servicioclinico.index')->with('servicioclinicos',$servicioclinicos);
     }
 
@@ -48,9 +36,11 @@ class ServicioClinicoController extends Controller
      */
     public function create()
     {
-        $servicios=Ssalud::all();
-        $centros=CentroSalud::all();
-        return view('servicioclinico.create')->with('centros',$centros)->with('servicios',$servicios);
+        if(Auth()->user()->Dependence->dependencetable_type=='App\Models\CentroSalud'){
+            $centro=CentroSalud::fin(Auth()->user()->Dependence->dependencetable_id);
+            return view('servicioclinico.create')->with('centro',$centro);
+        }
+    
     }
 
     /**
@@ -72,6 +62,14 @@ class ServicioClinicoController extends Controller
         $servicioclinico->anexo=$request->get('anexo');
         $servicioclinico->dependentable_id=$dependencia->dependencetable_id;
         $servicioclinico->dependentable_type=$dependencia->dependencetable_type;
+        if($dependencia->dependencetable_type=='App\Models\CentroSalud')
+            $establecimiento=$dependencia->dependencetable_id;
+        else
+            if($dependencia->dependencetable_type=='App\Models\Ssalud')
+                $establecimiento=$dependencia->dependencetable_id;
+            else
+                while($dependencia->dependencetable_type!='App\Models\Ssalud' || $dependencia->dependencetable_type!='App\Models\CentroSalud')
+       
         $servicioclinico->save();
          return redirect ('/servicioclinico');
     }

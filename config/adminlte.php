@@ -15,8 +15,8 @@ return [
     */
 
     'title' => 'Coo System',
-    'title_prefix' => '',
-    'title_postfix' => '',
+    'title_prefix' => 'System',
+    'title_postfix' => 'HPM',
 
     /*
     |--------------------------------------------------------------------------
@@ -68,7 +68,7 @@ return [
     'usermenu_header' => true,
     'usermenu_header_class' => 'bg-primary',
     'usermenu_image' => true,
-    'usermenu_desc' => false,
+    'usermenu_desc' => true,
     'usermenu_profile_url' => true,
 
     /*
@@ -194,7 +194,7 @@ return [
     'register_url' => 'register',
     'password_reset_url' => 'password/reset',
     'password_email_url' => 'password/email',
-    'profile_url' => false,
+    'profile_url' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -209,8 +209,8 @@ return [
     */
 
     'enabled_laravel_mix' => false,
-    'laravel_mix_css_path' => 'css/app.css',
-    'laravel_mix_js_path' => 'js/app.js',
+    'laravel_mix_css_path' => '',
+    'laravel_mix_js_path' => '',
 
     /*
     |--------------------------------------------------------------------------

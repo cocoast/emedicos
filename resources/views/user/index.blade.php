@@ -26,6 +26,7 @@
       <th scope="col">Nombre</th>
       <th scope="col">Email</th>
       <th scope="col">Dependencia</th>
+      <th>Establecimiento</th>
       <th scope="col">Editar Roles</th>
       @can('user.delete')<th scope="col">Eliminar</th>@endcan
 	</tr>
@@ -36,7 +37,8 @@
     <th scope="row">{{$user->id}}</th>
         <td>{{$user->name}}</td>
         <td>{{$user->email}}</td>
-        <td><a class="btn btn-info" href="{{ route('user.dependencia',$user->id) }}">{{ $user->Dependence->Dependencetable->nombre }}</a></td>
+        <td>@if($user->Dependence)<a class="btn btn-info" href="{{ route('user.dependencia',$user->id) }}">{{ $user->Dependence->Dependencetable->nombre }}</a>@else <a class="btn btn-info" href="{{ route('user.dependencia',$user->id) }}">-</a> @endif</td>
+        <td>{{$user->Trabajoen}}</td>
         <td><a class="btn btn-info" href="/user/{{$user->id}}/edit ">Roles</a></td>
         <td>@can('user.delete')
             <form action="{{route('user.delete',$user->id)}}" method="POST">

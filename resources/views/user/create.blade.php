@@ -36,6 +36,20 @@
 			</select>
 		</select>
 	</div>
+	<div class="mb-3">
+		<label for="" class="form-label">Establecimiento de Trabajo</label>
+			<select class="form-control" name="establecimiento" id="establecimiento" required >
+				<option disabled>Servicios de Salud</option>
+				@foreach($servicios as $servicio)
+				<option value="{{$servicio->id}}">{{$servicio->nombre}} </option>
+				@endforeach
+				<option value="" disabled> Establecimeintos de Salud</option>
+				@foreach ($establecimientos as $establecimiento)
+				<option value="{{ $establecimiento->id }}">{{ $establecimiento->nombre }}</option>
+				@endforeach
+			</select>
+		</select>
+	</div>
 	
 	<button  class="btn btn-primary" >GUARDAR</button>
 </form>

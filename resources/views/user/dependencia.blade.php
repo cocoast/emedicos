@@ -19,7 +19,7 @@
 		<input id="nombre" name="nombre" type="text" value="{{$user->email}}" readonly class="form-control">
 	</div>
 	<div class="mb-3">
-		<small>{{ $user->Dependence->Dependencetable->nombre }}</small>
+		@if($user->Dependence)<small>{{ $user->Dependence->Dependencetable->nombre }}</small>@endif
 			<label for="" class="form-label">Dependencia</label>
 			<select class="form-control" name="dependencia" id="dependencia" required >
 				<option selected value=""> Seleccione</option>
@@ -31,10 +31,11 @@
 				@foreach($centros as $centro)
 				<option value="{{'centro-'.$centro->id}}">{{$centro->nombre}} </option>
 				@endforeach
-				<option  disabled>Unidades de Salud</option>
+				@if($unidades->count()<0)<option  disabled>Unidades de Salud</option>
 				@foreach($unidades as $unidad)
 				<option value="{{'unidad-'.$unidad->id}}">{{$unidad->nombre}} </option>
 				@endforeach
+				@endif
 			</select>
 		</div>
 		

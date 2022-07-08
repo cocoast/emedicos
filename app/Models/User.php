@@ -72,6 +72,10 @@ class User extends Authenticatable
     {
         return 'profile/username';
     }
+       public function adminlte_desc()
+    {
+        return 'That\'s a nice guy';
+    }
 
     public function Dependence(){
         return  $this->hasOne('App\Models\Dependence','user','id');
@@ -83,5 +87,9 @@ class User extends Authenticatable
     public function Licitaciones()
     {
         return $this->hasMany('App\Models\Licitacion','licitador');
+    }
+    // relacion Polimorfica usuarios que trabajan en que establecimiento 
+    public function Trabajoen(){
+        return $this->morphTo('establecimiento');
     }
 }

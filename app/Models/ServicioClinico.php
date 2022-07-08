@@ -22,13 +22,10 @@ class ServicioClinico extends Model
     public function Destino(){
      return $this->hasMany('App\Models\Traslado', 'destino');
   }
-  public function Establecimiento(){
-        return $this->belongsTo('App\Models\Establecimiento','establecimiento','id');
-    } 
     public function Licitacion(){
      return $this->hasMany('App\Models\Licitacion', 'servicio');
   } 
-  // relacion Polimorfica
+  // relacion Polimorfica de unidades 
     public function Unidad(){
         return $this->morphTo('dependentable');
     }
@@ -36,9 +33,9 @@ class ServicioClinico extends Model
     public function dependence(){
         return $this->morphMany('App\Models\Dependence','Dependencetable','dependencetable_type','dependencetable_id','id');
     }
-   public function Unidades()
-    {
-        return $this->hasManyThrough(ServicioClinico::class,ServicioClinico::class,'id','dependencetable_id');
-    }
+   // relacion Polimorfica servicios de salud de a establecimiento 
+    public function Establecimiento(){
+        return $this->morphTo('establecimiento');
+      }
 
 }
